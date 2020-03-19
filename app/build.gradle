@@ -1,0 +1,140 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.0"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    signingConfigs {
+        config {
+            keyAlias 'holike'
+            keyPassword 'cloudshelf2020'
+            storeFile file('cloudshelf.jks')
+            storePassword 'cloudshelf2020'
+        }
+    }
+    defaultConfig {
+        applicationId "com.holike.cloudshelf"
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode APP_VERSION_CODE as int
+        versionName APP_VERSION_NAME
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi'//, 'x86', 'armeabi-v7a', 'arm64-v8a'
+        }
+        buildTypes {
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    // 输出apk名称为CRM_1.0.0_debug.apk  Smart retail platform
+                    outputFileName = "cloudshelf-" + "V${defaultConfig.versionName}" + "-${variant.buildType.name}.apk"
+                }
+            }
+            release {//正式环境
+                debuggable false
+                /*用来开启删除无用资源，也就是没有被引用的文件（经过实测是drawable,layout，
+                实际并不是彻底删除，而是保留文件名，但是没有内容，等等），但是因为需要知道是否被引用所以需要配合mififyEnable使用，
+                只有当两者都为true的时候才会起到真正的删除无效代码和无引用资源的目的*/
+//            shrinkResources false
+                minifyEnabled false   //是否开启混淆
+//            zipAlignEnabled true
+                resValue "string", "app_name", "舒适好家"
+                buildConfigField "boolean", "LOG_DEBUG", "false"
+                buildConfigField "String", "BASE_URL", "\"https://program.holike.com/\""  //正式服
+                buildConfigField "String", "BUGLY_APP_ID", "\"cfec0856ff\"" //bugly appId
+                buildConfigField "String", "AMAP_URL" , "\"https://restapi.amap.com/v3/ip?&output=json&key=b6dc1ec8dd69a318cec2d15fe4459414\"" //高德地图ip定位appkey
+                /*极光推送正式key配置*/
+                manifestPlaceholders = [
+                        JPUSH_PKGNAME: applicationId,
+                        JPUSH_APPKEY : "3662255df31e7a09b4804beb", //正式：8cccd94d6b844682b7757d8b
+                        JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+                ]
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                matchingFallbacks = ['release']
+                signingConfig signingConfigs.config
+            }
+            debug {//调试模式
+                debuggable true
+//            shrinkResources false
+                minifyEnabled false  //是否开启混淆
+//            zipAlignEnabled true
+                resValue "string", "app_name", "舒适好家"
+                buildConfigField "boolean", "LOG_DEBUG", "true"
+                //"https://program.holike.com/"   "http://120.79.9.159:8888/"
+                buildConfigField "String", "BASE_URL", "\"https://admintest.holike.com/\""  //测试服
+                buildConfigField "String", "BUGLY_APP_ID", "\"cfec0856ff\"" //bugly appId
+                buildConfigField "String", "AMAP_URL" , "\"https://restapi.amap.com/v3/ip?&output=json&key=b6dc1ec8dd69a318cec2d15fe4459414\"" //高德地图ip定位appkey
+                /*极光推送测试key配置*/
+                manifestPlaceholders = [
+                        JPUSH_PKGNAME: applicationId,
+                        JPUSH_APPKEY : "02ab3d34095e74115198edd1", //测试  b4222c18aac44260566c9007  --02ab3d34095e74115198edd1
+                        JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+                ]
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                matchingFallbacks = ['debug']
+                signingConfig signingConfigs.config
+            }
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+            res.srcDirs =
+                    [
+                            'src/main/res/layout/activity',
+                            'src/main/res/layout/fragment',
+                            'src/main/res/layout/dialog',
+                            'src/main/res/layout/item',
+                            'src/main/res/layout/include',
+                            'src/main/res/layout',
+                            'src/main/res'
+                    ]
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit2_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_version"
+    /*okhttp3版本3.14.x仅支持5.0以上java 8 要兼容低版本手机，应使用3.12.x*/
+
+    /*The OkHttp 3.12.x branch supports Android 2.3+ (API level 9+) and Java 7+.
+            These platforms lack support for TLS 1.2 and should not be used.
+            But because upgrading is difficult we will backport critical fixes to the 3.12.x branch through December 31, 2020.*/
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+//    implementation 'com.github.gallopmark:banner:2.0.3'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    //基础工程库
+    implementation 'com.github.gallopmark:BaseLib:1.1.0'
+    //极光推送
+    implementation 'cn.jiguang.sdk:jpush:3.5.6'
+    implementation 'cn.jiguang.sdk:jcore:2.2.8'
+    //bugly
+    implementation 'com.tencent.bugly:crashreport:3.1.7'
+//    implementation project(':videoplayer')
+    implementation 'cn.jzvd:jiaozivideoplayer:7.2.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.3'
+
+    implementation project(':smartrefreshhorizontal')
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-11'
+    implementation 'com.google.android:flexbox:2.0.1'
+}

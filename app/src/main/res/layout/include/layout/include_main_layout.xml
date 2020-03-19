@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/containerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dp_45"
+        android:paddingRight="@dimen/dp_45">
+
+        <TextView
+            android:id="@+id/typeTView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawablePadding="@dimen/dp_6"
+            android:gravity="center"
+            android:textColor="@color/col_03"
+            android:textSize="@dimen/sp_18"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/countTView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textColor="@color/col_10"
+            android:textSize="@dimen/sp_14" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dp_45"
+        android:layout_marginLeft="@dimen/dp_45"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_weight="1">
+
+        <com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal
+            android:id="@+id/refreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srlEnableRefresh="false">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/centerRView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        </com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal>
+
+        <include layout="@layout/include_default_page" />
+
+        <include
+            layout="@layout/include_backtrack2"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
+            android:layout_gravity="end|center"
+            android:layout_marginEnd="@dimen/dp_45"
+            android:layout_marginRight="@dimen/dp_45" />
+    </FrameLayout>
+</LinearLayout>

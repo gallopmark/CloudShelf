@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#D6001D</color>
+
+
+    <color name="ic_launcher_background">#1F88FD</color>
+    <color name="col_launch">#007AFF</color>
+    <color name="white">#ffffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="col_00">#000000</color>
+    <color name="col_01">#50000000</color>
+    <color name="col_03">#F2F8FF</color>
+    <color name="col_04">#ffffffff</color>
+    <color name="col_05">#ffebf0f4</color>
+    <color name="col_06">#353636</color>
+    <color name="col_07">#A0AAB8</color>
+    <color name="col_08">#fffafbfc</color>
+    <color name="col_09">#D0D9E1</color>
+    <color name="col_10">#C8D4E1</color>
+    <color name="col_11">#ff1c2328</color>
+    <color name="col_12">#b3000000</color>
+    <color name="col_13">#50ffffff</color>
+    <color name="col_14">#1C2428</color>
+    <color name="col_15">#F1F7FC</color>
+    <color name="col_16">#80000000</color>
+    <color name="col_17">#001C2428</color>
+    <color name="col_18">#a8333333</color>
+    <color name="col_19">#262E36</color>
+    <color name="col_20">#1A2025</color>
+    <color name="col_21">#ff2b3541</color>
+</resources>

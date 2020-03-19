@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_col08_corners4dp"
+    android:orientation="vertical"
+    android:padding="@dimen/dp_20">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/logo"
+        tools:ignore="ContentDescription" />
+
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_20"
+        android:background="@drawable/shape_edittext_background"
+        android:drawablePadding="@dimen/dp_4"
+        android:gravity="center|start"
+        android:hint="@string/hint_input_phone"
+        android:inputType="phone"
+        android:maxLength="11"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:textColor="@color/col_06"
+        android:textColorHint="@color/col_07"
+        android:textSize="@dimen/sp_12"
+        tools:ignore="Autofill" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_16"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_code"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@drawable/shape_edittext_background"
+            android:drawablePadding="@dimen/dp_4"
+            android:gravity="center|start"
+            android:hint="@string/hint_verification_code"
+            android:inputType="phone"
+            android:maxLength="11"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:textColor="@color/col_06"
+            android:textColorHint="@color/col_07"
+            android:textSize="@dimen/sp_12"
+            tools:ignore="Autofill" />
+
+        <TextView
+            android:id="@+id/tv_getCode"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_weight="1"
+            android:background="@drawable/sel_button_state"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="@string/text_get_verification_code"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/sel_button_state"
+        android:enabled="false"
+        android:gravity="center"
+        android:text="@string/text_login"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12" />
+</LinearLayout>

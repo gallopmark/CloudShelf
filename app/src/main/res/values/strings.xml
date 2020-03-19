@@ -1,0 +1,49 @@
+<resources>
+    <string name="sign_out">退出账号</string>
+    <string name="text_cancel">\u3000取消\u3000</string>
+    <string name="text_confirm">\u3000确定\u3000</string>
+    <string name="text_cancel2">取消</string>
+    <string name="text_finish">完成</string>
+    <string name="video_loading_failed">视频加载失败</string>
+
+    <string name="http_exception">请求失败，请稍后再试！</string>
+    <string name="socket_timeout_exception">连接超时，请检查您的网络状态，稍后重试！</string>
+    <string name="connect_exception">连接异常，请检查您的网络状态，稍后重试！</string>
+    <string name="connect_timeout_exception">请求超时，请检查您的网络状态，稍后重试！</string>
+    <string name="unknown_host_exception">连接异常，请检查您的网络状态，稍后重试！</string>
+    <string name="json_parse_exception">数据解析错误</string>
+    <string name="no_data_exception">暂无数据</string>
+
+    <string name="hint_input_phone">请输入手机号码</string>
+    <string name="hint_verification_code">验证码</string>
+    <string name="text_get_verification_code">获取验证码</string>
+    <string name="text_login">登录</string>
+    <string name="text_get_code_after">%1$ss后获取</string>
+    <string name="text_expiration_reminder">到期提示</string>
+    <string name="text_Iknow">我知道了</string>
+    <string name="text_back">返回</string>
+    <string name="text_product_catalog">产品大全</string>
+    <string name="text_wechat_scan">微信扫一扫</string>
+    <string name="text_program_library">方案库</string>
+
+    <string name="text_network_error">网络开小差啦~ 请点击刷新试试</string>
+    <string name="text_no_result">抱歉，暂无相关筛选结果</string>
+    <string name="text_refresh">刷新</string>
+
+    <string name="text_program_count">%s个方案结果</string>
+    <string name="text_all">全部</string>
+    <string name="text_space">空间</string>
+    <string name="text_style">风格</string>
+    <string name="text_more">更多</string>
+
+    <string name="text_scan_code_view_scheme">扫码查看方案</string>
+    <string name="text_video">视频</string>
+    <string name="text_panoramic">全景</string>
+
+    <string name="text_preview_index">当前第%d/%d张</string>
+    <string name="text_bleached_house">晒晒我家</string>
+    <string name="text_housing_status">房屋情况：</string>
+    <string name="text_current_position">当前定位：%s</string>
+    <string name="text_tips_search_house">找不到小区？试一试搜索吧</string>
+    <string name="text_search_my_home">搜搜我家</string>
+</resources>
