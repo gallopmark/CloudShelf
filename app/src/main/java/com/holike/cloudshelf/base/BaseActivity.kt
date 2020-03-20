@@ -3,10 +3,15 @@ package com.holike.cloudshelf.base
 import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
+import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.dialog.LoadingDialog
@@ -15,8 +20,13 @@ import pony.xcode.base.CommonActivity
 abstract class BaseActivity : CommonActivity() {
 
     companion object {
+        @Suppress("unused")
         const val EXTRA_DATA = "extra-data"
+        const val TOAST_GRAVITY = Gravity.BOTTOM or Gravity.END
     }
+
+    //自定义toast 解决频繁显示问题
+    private var mToast: Toast? = null
 
     //强制横屏
     override fun getScreenOrientation(): Int = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -76,6 +86,55 @@ abstract class BaseActivity : CommonActivity() {
         findViewById<View>(R.id.vg_default_page)?.visibility = View.GONE
     }
 
+    override fun showShortToast(@StringRes resId: Int) {
+        showShortToast(resId, TOAST_GRAVITY)
+    }
+
+    override fun showShortToast(@StringRes resId: Int, gravity: Int) {
+        showShortToast(getString(resId), gravity)
+    }
+
+    override fun showShortToast(text: CharSequence?) {
+        showShortToast(text, TOAST_GRAVITY)
+    }
+
+    override fun showShortToast(text: CharSequence?, gravity: Int) {
+        showToast(text, gravity, Toast.LENGTH_SHORT)
+    }
+
+    override fun showLongToast(@StringRes resId: Int) {
+        showLongToast(resId, TOAST_GRAVITY)
+    }
+
+    override fun showLongToast(@StringRes resId: Int, gravity: Int) {
+        showLongToast(getString(resId), gravity)
+    }
+
+    override fun showLongToast(text: CharSequence?) {
+        showLongToast(text, TOAST_GRAVITY)
+    }
+
+    override fun showLongToast(text: CharSequence?, gravity: Int) {
+        showToast(text, gravity, Toast.LENGTH_LONG)
+    }
+
+    override fun showToast(text: CharSequence?, gravity: Int, duration: Int) {
+        if (TextUtils.isEmpty(text)) return
+        mToast?.let {
+            it.cancel()
+            mToast = null
+        }
+        mToast = Toast(this).apply {
+            val view = LayoutInflater.from(this@BaseActivity).inflate(R.layout.include_custom_toast, FrameLayout(this@BaseActivity), false)
+            view.findViewById<TextView>(R.id.toast_view).text = text
+            setView(view)
+            setDuration(duration)
+            setMargin(0f, 0f)
+            setGravity(gravity, 0, 0)
+            show()
+        }
+    }
+
     //重试回调
     open fun onReload() {
 
@@ -85,7 +144,6 @@ abstract class BaseActivity : CommonActivity() {
         return LoadingDialog(this)
     }
 
-    @Suppress("MemberVisibilityCanBePrivate")
     fun getCurrentApp(): CurrentApp {
         return application as CurrentApp
     }

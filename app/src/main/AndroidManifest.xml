@@ -23,7 +23,8 @@
         tools:targetApi="q">
         <activity
             android:name=".activity.MainActivity"
-            android:configChanges="orientation|screenSize|layoutDirection">
+            android:configChanges="orientation|screenSize|layoutDirection"
+            android:launchMode="singleTask">
             <!--设置configChanges属性 保持activity横竖屏切换时状态不变，避免onCreate执行多次-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,11 +39,21 @@
         <activity android:name=".activity.PicturePreviewActivity" />
 
         <!--晒晒我家-->
-        <activity android:name=".activity.BlueprintListActivity"/>
+        <activity android:name=".activity.BlueprintListActivity" />
         <!--晒晒我家详情-->
-        <activity android:name=".activity.BlueprintInfoActivity"/>
+        <activity android:name=".activity.BlueprintInfoActivity" />
         <!--搜搜我家-->
-        <activity android:name=".activity.SoughtHouseActivity"/>
+        <activity
+            android:name=".activity.SoughtHouseActivity"
+            android:theme="@style/DefaultCityPickerTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <!--小区户型列表-->
+        <activity android:name=".activity.PlotTypeListActivity" />
+        <!--城市选择-->
+        <activity
+            android:name=".activity.CityPickerActivity"
+            android:theme="@style/AppCityPickerTheme"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <!--极光推送 jcenter 自动集成步骤-->
         <service

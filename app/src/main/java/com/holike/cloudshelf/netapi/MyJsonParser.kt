@@ -11,7 +11,11 @@ import java.lang.reflect.Type
 
 class MyJsonParser {
     companion object {
+        private const val FIELD_CODE = "code"  //接口返回的json是否保存code字段
+        private const val FIELD_RESULT = "result" //接口返回的json中result字段
+        private const val FIELD_MSG = "msg" //json中msg字段
         const val SUCCESS_CODE = 0
+        const val INVALID_CODE = 210819
         const val DEFAULT_CODE = -123456789
         private fun isEmpty(json: String?): Boolean {
             return json.isNullOrEmpty()
@@ -20,9 +24,8 @@ class MyJsonParser {
         fun getSuperclassTypeParameter(subclass: Class<*>): Type {
             val superclass = subclass.genericSuperclass
             return if (superclass is ParameterizedType) {
-                if (superclass.actualTypeArguments.isEmpty()) Any::class.java else `$Gson$Types`.canonicalize(
-                        superclass.actualTypeArguments[0]
-                )
+                if (superclass.actualTypeArguments.isEmpty()) Any::class.java
+                else `$Gson$Types`.canonicalize(superclass.actualTypeArguments[0])
             } else {
                 Any::class.java
             }
@@ -38,8 +41,7 @@ class MyJsonParser {
 
         private fun has(json: String?, key: String?): Boolean {
             return if (isEmpty(json)) false else try {
-                val jsonObject = getAsJsonObject(json)
-                jsonObject.has(key)
+                getAsJsonObject(json).has(key)
             } catch (e: Exception) {
                 LogCat.e(e)
                 false
@@ -47,13 +49,13 @@ class MyJsonParser {
         }
 
         private fun hasCode(json: String?): Boolean {
-            return has(json, "code")
+            return has(json, FIELD_CODE)
         }
 
         /*接口返回结果 code字段 int类型*/
         fun getCode(json: String?): Int {
             return if (!hasCode(json)) DEFAULT_CODE else try {
-                getAsJsonObject(json)["code"].asInt
+                getAsJsonObject(json)[FIELD_CODE].asInt
             } catch (e: Exception) {
                 LogCat.e(e)
                 DEFAULT_CODE
@@ -61,11 +63,11 @@ class MyJsonParser {
         }
 
         private fun hasMsg(json: String?): Boolean {
-            return has(json, "msg")
+            return has(json, FIELD_MSG)
         }
 
         private fun getMsgElement(json: String?): JsonElement {
-            return getAsJsonObject(json)["msg"]
+            return getAsJsonObject(json)[FIELD_MSG]
         }
 
         /*接口返回结果 msg字段 String类型*/
@@ -80,11 +82,11 @@ class MyJsonParser {
         }
 
         private fun hasResult(json: String?): Boolean {
-            return has(json, "result")
+            return has(json, FIELD_RESULT)
         }
 
         private fun getResultElement(json: String?): JsonElement {
-            return getAsJsonObject(json)["result"]
+            return getAsJsonObject(json)[FIELD_RESULT]
         }
 
         /*接口返回结果 result字段*/

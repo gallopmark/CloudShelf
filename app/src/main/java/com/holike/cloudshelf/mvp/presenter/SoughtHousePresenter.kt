@@ -6,9 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
+import com.holike.cloudshelf.activity.SoughtHouseActivity
 import com.holike.cloudshelf.bean.AMapLocationBean
 import com.holike.cloudshelf.bean.SoughtHouseBean
-import com.holike.cloudshelf.bean.internal.PictureDisplayItem
+import com.holike.cloudshelf.dialog.SearchDialog
 import com.holike.cloudshelf.mvp.model.SoughtHouseModel
 import com.holike.cloudshelf.mvp.view.SoughtHouseView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
@@ -18,8 +19,16 @@ import pony.xcode.recycler.CommonAdapter
 
 //搜搜我家presenter
 class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() {
-    private class SoughtHouseItem(var topId: String?, var topUrl: String?, var topName: String?, var topAddress: String?,
-                                  var bottomId: String?, var bottomUrl: String?, var bottomName: String?, var bottomAddress: String?)
+    private class SoughtHouseItem(
+            var topId: String?,
+            var topUrl: String?,
+            var topName: String?,
+            var topAddress: String?,
+            var bottomId: String?,
+            var bottomUrl: String?,
+            var bottomName: String?,
+            var bottomAddress: String?
+    )
 
     private inner class SoughtHouseAdapter(context: Context, dataList: MutableList<SoughtHouseItem>, private val itemWidth: Int)
         : CommonAdapter<SoughtHouseItem>(context, dataList) {
@@ -37,12 +46,12 @@ class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() 
             holder.setText(R.id.tv_address_bottom, t.bottomAddress)
             holder.setOnClickListener(R.id.top_layout) {
                 if (!t.topId.isNullOrEmpty()) {
-                    view?.onSoughtHouseClick(t.topId)
+                    view?.onSoughtHouseClick(t.topId, t.topName)
                 }
             }
             holder.setOnClickListener(R.id.bottom_layout) {
                 if (!t.bottomId.isNullOrEmpty()) {
-                    view?.onSoughtHouseClick(t.bottomId)
+                    view?.onSoughtHouseClick(t.bottomId, t.bottomName)
                 }
             }
         }
@@ -65,7 +74,16 @@ class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() 
         recyclerView.adapter = mAdapter
     }
 
-    fun setSearchContent(content: String?) {
+    //显示搜索对话框
+    fun showSearchDialog(act: SoughtHouseActivity) {
+        SearchDialog(act).setHint(act.getString(R.string.hint_community_name)).setOnSearchListener(object : SearchDialog.OnSearchListener {
+            override fun onSearch(content: String?) {
+                setSearchContent(content)
+            }
+        }).show()
+    }
+
+    private fun setSearchContent(content: String?) {
         mSearchContent = content
         initData()
     }
@@ -98,17 +116,22 @@ class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() 
     }
 
     private fun doSearchCommunityList() {
-        mModel.doSearchHouseList(mCurrentCity, mSearchContent, mPageNo.toString(), mPageSize.toString(), object : HttpRequestCallback<SoughtHouseBean>() {
-            override fun onSuccess(result: SoughtHouseBean, message: String?) {
-                view?.onSearchSuccess(result, result.obtainDataList().size >= mPageSize)
-                updateSoughtHouse(result.obtainDataList())
-                mPageNo += 1
-            }
+        mModel.doSearchHouseList(
+                mCurrentCity,
+                mSearchContent,
+                mPageNo.toString(),
+                mPageSize.toString(),
+                object : HttpRequestCallback<SoughtHouseBean>() {
+                    override fun onSuccess(result: SoughtHouseBean, message: String?) {
+                        view?.onSearchSuccess(result, result.obtainDataList().size >= mPageSize)
+                        updateSoughtHouse(result.obtainDataList())
+                        mPageNo += 1
+                    }
 
-            override fun onFailure(code: Int, failReason: String?) {
-                view?.onSearchFailure(failReason, mPageNo == 1)
-            }
-        })
+                    override fun onFailure(code: Int, failReason: String?) {
+                        view?.onSearchFailure(failReason, mPageNo == 1)
+                    }
+                })
     }
 
     private fun updateSoughtHouse(dataList: MutableList<SoughtHouseBean.DataBean>) {
@@ -127,13 +150,16 @@ class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() 
     private fun updateSoughtHouseList(dataList: MutableList<SoughtHouseBean.DataBean>) {
         val sList = ListUtils.averageAssignFixLength(dataList, 2)
         for (i in sList.indices) {
-            val item: SoughtHouseItem
-            if (sList[i].size > 1) {
-                item = SoughtHouseItem(sList[i][0].id, sList[i][0].image, sList[i][0].name, sList[i][0].address,
-                        sList[i][1].id, sList[i][1].image, sList[i][1].name, sList[i][1].address)
+            val item: SoughtHouseItem = if (sList[i].size > 1) {
+                SoughtHouseItem(
+                        sList[i][0].id, sList[i][0].image, sList[i][0].name, sList[i][0].address,
+                        sList[i][1].id, sList[i][1].image, sList[i][1].name, sList[i][1].address
+                )
             } else {
-                item = SoughtHouseItem(sList[i][0].id, sList[i][0].image, sList[i][0].name, sList[i][0].address,
-                        null, null, null, null)
+                SoughtHouseItem(
+                        sList[i][0].id, sList[i][0].image, sList[i][0].name, sList[i][0].address,
+                        null, null, null, null
+                )
             }
             mDataList.add(item)
         }

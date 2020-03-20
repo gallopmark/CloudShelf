@@ -2,6 +2,7 @@ package com.holike.cloudshelf
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
@@ -10,13 +11,15 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import cn.jpush.android.api.JPushInterface
+import com.holike.cloudshelf.activity.MainActivity
+import com.holike.cloudshelf.local.PreferenceSource
+import com.holike.cloudshelf.rxbus.EventBus
+import com.holike.cloudshelf.rxbus.EventType
+import com.holike.cloudshelf.rxbus.MessageEvent
 import com.holike.cloudshelf.util.JPushUtils
 import com.holike.cloudshelf.util.LogCat
 import com.scwang.smartrefresh.header.WaterDropHeader
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
-import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator
-import com.scwang.smartrefresh.layout.api.RefreshHeader
-import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter
 import com.tencent.bugly.crashreport.CrashReport
 import java.lang.ref.WeakReference
@@ -159,5 +162,15 @@ class CurrentApp : MultiDexApplication() {
     fun exit() {
         finishAllActivities()
         Process.killProcess(Process.myPid())
+    }
+
+    //app收到登录认证失效时-即被挤出登录时 退回到首页
+    fun backToHome() {
+        PreferenceSource.clear()  //清除本地缓存
+        //发送事件通知首页检测登录状态
+        EventBus.getInstance().post(MessageEvent(EventType.TYPE_LOGIN_INVALID))
+        //MainActivity为singleTask 把task中在其之上的其它Activity destory掉。
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 }

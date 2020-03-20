@@ -4,7 +4,6 @@
     android:id="@+id/containerRL"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/pic_bg"
     android:paddingStart="@dimen/dp_45"
     android:paddingLeft="@dimen/dp_45"
     android:paddingEnd="@dimen/dp_45"

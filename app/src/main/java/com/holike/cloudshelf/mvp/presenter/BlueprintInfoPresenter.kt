@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.ImageViewTarget
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.adapter.BottomPreviewImageAdapter
@@ -21,7 +20,6 @@ import com.holike.cloudshelf.bean.BlueprintInfoBean
 import com.holike.cloudshelf.mvp.model.BlueprintModel
 import com.holike.cloudshelf.mvp.view.BlueprintInfoView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
-import com.holike.cloudshelf.util.ImageUtil
 import pony.xcode.mvp.BasePresenter
 
 

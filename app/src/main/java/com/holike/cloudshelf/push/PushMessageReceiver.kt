@@ -34,11 +34,7 @@ class PushMessageReceiver : JPushMessageReceiver() {
             val pushBean = Gson().fromJson(body, JPushBean::class.java)
             if (TextUtils.equals(pushBean.type, "1")) {
                 //挤出账号 - 该账号已在另一台云货架设备登录！
-                CurrentApp.getInstance().finishAllActivities()
-                val intent = Intent(CurrentApp.getInstance(), MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                CurrentApp.getInstance().startActivity(intent)
-                CurrentApp.getInstance().exit()
+                CurrentApp.getInstance().backToHome()
                 CustomToast.showToast(CurrentApp.getInstance(), pushBean.content, Toast.LENGTH_LONG)
             } else if (TextUtils.equals(pushBean.type, "2") || TextUtils.equals(pushBean.type, "3")) {
                 val act = CurrentApp.getInstance().getCurrentActivity()

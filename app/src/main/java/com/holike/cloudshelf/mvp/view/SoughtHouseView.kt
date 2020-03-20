@@ -16,5 +16,5 @@ interface SoughtHouseView : BaseView {
     fun onNoResults()
     fun onSearchFailure(failReason: String?, isShowError: Boolean)
 
-    fun onSoughtHouseClick(id: String?)
+    fun onSoughtHouseClick(id: String?, name: String?)
 }

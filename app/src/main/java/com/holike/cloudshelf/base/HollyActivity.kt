@@ -17,7 +17,7 @@ abstract class HollyActivity<P : BasePresenter<*, V>, V : BaseView> : BaseActivi
                 mPresenter.register(this as V)
             }
         } catch (e: Exception) {
-            //You should extends CommonActivity only
+            //You should extends BaseActivity only
         }
     }
 

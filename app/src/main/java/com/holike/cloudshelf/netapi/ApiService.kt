@@ -66,4 +66,9 @@ interface ApiService {
     @POST("/cloud/searchNearby/searchCommunityList")
     fun getCommunityList(@Field("currentCity") currentCity: String?, @Field("searchName") searchName: String?,
                          @Field("pageNo") pageNo: String, @Field("pageSize") pageSize: String): Observable<String?>
+
+    /*搜搜我家户型列表(分页)*/
+    @FormUrlEncoded
+    @POST("/cloud/searchNearby/getHouseTypeByCommunityId")
+    fun getHouseTypeById(@Field("pageNo") pageNo: String, @Field("pageSize") pageSize: String, @Field("communityId") communityId: String?): Observable<String?>
 }

@@ -16,7 +16,7 @@ public class LoadingDialog extends Dialog {
         setCanceledOnTouchOutside(false);
         Window window = getWindow();
         if (window != null)
-            window.setWindowAnimations(R.style.PictureThemeDialogWindowStyle);
+            window.setWindowAnimations(R.style.LoadingDialogWindowStyle);
     }
 
     protected void onCreate(Bundle savedInstanceState) {

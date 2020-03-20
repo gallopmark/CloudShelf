@@ -1,5 +1,6 @@
 package com.holike.cloudshelf.mvp.model
 
+import android.text.TextUtils
 import com.google.gson.Gson
 import com.holike.cloudshelf.BuildConfig
 import com.holike.cloudshelf.CurrentApp
@@ -20,7 +21,12 @@ class SoughtHouseModel : ApiModel() {
             override fun onSuccess(result: String, message: String?) {
                 try {
                     val bean = Gson().fromJson(result, AMapLocationBean::class.java)
-                    callback.onSuccess(bean, null)
+                    if (TextUtils.equals(bean.status, "1")) { //返回结果状态值 值为0或1,0表示失败；1表示成功
+                        //返回状态说明，status为0时，info返回错误原因，否则返回“OK”。
+                        callback.onSuccess(bean, null)
+                    } else {
+                        callback.onFailure(MyJsonParser.DEFAULT_CODE, bean.info)
+                    }
                 } catch (e: Exception) {
                     callback.onFailure(MyJsonParser.DEFAULT_CODE, CurrentApp.getInstance().getString(R.string.json_parse_exception))
                 }

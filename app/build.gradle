@@ -137,4 +137,6 @@ dependencies {
     implementation project(':smartrefreshhorizontal')
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-11'
     implementation 'com.google.android:flexbox:2.0.1'
+    /*城市选择库*/
+    implementation 'com.github.gallopmark:CityPicker:1.0.0'
 }

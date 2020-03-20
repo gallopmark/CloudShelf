@@ -46,4 +46,10 @@
     <string name="text_current_position">当前定位：%s</string>
     <string name="text_tips_search_house">找不到小区？试一试搜索吧</string>
     <string name="text_search_my_home">搜搜我家</string>
+    <string name="hint_community_name">请输入小区名称</string>
+    <string name="text_search">搜索</string>
+    <string name="text_switch_cities">切换城市</string>
+    <string name="hint_input_city">请输入城市名</string>
+    <string name="text_locating">正在定位…</string>
+    <string name="text_locate_failed">定位失败</string>
 </resources>

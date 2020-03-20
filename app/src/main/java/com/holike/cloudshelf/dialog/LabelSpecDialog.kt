@@ -26,16 +26,17 @@ class LabelSpecDialog(context: Context) : CommonDialog(context, R.style.AppDialo
     }
 
     override fun getWindowAnimations(): Int = R.style.BottomDialogAnimation
-
-    fun withData(data: MutableList<LabelSpec>?, selected: ArrayMap<String, LabelSpec.Spec>?): LabelSpecDialog {
+    override fun getWidth(): Int = CurrentApp.getInstance().getMaxPixels()
+    fun withData(
+        data: MutableList<LabelSpec>?,
+        selected: ArrayMap<String, LabelSpec.Spec>?
+    ): LabelSpecDialog {
         if (!data.isNullOrEmpty()) {
             mDataList.addAll(data)
         }
         this.mSelected = selected
         return this
     }
-
-    override fun getWidth(): Int = CurrentApp.getInstance().getMaxPixels()
 
     fun listen(l: OnConfirmListener?): LabelSpecDialog {
         this.mListener = l

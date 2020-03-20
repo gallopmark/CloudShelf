@@ -29,6 +29,7 @@
     <dimen name="dp_130">130dp</dimen>
     <dimen name="dp_200">200dp</dimen>
     <dimen name="dp_270">270dp</dimen>
+    <dimen name="dp_330">330dp</dimen>
 
     <dimen name="sp_8">8sp</dimen>
     <dimen name="sp_9">9sp</dimen>

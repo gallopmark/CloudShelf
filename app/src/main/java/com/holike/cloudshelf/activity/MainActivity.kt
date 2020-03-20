@@ -1,6 +1,7 @@
 package com.holike.cloudshelf.activity
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import com.bumptech.glide.Glide
 import com.holike.cloudshelf.R
@@ -9,17 +10,28 @@ import com.holike.cloudshelf.bean.AdvertisingBean
 import com.holike.cloudshelf.local.PreferenceSource
 import com.holike.cloudshelf.mvp.presenter.MainPresenter
 import com.holike.cloudshelf.mvp.view.MainView
+import com.holike.cloudshelf.rxbus.EventBus
+import com.holike.cloudshelf.rxbus.EventType
+import com.holike.cloudshelf.rxbus.MessageEvent
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
 
 //首页
 class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
 
+    private var mDisposable: Disposable? = null
     override fun getLayoutResourceId(): Int = R.layout.activity_main
 
     override fun setup(savedInstanceState: Bundle?) {
         mPresenter.initLoginState(this)
         mPresenter.initClickViews(this, programmeIView, productsIView, searchHomeIView, shareHomeIv)
         mPresenter.getAdvertising()
+        mDisposable = EventBus.getInstance().toObservable(MessageEvent::class.java).subscribe {
+            if (TextUtils.equals(it.type, EventType.TYPE_LOGIN_INVALID)) {  //收到被挤出登录的通知
+                logoutTextView.visibility = View.GONE  //隐藏退出登录按钮
+                mPresenter.initLoginState(this)
+            }
+        }
     }
 
     //获取广告成功
@@ -64,5 +76,10 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
 
     override fun onLogoutFailure(failReason: String?) {
         showShortToast(failReason)
+    }
+
+    override fun onDestroy() {
+        mDisposable?.dispose()
+        super.onDestroy()
     }
 }
