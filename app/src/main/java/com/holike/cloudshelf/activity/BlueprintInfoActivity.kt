@@ -82,6 +82,6 @@ class BlueprintInfoActivity : HollyActivity<BlueprintInfoPresenter, BlueprintInf
     }
 
     override fun onFailure(failReason: String?) {
-        showLoading(failReason)
+        showShortToast(failReason)
     }
 }

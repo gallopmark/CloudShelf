@@ -1,21 +1,18 @@
 package com.holike.cloudshelf.mvp.presenter
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.adapter.BottomPreviewImageAdapter
+import com.holike.cloudshelf.base.BasePagerAdapter
 import com.holike.cloudshelf.bean.BlueprintInfoBean
 import com.holike.cloudshelf.mvp.model.BlueprintModel
 import com.holike.cloudshelf.mvp.view.BlueprintInfoView
@@ -35,57 +32,22 @@ class BlueprintInfoPresenter : BasePresenter<BlueprintModel, BlueprintInfoView>(
         mParamHeight = (size * 0.9f).toInt()
     }
 
-    private inner class PicturePreviewAdapter(private val context: Context, private val images: MutableList<String>)
-        : PagerAdapter() {
+    private inner class PicturePreviewAdapter(context: Context, images: MutableList<String>) :
+        BasePagerAdapter<String>(context, images) {
 
-
-        override fun getCount(): Int = images.size
-
-        override fun isViewFromObject(view: View, `object`: Any): Boolean {
-            return view === `object`
-        }
-
-        override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            val view = LayoutInflater.from(context).inflate(R.layout.item_picture_preview, container, false)
-            Glide.with(context).load(images[position]).into(view.findViewById(R.id.iv_pic))
-            val imageView = view.findViewById<ImageView>(R.id.iv_pic)
-            Glide.with(context).load(images[position]).override(mResourceWidth, mResourceHeight).into(imageView)
-//            Glide.with(context).asBitmap().load(images[position])
-//                    .into(object : ImageViewTarget<Bitmap?>(imageView) {
-//                        override fun setResource(resource: Bitmap?) {
-//                            if (resource == null) return
-//                            val width = resource.width
-//                            val height = resource.height
-//                            var newBitmap = resource
-//                            if (width > mResourceWidth || height > mResourceHeight) {
-//                                newBitmap = ImageUtil.zoomBitmap(resource, mResourceWidth, mResourceHeight)
-//                            }
-//                            setBitmap(imageView, newBitmap)
-//                        }
-//                    })
-            container.addView(view)
-            return view
-        }
-
-        private fun setBitmap(imageView: ImageView, bitmap: Bitmap?) {
-            imageView.setImageBitmap(bitmap)
-            if (bitmap != null) {
-                val bw = bitmap.width
-                val bh = bitmap.height
-                val vw = imageView.width
-                val vh = imageView.height
-                if (bw != 0 && bh != 0 && vw != 0 && vh != 0) {
-                    if (1.0f * bh / bw > 1.0f * vh / vw) {
-                        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                    } else {
-                        imageView.scaleType = ImageView.ScaleType.FIT_CENTER
-                    }
-                }
-            }
-        }
-
-        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-            container.removeView(`object` as View)
+        override fun getLayoutResourceId(): Int = R.layout.item_picture_preview
+        override fun convert(convertView: View, bean: String, position: Int) {
+            /**
+             * 如果想设置图片固定大小，又想保持图片宽高比
+            解决方案如下：
+            1)ImageView的width和height都设为wrap_content
+            2)设置ImageView的maxWidth和maxHeight
+            3)设置adjustViewBounds为true；
+             */
+            Glide.with(context).load(dataList[position]).into(convertView.findViewById(R.id.iv_pic))
+            val imageView = convertView.findViewById<ImageView>(R.id.iv_pic)
+            Glide.with(context).load(dataList[position]).override(mResourceWidth, mResourceHeight)
+                .into(imageView)
         }
     }
 
@@ -101,7 +63,8 @@ class BlueprintInfoPresenter : BasePresenter<BlueprintModel, BlueprintInfoView>(
         lp.width = mParamWidth
         lp.height = mParamHeight
         centerLayout.layoutParams = lp
-        mResourceWidth = mParamWidth - pictureFL.context.resources.getDimensionPixelSize(R.dimen.dp_60) * 2
+        mResourceWidth =
+            mParamWidth - pictureFL.context.resources.getDimensionPixelSize(R.dimen.dp_60) * 2
         mResourceHeight = (mResourceWidth * 0.75f).toInt()
         val plp = pictureFL.layoutParams as LinearLayout.LayoutParams
         plp.width = mResourceWidth
