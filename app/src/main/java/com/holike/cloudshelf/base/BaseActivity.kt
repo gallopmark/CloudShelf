@@ -22,6 +22,7 @@ import com.holike.cloudshelf.dialog.LoadingDialog
 import com.holike.cloudshelf.widget.CustomToast
 import pony.xcode.system.SystemTintHelper
 
+//app内所有activity的父类
 abstract class BaseActivity : AppCompatActivity() {
 
     companion object {
