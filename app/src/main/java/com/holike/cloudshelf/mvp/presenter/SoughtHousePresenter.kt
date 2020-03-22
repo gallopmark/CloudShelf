@@ -123,13 +123,13 @@ class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() 
                 mPageSize.toString(),
                 object : HttpRequestCallback<SoughtHouseBean>() {
                     override fun onSuccess(result: SoughtHouseBean, message: String?) {
-                        view?.onSearchSuccess(result, result.obtainDataList().size >= mPageSize)
+                        view?.onSuccess(result, result.obtainDataList().size >= mPageSize)
                         updateSoughtHouse(result.obtainDataList())
                         mPageNo += 1
                     }
 
                     override fun onFailure(code: Int, failReason: String?) {
-                        view?.onSearchFailure(failReason, mPageNo == 1)
+                        view?.onFailure(failReason, mPageNo == 1)
                     }
                 })
     }

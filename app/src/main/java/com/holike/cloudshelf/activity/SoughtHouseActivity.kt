@@ -2,22 +2,24 @@ package com.holike.cloudshelf.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.view.animation.AnimationUtils
 import com.holike.cloudshelf.R
-import com.holike.cloudshelf.base.HollyActivity
+import com.holike.cloudshelf.base.RefreshActivity
 import com.holike.cloudshelf.bean.SoughtHouseBean
 import com.holike.cloudshelf.mvp.presenter.SoughtHousePresenter
 import com.holike.cloudshelf.mvp.view.SoughtHouseView
+import com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal
 import kotlinx.android.synthetic.main.activity_sought_house.*
 import kotlinx.android.synthetic.main.include_backtrack2.*
 import kotlinx.android.synthetic.main.include_main_layout.*
 
 
 //搜搜我家
-class SoughtHouseActivity : HollyActivity<SoughtHousePresenter, SoughtHouseView>(), SoughtHouseView {
+class SoughtHouseActivity : RefreshActivity<SoughtHousePresenter, SoughtHouseView, SoughtHouseBean>(), SoughtHouseView {
 
     override fun getLayoutResourceId(): Int = R.layout.activity_sought_house
+
+    override fun getRefreshLayout(): SmartRefreshHorizontal = refreshLayout
 
     override fun setup(savedInstanceState: Bundle?) {
         super.setup(savedInstanceState)
@@ -58,36 +60,12 @@ class SoughtHouseActivity : HollyActivity<SoughtHousePresenter, SoughtHouseView>
 
     }
 
-    //查询成功
-    override fun onSearchSuccess(bean: SoughtHouseBean, isLoadMoreEnabled: Boolean) {
+    override fun whenLoadSuccess(bean: SoughtHouseBean) {
         countTView.text = String.format(getString(R.string.text_program_count, bean.pageTotal))
-        hideDefaultPage()
-        if (refreshLayout.visibility != View.VISIBLE) {
-            refreshLayout.visibility = View.VISIBLE
-        }
-        refreshLayout.finishLoadMore()
-        refreshLayout.setEnableLoadMore(isLoadMoreEnabled)
     }
 
-    //无查询结果
-    override fun onNoResults() {
-        refreshLayout.visibility = View.GONE
-        onNoResult()
-    }
-
-    //查询失败
-    override fun onSearchFailure(failReason: String?, isShowError: Boolean) {
-        refreshLayout.finishLoadMore()
-        if (isShowError) {
-            countTView.text = String.format(getString(R.string.text_program_count, "0"))
-            refreshLayout.visibility = View.GONE
-            onNetworkError(failReason)
-        } else {
-            if (refreshLayout.visibility != View.VISIBLE) {
-                refreshLayout.visibility = View.VISIBLE
-            }
-            showShortToast(failReason)
-        }
+    override fun whenLoadError(failReason: String?) {
+        countTView.text = String.format(getString(R.string.text_program_count, "0"))
     }
 
     //item点击

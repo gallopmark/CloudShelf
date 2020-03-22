@@ -1,20 +1,23 @@
 package com.holike.cloudshelf.activity
 
 import android.os.Bundle
-import android.view.View
 import android.view.animation.AnimationUtils
 import com.holike.cloudshelf.R
-import com.holike.cloudshelf.base.HollyActivity
+import com.holike.cloudshelf.base.RefreshActivity
 import com.holike.cloudshelf.bean.BlueprintBean
 import com.holike.cloudshelf.mvp.presenter.BlueprintListPresenter
 import com.holike.cloudshelf.mvp.view.BlueprintListView
+import com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal
 import kotlinx.android.synthetic.main.include_backtrack2.*
 import kotlinx.android.synthetic.main.include_main_layout.*
 
 //晒晒我家
-class BlueprintListActivity : HollyActivity<BlueprintListPresenter, BlueprintListView>(), BlueprintListView {
+class BlueprintListActivity : RefreshActivity<BlueprintListPresenter, BlueprintListView, BlueprintBean>(),
+        BlueprintListView {
 
     override fun getLayoutResourceId(): Int = R.layout.activity_blueprint_list
+
+    override fun getRefreshLayout(): SmartRefreshHorizontal = refreshLayout
 
     override fun setup(savedInstanceState: Bundle?) {
         super.setup(savedInstanceState)
@@ -33,41 +36,12 @@ class BlueprintListActivity : HollyActivity<BlueprintListPresenter, BlueprintLis
         view_back.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_bottom_to_top_more_slow))
     }
 
-    override fun onShowLoading() {
-        showLoading()
-    }
-
-    override fun onDismissLoading() {
-        dismissLoading()
-    }
-
-    override fun onSuccess(bean: BlueprintBean, isLoadMoreEnabled: Boolean) {
+    override fun whenLoadSuccess(bean: BlueprintBean) {
         countTView.text = String.format(getString(R.string.text_program_count, bean.pageTotal))
-        hideDefaultPage()
-        if (refreshLayout.visibility != View.VISIBLE) {
-            refreshLayout.visibility = View.VISIBLE
-        }
-        refreshLayout.finishLoadMore()
-        refreshLayout.setEnableLoadMore(isLoadMoreEnabled)
     }
 
-    override fun onNoResults() {
-        refreshLayout.visibility = View.GONE
-        onNoResult()
-    }
-
-    override fun onFailure(failReason: String?, showErrorPage: Boolean) {
-        refreshLayout.finishLoadMore()
-        if (showErrorPage) {
-            countTView.text = String.format(getString(R.string.text_program_count, "0"))
-            refreshLayout.visibility = View.GONE
-            onNetworkError(failReason)
-        } else {
-            if (refreshLayout.visibility != View.VISIBLE) {
-                refreshLayout.visibility = View.VISIBLE
-            }
-            showShortToast(failReason)
-        }
+    override fun whenLoadError(failReason: String?) {
+        countTView.text = String.format(getString(R.string.text_program_count, "0"))
     }
 
     override fun onPictureItemClick(id: String?) {

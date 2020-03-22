@@ -35,7 +35,7 @@ class BlueprintInfoPresenter : BasePresenter<BlueprintModel, BlueprintInfoView>(
     private inner class PicturePreviewAdapter(context: Context, images: MutableList<String>) :
         BasePagerAdapter<String>(context, images) {
 
-        override fun getLayoutResourceId(): Int = R.layout.item_picture_preview
+        override fun getLayoutResourceId(): Int = R.layout.item_blueprint_info
         override fun convert(convertView: View, bean: String, position: Int) {
             /**
              * 如果想设置图片固定大小，又想保持图片宽高比
@@ -44,10 +44,10 @@ class BlueprintInfoPresenter : BasePresenter<BlueprintModel, BlueprintInfoView>(
             2)设置ImageView的maxWidth和maxHeight
             3)设置adjustViewBounds为true；
              */
-            Glide.with(context).load(dataList[position]).into(convertView.findViewById(R.id.iv_pic))
             val imageView = convertView.findViewById<ImageView>(R.id.iv_pic)
-            Glide.with(context).load(dataList[position]).override(mResourceWidth, mResourceHeight)
-                .into(imageView)
+            imageView.maxWidth = mResourceWidth
+            imageView.maxHeight = mResourceHeight
+            Glide.with(context).load(dataList[position]).into(imageView)
         }
     }
 

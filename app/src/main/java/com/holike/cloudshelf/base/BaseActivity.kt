@@ -7,11 +7,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
@@ -23,6 +19,7 @@ import androidx.core.content.ContextCompat
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.dialog.LoadingDialog
+import com.holike.cloudshelf.widget.CustomToast
 import pony.xcode.system.SystemTintHelper
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -30,8 +27,8 @@ abstract class BaseActivity : AppCompatActivity() {
     companion object {
         @Suppress("unused")
         const val EXTRA_DATA = "extra-data"
-        const val TOAST_GRAVITY = Gravity.BOTTOM or Gravity.END
     }
+
     /*加载loading对话框*/
     private var mLoadingDialog: Dialog? = null
     //自定义toast 解决频繁显示问题
@@ -81,7 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected open fun setup(savedInstanceState: Bundle?) {}
 
-    protected open fun createPresenter(){}
+    internal open fun createPresenter() {}
 
     open fun showLoading() {
         dismissLoading()
@@ -100,7 +97,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun showShortToast(@StringRes resId: Int) {
-        showShortToast(resId, TOAST_GRAVITY)
+        showShortToast(resId, CustomToast.DEFAULT_GRAVITY)
     }
 
     open fun showShortToast(@StringRes resId: Int, gravity: Int) {
@@ -108,7 +105,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun showShortToast(text: CharSequence?) {
-        showShortToast(text, TOAST_GRAVITY)
+        showShortToast(text, CustomToast.DEFAULT_GRAVITY)
     }
 
     open fun showShortToast(text: CharSequence?, gravity: Int) {
@@ -116,7 +113,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun showLongToast(@StringRes resId: Int) {
-        showLongToast(resId, TOAST_GRAVITY)
+        showLongToast(resId, CustomToast.DEFAULT_GRAVITY)
     }
 
     open fun showLongToast(@StringRes resId: Int, gravity: Int) {
@@ -124,7 +121,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun showLongToast(text: CharSequence?) {
-        showLongToast(text,TOAST_GRAVITY)
+        showLongToast(text, CustomToast.DEFAULT_GRAVITY)
     }
 
     open fun showLongToast(text: CharSequence?, gravity: Int) {
@@ -133,19 +130,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
     open fun showToast(text: CharSequence?, gravity: Int, duration: Int) {
         if (TextUtils.isEmpty(text)) return
+        //先取消在实例化，避免频繁显示
         mToast?.let {
             it.cancel()
             mToast = null
         }
-        mToast = Toast(this).apply {
-            val view = LayoutInflater.from(this@BaseActivity).inflate(R.layout.include_custom_toast, FrameLayout(this@BaseActivity), false)
-            view.findViewById<TextView>(R.id.toast_view).text = text
-            setView(view)
-            setDuration(duration)
-            setMargin(0f, 0f)
-            setGravity(gravity, 0, 0)
-            show()
-        }
+        mToast = CustomToast.obtain(this, text, duration, gravity).apply { show() }
     }
 
     /*获取drawable*/
@@ -224,14 +214,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun onNoResult(@DrawableRes iconRes: Int, text: CharSequence?) {
-        val defaultPage = findViewById<View>(R.id.vg_default_page)
-        defaultPage?.let {
-            it.visibility = View.VISIBLE
-            val centerTView = it.findViewById<TextView>(R.id.centerTView)
-            centerTView.setCompoundDrawablesWithIntrinsicBounds(null, getDrawableCompat(iconRes), null, null)
-            centerTView.text = if (text.isNullOrEmpty()) getString(R.string.text_no_result) else text
-            it.findViewById<TextView>(R.id.refreshTView).visibility = View.GONE
-        }
+        DefaultPageHelper.noResult(this, iconRes, text)
     }
 
     fun onNetworkError() {
@@ -240,29 +223,18 @@ abstract class BaseActivity : AppCompatActivity() {
 
     //网络异常、请求失败等 缺省页
     fun onNetworkError(failReason: CharSequence?) {
-        val defaultPage = findViewById<View>(R.id.vg_default_page)
-        defaultPage?.let { dePage ->
-            dePage.visibility = View.VISIBLE
-            val centerTView = dePage.findViewById<TextView>(R.id.centerTView)
-            centerTView.text = if (failReason.isNullOrEmpty()) getString(R.string.text_network_error) else failReason
-            val refreshTView = dePage.findViewById<TextView>(R.id.refreshTView)
-            refreshTView.visibility = View.VISIBLE
-            refreshTView.setOnClickListener {
-                dePage.visibility = View.GONE
-                onReload()
-            }
-        }
+        DefaultPageHelper.noNetwork(this, R.mipmap.pic_emptypage_nonenetwork, failReason)
     }
 
+    //隐藏缺省页
     fun hideDefaultPage() {
-        findViewById<View>(R.id.vg_default_page)?.visibility = View.GONE
+        DefaultPageHelper.hide(this)
     }
 
     //重试回调
     open fun onReload() {
 
     }
-
 
     override fun onDestroy() {
         mLoadingDialog?.dismiss()

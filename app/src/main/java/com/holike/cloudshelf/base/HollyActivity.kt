@@ -10,10 +10,12 @@ abstract class HollyActivity<P : BasePresenter<*, V>, V : BaseView> : BaseActivi
 
     protected lateinit var mPresenter: P
 
+    //通过泛型参数创建presenter对象
     override fun createPresenter() {
         try {
             mPresenter = (GenericsUtils.getGenericsSuperclassType(javaClass) as Class<P>).newInstance()
             if (this is BaseView) {
+                //绑定view
                 mPresenter.register(this as V)
             }
         } catch (e: Exception) {
@@ -22,6 +24,7 @@ abstract class HollyActivity<P : BasePresenter<*, V>, V : BaseView> : BaseActivi
     }
 
     override fun onDestroy() {
+        //解绑view
         mPresenter.unregister()
         super.onDestroy()
     }

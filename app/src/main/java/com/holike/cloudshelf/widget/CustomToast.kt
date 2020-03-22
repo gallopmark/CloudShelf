@@ -8,11 +8,13 @@ import android.widget.TextView
 import android.widget.Toast
 import com.holike.cloudshelf.R
 
-
+//自定义toast 默认显示在右下角
 class CustomToast {
 
     companion object {
-        fun showToast(context: Context, text: CharSequence?, duration: Int) {
+        const val DEFAULT_GRAVITY = Gravity.BOTTOM or Gravity.END
+        //获取toast实例
+        fun obtain(context: Context, text: CharSequence?, duration: Int, gravity: Int): Toast {
             val toast = Toast(context)
             val view = LayoutInflater.from(context)
                 .inflate(R.layout.include_custom_toast, FrameLayout(context), false)
@@ -22,8 +24,13 @@ class CustomToast {
             }
             toast.duration = duration
             toast.setMargin(0f, 0f)
-            toast.setGravity(Gravity.BOTTOM or Gravity.END, 0, 0)
-            toast.show()
+            toast.setGravity(gravity, 0, 0)
+            return toast
+        }
+
+        //显示toast
+        fun showToast(context: Context, text: CharSequence?, duration: Int) {
+            obtain(context, text, duration, DEFAULT_GRAVITY).show()
         }
     }
 
