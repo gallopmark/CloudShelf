@@ -19,7 +19,7 @@ class UniversalDialog(context: Context) : CommonDialog(context, R.style.AppDialo
     private var mRightClickListener: OnViewClickListener? = null
 
     override fun getLayoutResourceId(): Int = R.layout.dialog_universal
-
+    override fun getWidth(): Int = mContext.resources.getDimensionPixelSize(R.dimen.dp_270)
     fun title(@StringRes titleId: Int): UniversalDialog {
         return title(mContext.getString(titleId))
     }

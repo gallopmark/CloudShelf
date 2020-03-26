@@ -1,10 +1,10 @@
 <resources>
     <string name="sign_out">退出账号</string>
+    <string name="sign_out_message">确定要退出吗？</string>
     <string name="text_cancel">\u3000取消\u3000</string>
     <string name="text_confirm">\u3000确定\u3000</string>
     <string name="text_cancel2">取消</string>
     <string name="text_finish">完成</string>
-    <string name="video_loading_failed">视频加载失败</string>
 
     <string name="http_exception">请求失败，请稍后再试！</string>
     <string name="socket_timeout_exception">连接超时，请检查您的网络状态，稍后重试！</string>
@@ -23,7 +23,6 @@
     <string name="text_Iknow">我知道了</string>
     <string name="text_back">返回</string>
     <string name="text_product_catalog">产品大全</string>
-    <string name="text_wechat_scan">微信扫一扫</string>
     <string name="text_program_library">方案库</string>
 
     <string name="text_network_error">网络开小差啦~ 请点击刷新试试</string>
@@ -42,7 +41,6 @@
 
     <string name="text_preview_index">当前第%d/%d张</string>
     <string name="text_bleached_house">晒晒我家</string>
-    <string name="text_housing_status">房屋情况：</string>
     <string name="text_current_position">当前定位：%s</string>
     <string name="text_tips_search_house">找不到小区？试一试搜索吧</string>
     <string name="text_search_my_home">搜搜我家</string>
@@ -52,4 +50,7 @@
     <string name="hint_input_city">请输入城市名</string>
     <string name="text_locating">正在定位…</string>
     <string name="text_locate_failed">定位失败</string>
+    <string name="text_tips_area">面积：%s㎡</string>
+    <string name="text_tips_houseType">户型：%s</string>
+    <string name="text_tips_budget">预算：%s</string>
 </resources>

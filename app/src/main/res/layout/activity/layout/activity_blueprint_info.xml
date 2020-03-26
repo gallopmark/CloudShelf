@@ -5,99 +5,138 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:paddingLeft="@dimen/dp_35"
-    android:paddingTop="@dimen/dp_40"
     android:paddingRight="@dimen/dp_35"
-    android:paddingBottom="@dimen/dp_40"
     tools:ignore="ContentDescription">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
 
-        <LinearLayout
+        <include
+            layout="@layout/include_miniqr_layout"
             android:layout_width="@dimen/dp_80"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|start"
-            android:background="@drawable/bg_white_corners2dp"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_gravity="center|start" />
 
-            <ImageView
-                android:id="@+id/miniQrUrlIView"
-                android:layout_width="@dimen/dp_60"
-                android:layout_height="@dimen/dp_60"
-                android:layout_marginTop="@dimen/dp_10" />
+        <FrameLayout
+            android:id="@+id/pictureContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/col_20">
 
-            <TextView
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/previewVP"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
+
+            <LinearLayout
+                android:id="@+id/infoLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_4"
-                android:layout_marginBottom="@dimen/dp_4"
-                android:text="@string/text_scan_code_view_scheme"
-                android:textColor="@color/col_06"
-                android:textSize="@dimen/sp_8" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/centerLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@color/col_19"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/dp_60"
-            android:paddingBottom="@dimen/dp_10"
-            android:paddingTop="@dimen/dp_30"
-            android:paddingRight="@dimen/dp_60">
-
-            <FrameLayout
-                android:id="@+id/pictureFL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/col_20">
-
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/previewVP"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                android:layout_gravity="bottom"
+                android:background="@drawable/bg_gradient"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dp_16"
+                android:paddingRight="@dimen/dp_16"
+                android:paddingBottom="@dimen/dp_10">
 
                 <TextView
                     android:id="@+id/titleTView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/bg_gradient"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/dp_12"
-                    android:paddingTop="@dimen/dp_24"
-                    android:paddingRight="@dimen/dp_12"
-                    android:paddingBottom="@dimen/dp_24"
                     android:textColor="@color/col_03"
                     android:textSize="@dimen/sp_18" />
-            </FrameLayout>
 
-            <TextView
-                android:id="@+id/houseInfoTView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_20"
-                android:textColor="@color/col_03"
-                android:textSize="@dimen/sp_16" />
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/flexBoxLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:alignContent="flex_start"
+                    app:alignItems="center"
+                    app:flexDirection="row"
+                    app:flexWrap="wrap"
+                    app:justifyContent="flex_start">
 
-            <TextView
-                android:id="@+id/deliverTView"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_marginTop="@dimen/dp_16"
-                android:ellipsize="end"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_12" />
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/areaTView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:background="@drawable/bg_col24_corners20dp"
+                        android:paddingLeft="@dimen/dp_10"
+                        android:paddingTop="@dimen/dp_4"
+                        android:paddingRight="@dimen/dp_10"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/houseTypeTView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:background="@drawable/bg_col24_corners20dp"
+                        android:paddingLeft="@dimen/dp_10"
+                        android:paddingTop="@dimen/dp_4"
+                        android:paddingRight="@dimen/dp_10"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/budgetTView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:background="@drawable/bg_col24_corners20dp"
+                        android:paddingLeft="@dimen/dp_10"
+                        android:paddingTop="@dimen/dp_4"
+                        android:paddingRight="@dimen/dp_10"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/addressTView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginEnd="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:background="@drawable/bg_col24_corners20dp"
+                        android:paddingLeft="@dimen/dp_10"
+                        android:paddingTop="@dimen/dp_4"
+                        android:paddingRight="@dimen/dp_10"
+                        android:paddingBottom="@dimen/dp_4"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_12"
+                        android:visibility="gone" />
+                </com.google.android.flexbox.FlexboxLayout>
+
+                <TextView
+                    android:id="@+id/deliverTView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:ellipsize="end"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_12" />
+            </LinearLayout>
+        </FrameLayout>
 
         <include
             layout="@layout/include_backtrack"
@@ -106,48 +145,14 @@
             android:layout_gravity="end|center" />
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/bottomLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dp_24"
-        android:visibility="invisible">
-
-        <ImageView
-            android:id="@+id/preIView"
-            android:layout_width="@dimen/dp_16"
-            android:layout_height="@dimen/dp_32"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_details_left_sel" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bottomRView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dp_40"
-            android:layout_marginLeft="@dimen/dp_40"
-            android:layout_marginEnd="@dimen/dp_40"
-            android:layout_marginRight="@dimen/dp_40"
-            android:layout_weight="1"
-            android:orientation="horizontal"
-            android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-        <ImageView
-            android:id="@+id/nextIView"
-            android:layout_width="@dimen/dp_16"
-            android:layout_height="@dimen/dp_32"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_details_right_sel" />
-    </LinearLayout>
+    <include layout="@layout/include_bottom_images_layout" />
 
     <TextView
         android:id="@+id/bottomTView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:layout_marginTop="@dimen/dp_16"
         android:textColor="@color/col_03"
         android:textSize="@dimen/sp_10" />

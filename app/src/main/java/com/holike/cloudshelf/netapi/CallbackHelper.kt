@@ -38,7 +38,9 @@ class CallbackHelper {
                         CurrentApp.getInstance().backToHome()
                         callBack.onFailure(code, MyJsonParser.getMsg(s))
                     }
-                    else -> callBack.onFailure(code, MyJsonParser.getMsg(s))
+                    else -> {
+                        callBack.onFailure(code, MyJsonParser.getMsg(s))
+                    }
                 }
             }
             callBack.onCompleted()

@@ -53,6 +53,7 @@ class CurrentApp : MultiDexApplication() {
     private var mScreenWidth: Int = 3840 //屏幕宽度
     private var mScreenHeight: Int = 2160 //屏幕高度
     private var mMaxPixels: Int = mScreenWidth.coerceAtLeast(mScreenHeight)  //取宽度、高度的最大值
+    private var mMinPixels: Int = mScreenWidth.coerceAtMost(mScreenHeight)
 
     companion object {
 
@@ -79,6 +80,7 @@ class CurrentApp : MultiDexApplication() {
             mScreenWidth = outMetrics.widthPixels
             mScreenHeight = outMetrics.heightPixels
             mMaxPixels = mScreenWidth.coerceAtLeast(mScreenHeight)
+            mMinPixels = mScreenWidth.coerceAtMost(mScreenHeight)
         }
     }
 
@@ -102,6 +104,8 @@ class CurrentApp : MultiDexApplication() {
     fun getScreenHeight() = mScreenHeight
 
     fun getMaxPixels() = mMaxPixels
+
+    fun getMinPixels() = mMinPixels
 
     fun putExtra(name: String, obj: Any?) {
         if (mValueMap == null) {

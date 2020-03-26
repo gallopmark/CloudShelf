@@ -9,10 +9,8 @@
     <color name="col_launch">#007AFF</color>
     <color name="white">#ffffffff</color>
     <color name="transparent">#00000000</color>
-    <color name="col_00">#000000</color>
     <color name="col_01">#50000000</color>
     <color name="col_03">#F2F8FF</color>
-    <color name="col_04">#ffffffff</color>
     <color name="col_05">#ffebf0f4</color>
     <color name="col_06">#353636</color>
     <color name="col_07">#A0AAB8</color>
@@ -24,11 +22,10 @@
     <color name="col_13">#50ffffff</color>
     <color name="col_14">#1C2428</color>
     <color name="col_15">#F1F7FC</color>
-    <color name="col_16">#80000000</color>
     <color name="col_17">#001C2428</color>
     <color name="col_18">#a8333333</color>
-    <color name="col_19">#262E36</color>
     <color name="col_20">#1A2025</color>
     <color name="col_21">#ff2b3541</color>
     <color name="col_22">#ff363f4a</color>
+    <color name="col_24">#cc000000</color>
 </resources>

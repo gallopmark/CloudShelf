@@ -22,6 +22,7 @@ import pony.xcode.mvp.BasePresenter
 
 class MainPresenter : BasePresenter<MainModel, MainView>() {
 
+    //登录对话框
     private var mLoginDialog: LoginDialog? = null
     private var mHandler: Handler? = null
 
@@ -150,7 +151,21 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
     }
 
     /*登出*/
-    fun displayLogout() {
+    fun displayLogout(act: MainActivity) {
+        //弹出退出帐号提示窗
+        UniversalDialog(act).title(R.string.sign_out)
+                .message(R.string.sign_out_message)
+                .setLeft(R.string.text_cancel, null)
+                .setRight(R.string.text_confirm, object : UniversalDialog.OnViewClickListener {
+                    override fun onClick(dialog: UniversalDialog, view: View) {
+                        dialog.dismiss()
+                        logout()
+                    }
+                }).show()
+    }
+
+    //执行退出登录操作
+    private fun logout() {
         mModel.doLogout(PreferenceSource.getCliId(), PreferenceSource.getToken(),
                 object : HttpRequestCallback<String>() {
 
@@ -173,6 +188,7 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
         mLoginDialog = null
     }
 
+    //跳转处理
     fun jumpActivity(activity: MainActivity, viewId: Int) {
         when (viewId) {
             R.id.programmeIView -> {
@@ -184,9 +200,10 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
                 activity.openActivity(Intent(activity, ProductCatalogActivity::class.java))
             }
             R.id.searchHomeIView -> {
+                //搜搜我家
                 activity.openActivity(Intent(activity, SoughtHouseActivity::class.java))
             }
-            R.id.shareHomeIv -> {
+            R.id.shareHomeIView -> {
                 //晒晒我家
                 activity.openActivity(Intent(activity, BlueprintListActivity::class.java))
             }

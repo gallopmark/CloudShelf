@@ -57,7 +57,7 @@ class PlotTypeListActivity : RefreshActivity<PlotTypeListPresenter, PlotTypeList
     }
 
     override fun onItemClick(id: String?) {
-
+        PlotTypeInfoActivity.open(this, id)
     }
 
     override fun onReload() {

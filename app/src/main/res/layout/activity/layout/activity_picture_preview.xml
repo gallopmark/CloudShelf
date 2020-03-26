@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,29 +17,7 @@
         android:baselineAligned="false"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="@dimen/dp_80"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_white_corners2dp"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/miniQrUrlIView"
-                android:layout_width="@dimen/dp_60"
-                android:layout_height="@dimen/dp_60"
-                android:layout_marginTop="@dimen/dp_10" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_4"
-                android:layout_marginBottom="@dimen/dp_4"
-                android:text="@string/text_scan_code_view_scheme"
-                android:textColor="@color/col_06"
-                android:textSize="@dimen/sp_8" />
-        </LinearLayout>
+        <include layout="@layout/include_miniqr_layout" />
 
         <FrameLayout
             android:layout_width="0dp"
@@ -77,7 +54,6 @@
             android:orientation="vertical">
 
             <pony.xcode.widget.DrawableTextView
-                android:id="@+id/viewVideo"
                 android:layout_width="@dimen/dp_80"
                 android:layout_height="@dimen/dp_80"
                 android:layout_gravity="center"
@@ -92,7 +68,6 @@
                 android:visibility="gone" />
 
             <pony.xcode.widget.DrawableTextView
-                android:id="@+id/viewPanoramic"
                 android:layout_width="@dimen/dp_80"
                 android:layout_height="@dimen/dp_80"
                 android:layout_gravity="center"
@@ -110,40 +85,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/dp_24">
-
-        <ImageView
-            android:id="@+id/preIView"
-            android:layout_width="@dimen/dp_16"
-            android:layout_height="@dimen/dp_32"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_details_left_sel" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bottomRView"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dp_40"
-            android:layout_marginLeft="@dimen/dp_40"
-            android:layout_marginEnd="@dimen/dp_40"
-            android:layout_marginRight="@dimen/dp_40"
-            android:orientation="horizontal"
-            android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-        <ImageView
-            android:id="@+id/nextIView"
-            android:layout_width="@dimen/dp_16"
-            android:layout_height="@dimen/dp_32"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_details_right_sel" />
-    </LinearLayout>
+    <include layout="@layout/include_bottom_images_layout" />
 
     <TextView
         android:id="@+id/bottomTView"

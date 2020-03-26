@@ -2,13 +2,14 @@ package com.holike.cloudshelf.fragment.video
 
 import android.os.Bundle
 import android.view.View
-import cn.jzvd.Jzvd
+import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.base.BaseFragment
-import com.holike.cloudshelf.widget.ExoMedia
 import kotlinx.android.synthetic.main.fragment_exoplayer.*
+import pony.xcode.media.exo.ExoMediaInterface
+import pony.xcode.media.jz.JZvd
 
 
 class ExoPlayerFragment : BaseFragment() {
@@ -40,19 +41,25 @@ class ExoPlayerFragment : BaseFragment() {
     }
 
     private fun initPlayer(thumbUrl: String?, videoUrl: String?) {
-        videoPlayView.setUp(videoUrl, "", Jzvd.SCREEN_NORMAL, ExoMedia::class.java)
-        Glide.with(this).load(thumbUrl)
+        videoView.setFullscreenEnabled(false)
+        videoView.setUp(videoUrl,"",JZvd.SCREEN_NORMAL, ExoMediaInterface::class.java)
+        Glide.with(mContext).load(thumbUrl)
             .apply(RequestOptions().skipMemoryCache(true).error(R.mipmap.ic_video_default))
-            .into(videoPlayView.thumbImageView)
+            .into(videoView.thumbImageView)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        JZvd.goOnPlayOnResume()
     }
 
     override fun onPause() {
         super.onPause()
-        Jzvd.goOnPlayOnPause()
+        JZvd.goOnPlayOnPause()
     }
 
     override fun onDestroyView() {
-        Jzvd.releaseAllVideos()
+        JZvd.releaseAllVideos()
         super.onDestroyView()
     }
 }

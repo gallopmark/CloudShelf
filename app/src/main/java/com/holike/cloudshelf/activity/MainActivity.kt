@@ -24,7 +24,7 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
 
     override fun setup(savedInstanceState: Bundle?) {
         mPresenter.initLoginState(this)
-        mPresenter.initClickViews(this, programmeIView, productsIView, searchHomeIView, shareHomeIv)
+        mPresenter.initClickViews(this, programmeIView, productsIView, searchHomeIView, shareHomeIView)
         mPresenter.getAdvertising()
         mDisposable = EventBus.getInstance().toObservable(MessageEvent::class.java).subscribe {
             if (TextUtils.equals(it.type, EventType.TYPE_LOGIN_INVALID)) {  //收到被挤出登录的通知
@@ -59,7 +59,7 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
     override fun onLoginSuccess(message: String?) {
         showShortToast(message)
         logoutTextView.visibility = View.VISIBLE
-        logoutTextView.setOnClickListener { mPresenter.displayLogout() }
+        logoutTextView.setOnClickListener { mPresenter.displayLogout(this) }
     }
 
     override fun onLoginFailure(code: Int, failReason: String?) {
@@ -76,6 +76,11 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
 
     override fun onLogoutFailure(failReason: String?) {
         showShortToast(failReason)
+    }
+
+    override fun finish() {
+        setResult(RESULT_OK)
+        super.finish()
     }
 
     override fun onDestroy() {

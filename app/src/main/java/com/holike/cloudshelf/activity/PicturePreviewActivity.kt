@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.AbsoluteSizeSpan
+import android.view.View
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -14,6 +15,8 @@ import com.holike.cloudshelf.bean.TableModelDetailBean
 import com.holike.cloudshelf.mvp.presenter.GeneralPresenter
 import com.holike.cloudshelf.mvp.view.GeneralView
 import kotlinx.android.synthetic.main.activity_picture_preview.*
+import kotlinx.android.synthetic.main.include_bottom_images_layout.*
+import kotlinx.android.synthetic.main.include_miniqr_layout.*
 
 
 /*详情展示 多模块公用*/
@@ -66,6 +69,7 @@ class PicturePreviewActivity : HollyActivity<GeneralPresenter, GeneralView>(), G
     }
 
     override fun onTableModelResponse(bean: TableModelDetailBean) {
+        bottomLayout.visibility = View.VISIBLE
         titleTView.text = bean.title
         Glide.with(this).load(bean.miniQrCode).apply(RequestOptions().error(R.mipmap.ic_wxacode)).into(miniQrUrlIView)
         if (bean.obtainImages().size > 7) {

@@ -13,6 +13,7 @@ import com.holike.cloudshelf.mvp.presenter.ProductCatalogPresenter
 import com.holike.cloudshelf.mvp.view.ProductCatalogView
 import kotlinx.android.synthetic.main.activity_product_catalog.*
 import kotlinx.android.synthetic.main.include_backtrack.*
+import kotlinx.android.synthetic.main.include_miniqr_layout.*
 
 //产品大全
 class ProductCatalogActivity : HollyActivity<ProductCatalogPresenter, ProductCatalogView>(), ProductCatalogView {

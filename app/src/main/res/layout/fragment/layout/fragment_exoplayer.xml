@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.holike.cloudshelf.widget.ExoPlayView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/videoPlayView"
+<pony.xcode.media.jz.JZVideoView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/videoView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center" />

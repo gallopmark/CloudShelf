@@ -32,6 +32,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     /*加载loading对话框*/
     private var mLoadingDialog: Dialog? = null
+
     //自定义toast 解决频繁显示问题
     private var mToast: Toast? = null
 
@@ -171,22 +172,17 @@ abstract class BaseActivity : AppCompatActivity() {
     /*启动activity，带bundle参数*/
     open fun openActivity(clz: Class<out Activity?>, extras: Bundle?) {
         val intent = Intent(this, clz)
-        if (extras != null) {
-            intent.putExtras(extras)
-        }
+        extras?.let { intent.putExtras(it) }
         startActivity(intent)
     }
 
     open fun openActivityForResult(clz: Class<out Activity>, @IntRange(from = 0, to = 65535) requestCode: Int) {
-        openActivityForResult(clz, requestCode)
+        openActivityForResult(clz, requestCode, null)
     }
 
-
-    open fun openActivityForResult(clz: Class<out Activity>, extras: Bundle?, @IntRange(from = 0, to = 65535) requestCode: Int) {
+    open fun openActivityForResult(clz: Class<out Activity>, @IntRange(from = 0, to = 65535) requestCode: Int, extras: Bundle?) {
         val intent = Intent(this, clz)
-        if (extras != null) {
-            intent.putExtras(extras)
-        }
+        extras?.let { intent.putExtras(it) }
         startActivityForResult(intent, requestCode)
     }
 

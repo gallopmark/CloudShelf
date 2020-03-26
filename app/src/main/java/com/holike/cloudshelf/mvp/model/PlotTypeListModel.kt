@@ -11,6 +11,6 @@ class PlotTypeListModel : ApiModel() {
     fun getPlotTypeList(id: String?, pageNo: Int, pageSize: Int, callback: HttpRequestCallback<PlotTypeBean>) {
         remove("plot-type-list")
         put("plot-type-list", CallbackHelper.deliveryResult(NetClient.getInstance().getNetApi()
-                .getHouseTypeById(pageNo.toString(), pageSize.toString(), id), callback))
+                .getHouseTypeListById(pageNo.toString(), pageSize.toString(), id), callback))
     }
 }

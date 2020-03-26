@@ -93,7 +93,7 @@
 
             <!--晒晒我家-->
             <ImageView
-                android:id="@+id/shareHomeIv"
+                android:id="@+id/shareHomeIView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp_20"

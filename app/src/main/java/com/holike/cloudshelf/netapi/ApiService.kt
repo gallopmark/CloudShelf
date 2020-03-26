@@ -70,5 +70,10 @@ interface ApiService {
     /*搜搜我家户型列表(分页)*/
     @FormUrlEncoded
     @POST("/cloud/searchNearby/getHouseTypeByCommunityId")
-    fun getHouseTypeById(@Field("pageNo") pageNo: String, @Field("pageSize") pageSize: String, @Field("communityId") communityId: String?): Observable<String?>
+    fun getHouseTypeListById(@Field("pageNo") pageNo: String, @Field("pageSize") pageSize: String, @Field("communityId") communityId: String?): Observable<String?>
+
+    /*搜搜我家户型详情查询*/
+    @FormUrlEncoded
+    @POST("/cloud/searchNearby/houseType/detail/getHouseTypeInfo")
+    fun getHouseTypeInfoById(@Field("houseTypeId") houseTypeId: String?): Observable<String?>
 }

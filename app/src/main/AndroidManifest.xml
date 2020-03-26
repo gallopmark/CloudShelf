@@ -21,10 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="q">
+
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.SplashActivity"
             android:configChanges="orientation|screenSize|layoutDirection"
-            android:launchMode="singleTask">
+            android:screenOrientation="landscape"
+            tools:ignore="LockedOrientationActivity">
             <!--设置configChanges属性 保持activity横竖屏切换时状态不变，避免onCreate执行多次-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,6 +34,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize|layoutDirection"
+            android:screenOrientation="landscape"
+            android:launchMode="singleTask"
+            tools:ignore="LockedOrientationActivity" />
+
         <!--产品大全-->
         <activity android:name=".activity.ProductCatalogActivity" />
 
@@ -49,6 +59,14 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--小区户型列表-->
         <activity android:name=".activity.PlotTypeListActivity" />
+        <!--小区户型详情查询-->
+        <activity android:name=".activity.PlotTypeInfoActivity" />
+        <!--主要用于全景图预览-->
+        <activity android:name=".activity.WebViewActivity" />
+        <activity
+            android:name=".activity.VideoPlayerActivity"
+            android:configChanges="orientation|screenSize|layoutDirection" />
+
         <!--城市选择-->
         <activity
             android:name=".activity.CityPickerActivity"

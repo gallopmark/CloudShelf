@@ -1,0 +1,43 @@
+package tv.danmaku.ijk.media.exo;
+
+import android.content.Context;
+import android.net.Uri;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
+import com.google.android.exoplayer2.upstream.DataSource;
+
+import tv.danmaku.ijk.media.exo.factory.JDefaultDataSourceFactory;
+import tv.danmaku.ijk.media.exo.utils.VideoPlayUtils;
+
+public class WholeMediaSource {
+    @NonNull
+    public static MediaSource initMediaSource(Context context, @NonNull Uri uri) {
+        return initMediaSource(context, uri, null);
+    }
+
+    @NonNull
+    public static MediaSource initMediaSource(Context context, @NonNull Uri uri, @Nullable DataSource.Factory factory) {
+        int streamType = VideoPlayUtils.inferContentType(uri);
+        if (factory == null) {
+            factory = new JDefaultDataSourceFactory(context);
+        }
+        switch (streamType) {
+            case C.TYPE_SS:
+                return new SsMediaSource.Factory(factory).createMediaSource(uri);
+            case C.TYPE_DASH:
+                return new DashMediaSource.Factory(factory).createMediaSource(uri);
+            case C.TYPE_HLS:
+                return new HlsMediaSource.Factory(factory).createMediaSource(uri);
+            default:
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(uri);
+        }
+    }
+}

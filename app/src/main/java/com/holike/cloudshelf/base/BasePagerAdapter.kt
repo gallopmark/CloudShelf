@@ -5,9 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
+
 //viewPager baseAdapter
 abstract class BasePagerAdapter<T>(var context: Context, var dataList: MutableList<T>) : PagerAdapter() {
-    var mInflater = LayoutInflater.from(context)
+    val mInflater: LayoutInflater = LayoutInflater.from(context)
     override fun getCount(): Int = dataList.size
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
