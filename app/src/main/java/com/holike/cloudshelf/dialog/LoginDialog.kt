@@ -6,8 +6,8 @@ import android.widget.EditText
 import android.widget.TextView
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.util.CheckUtils
-import com.holike.cloudshelf.util.ClearEditTextUtil
-import com.holike.cloudshelf.util.CountTimerHelper
+import com.holike.cloudshelf.helper.ClearEditTextHelper
+import com.holike.cloudshelf.helper.CountTimerHelper
 import pony.xcode.base.CommonDialog
 
 //登录对话框
@@ -32,14 +32,14 @@ class LoginDialog(context: Context) : CommonDialog(context, R.style.AppDialogSty
         val codeEdt = contentView.findViewById<EditText>(R.id.et_code)
         mGetCodeTextView = contentView.findViewById(R.id.tv_getCode)
         val loginTxt = contentView.findViewById<TextView>(R.id.tv_login)
-        ClearEditTextUtil.setTargetView(phoneEdt, object : ClearEditTextUtil.TextChangeListener {
+        ClearEditTextHelper.setTargetView(phoneEdt, object : ClearEditTextHelper.TextChangeListener {
             override fun textChanged(isEmpty: Boolean) {
                 mPhoneNumberEnabled = !isEmpty && CheckUtils.isMobile(phoneEdt.text.toString())
                 loginTxt.isEnabled = !codeEdt.text?.toString().isNullOrEmpty() && mPhoneNumberEnabled
                 mGetCodeTextView?.isEnabled = !mCountDowning && mPhoneNumberEnabled  //输入了验证码 获取验证码按钮才能点击
             }
         })
-        ClearEditTextUtil.setTargetView(codeEdt, object : ClearEditTextUtil.TextChangeListener {
+        ClearEditTextHelper.setTargetView(codeEdt, object : ClearEditTextHelper.TextChangeListener {
             override fun textChanged(isEmpty: Boolean) {
                 loginTxt.isEnabled = mPhoneNumberEnabled && !isEmpty
             }

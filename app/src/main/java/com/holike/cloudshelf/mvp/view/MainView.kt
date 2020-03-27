@@ -1,12 +1,15 @@
 package com.holike.cloudshelf.mvp.view
 
 import com.holike.cloudshelf.bean.AdvertisingBean
+import com.holike.cloudshelf.bean.VersionInfoBean
 import pony.xcode.mvp.BaseView
 
 
 interface MainView : BaseView {
 
     fun onAdvertisingSuccess(bean: AdvertisingBean)
+
+    fun onVersionUpdate(bean: VersionInfoBean)
 
     fun onClickAnimationEnd(viewId: Int)
 

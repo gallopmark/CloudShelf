@@ -12,7 +12,6 @@ class CheckUtils {
         }
     }
 
-
     /*正则表达式：要求6位以上，只能有大小写字母和数字，并且大小写字母和数字都要有。*/
     fun isPassword(source: String): Boolean {
         if (TextUtils.isEmpty(source)) return false

@@ -7,24 +7,33 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import cn.jpush.android.api.JPushInterface
+import com.holike.cloudshelf.BuildConfig
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.activity.*
 import com.holike.cloudshelf.bean.AdvertisingBean
 import com.holike.cloudshelf.bean.LoginBean
+import com.holike.cloudshelf.bean.VersionInfoBean
 import com.holike.cloudshelf.dialog.LoginDialog
 import com.holike.cloudshelf.dialog.UniversalDialog
+import com.holike.cloudshelf.dialog.VersionUpdateDialog
 import com.holike.cloudshelf.fragment.video.ExoPlayerFragment
 import com.holike.cloudshelf.local.PreferenceSource
 import com.holike.cloudshelf.mvp.model.MainModel
 import com.holike.cloudshelf.mvp.view.MainView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import pony.xcode.mvp.BasePresenter
+import pony.xcode.utils.AppUtils
 
 class MainPresenter : BasePresenter<MainModel, MainView>() {
 
+    companion object {
+        private const val RETRY_TIME = 3000L
+    }
+
     //登录对话框
     private var mLoginDialog: LoginDialog? = null
-    private var mHandler: Handler? = null
+    private var mVersionUpdateDialog: VersionUpdateDialog? = null
+    private val mHandler: Handler = Handler()
 
     /*检测登录状态*/
     fun initLoginState(activity: MainActivity) {
@@ -111,21 +120,51 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
         mModel.getAdvertising(object : HttpRequestCallback<AdvertisingBean>() {
             override fun onSuccess(result: AdvertisingBean, message: String?) {
                 view?.onAdvertisingSuccess(result)
-                mHandler?.removeCallbacks(mRun)
+                mHandler.removeCallbacks(mRun)
             }
 
             override fun onFailure(code: Int, failReason: String?) {
 //                view?.onAdvertisingFailure(failReason)
                 //加载失败，3秒后自动重试
-                if (mHandler == null) {
-                    mHandler = Handler()
-                }
-                mHandler?.postDelayed(mRun, 3000L)
+                mHandler.removeCallbacks(mRun)
+                mHandler.postDelayed(mRun, RETRY_TIME)
             }
         })
     }
 
     private val mRun = Runnable { getAdvertising() }
+
+    /*获取版本信息*/
+    fun getVersionInfo() {
+        mModel.getVersionInfo(object : HttpRequestCallback<VersionInfoBean>() {
+            override fun onSuccess(result: VersionInfoBean, message: String?) {
+                if (result.obtainVersion() > BuildConfig.VERSION_CODE) {
+                    //服务器的版本号大于当前app版本号  则提示更新
+                    view?.onVersionUpdate(result)
+                }
+            }
+
+            override fun onFailure(code: Int, failReason: String?) {
+                //失败后3秒自动重试
+                mHandler.removeCallbacks(mVersionRun)
+                mHandler.postDelayed(mVersionRun, RETRY_TIME)
+            }
+        })
+    }
+
+    private val mVersionRun = Runnable { getVersionInfo() }
+
+    fun showVersionUpdateDialog(act: MainActivity, bean: VersionInfoBean) {
+        mVersionUpdateDialog?.dismiss()
+        mVersionUpdateDialog = VersionUpdateDialog(act, bean).apply { show() }
+    }
+
+    fun onActivityResult(act: MainActivity, requestCode: Int) {
+        if (requestCode == VersionUpdateDialog.UNKNOWN_APP_REQUEST_CODE
+                && AppUtils.canInstallApk(act)) {
+            mVersionUpdateDialog?.installApk()
+        }
+    }
 
     //动态设置视频播放器的长宽，根据UI图的尺寸比例进行调整
     fun initVideoContainer(activity: MainActivity, videoContainer: FrameLayout, bean: AdvertisingBean) {
@@ -139,23 +178,19 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
             lp.height = videoHeight
             videoContainer.layoutParams = lp
             //https://file.holike.com/miniprogram/test/video/4aa0637b-e062-4419-b9b8-f1d4daa08615.mp4
-            activity.supportFragmentManager.beginTransaction().replace(R.id.videoContainer, ExoPlayerFragment.newInstance(bean.videoUrl, bean.videoPic, bean.title)).commit()
+            activity.supportFragmentManager.beginTransaction().replace(R.id.videoContainer,
+                    ExoPlayerFragment.newInstance(bean.videoUrl, bean.videoPic, bean.title)).commit()
         }
     }
 
     fun expired(activity: MainActivity, message: String?) {
-        UniversalDialog(activity).title(R.string.text_expiration_reminder)
-                .message(message)
-                .setRight(R.string.text_Iknow, null)
-                .show()
+        UniversalDialog(activity).title(R.string.text_expiration_reminder).message(message).setRight(R.string.text_Iknow, null).show()
     }
 
     /*登出*/
     fun displayLogout(act: MainActivity) {
         //弹出退出帐号提示窗
-        UniversalDialog(act).title(R.string.sign_out)
-                .message(R.string.sign_out_message)
-                .setLeft(R.string.text_cancel, null)
+        UniversalDialog(act).title(R.string.sign_out).message(R.string.sign_out_message).setLeft(R.string.text_cancel, null)
                 .setRight(R.string.text_confirm, object : UniversalDialog.OnViewClickListener {
                     override fun onClick(dialog: UniversalDialog, view: View) {
                         dialog.dismiss()
@@ -212,7 +247,8 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
 
     override fun unregister() {
         gcLoginDialog()
-        mHandler?.removeCallbacks(mRun)
+        mVersionUpdateDialog?.dismiss()
+        mHandler.removeCallbacksAndMessages(null)
         super.unregister()
     }
 

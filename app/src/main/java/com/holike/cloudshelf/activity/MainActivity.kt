@@ -1,5 +1,6 @@
 package com.holike.cloudshelf.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -7,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.base.HollyActivity
 import com.holike.cloudshelf.bean.AdvertisingBean
+import com.holike.cloudshelf.bean.VersionInfoBean
 import com.holike.cloudshelf.local.PreferenceSource
 import com.holike.cloudshelf.mvp.presenter.MainPresenter
 import com.holike.cloudshelf.mvp.view.MainView
@@ -26,6 +28,7 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
         mPresenter.initLoginState(this)
         mPresenter.initClickViews(this, programmeIView, productsIView, searchHomeIView, shareHomeIView)
         mPresenter.getAdvertising()
+        mPresenter.getVersionInfo()
         mDisposable = EventBus.getInstance().toObservable(MessageEvent::class.java).subscribe {
             if (TextUtils.equals(it.type, EventType.TYPE_LOGIN_INVALID)) {  //收到被挤出登录的通知
                 logoutTextView.visibility = View.GONE  //隐藏退出登录按钮
@@ -38,6 +41,11 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
     override fun onAdvertisingSuccess(bean: AdvertisingBean) {
         Glide.with(this).load(bean.pic).into(bgImageView)
         mPresenter.initVideoContainer(this, videoContainer, bean)
+    }
+
+    //服务器有新版本的apk 此方法里提示更新
+    override fun onVersionUpdate(bean: VersionInfoBean) {
+        mPresenter.showVersionUpdateDialog(this, bean)
     }
 
     override fun onClickAnimationEnd(viewId: Int) {
@@ -76,6 +84,11 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
 
     override fun onLogoutFailure(failReason: String?) {
         showShortToast(failReason)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        mPresenter.onActivityResult(this, requestCode)
     }
 
     override fun finish() {

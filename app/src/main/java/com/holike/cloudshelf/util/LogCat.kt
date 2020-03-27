@@ -7,7 +7,7 @@ import java.io.StringWriter
 
 class LogCat {
     companion object {
-        private val TAG: String = BuildConfig.VERSION_NAME
+        private const val TAG: String = BuildConfig.VERSION_NAME
         private const val LOG_MAX_LENGTH = 2000
 
         fun i(msg: String?) {

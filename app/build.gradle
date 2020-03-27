@@ -124,7 +124,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.10.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
     //基础工程库
-    implementation 'com.github.gallopmark:BaseLib:1.1.0'
+    implementation 'com.github.gallopmark:BaseLib:1.1.2'
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.5.6'
     implementation 'cn.jiguang.sdk:jcore:2.2.8'

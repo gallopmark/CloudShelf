@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_col08_corners4dp"
+    android:orientation="vertical"
+    android:padding="@dimen/dp_20">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@color/col_06"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_update_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_10"
+        android:gravity="center"
+        android:lineSpacingExtra="@dimen/dp_4"
+        android:textColor="@color/col_06"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/tv_failure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_12"
+        android:textColor="@color/colorAccent"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/update_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/dp_16"
+        android:background="@drawable/shape_button_clickable"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_30"
+        android:paddingTop="@dimen/dp_6"
+        android:paddingRight="@dimen/dp_30"
+        android:paddingBottom="@dimen/dp_6"
+        android:text="@string/text_update_immediately"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_12" />
+
+    <LinearLayout
+        android:id="@+id/updating_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_12"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_40"
+            android:layout_marginLeft="@dimen/dp_40"
+            android:layout_marginEnd="@dimen/dp_40"
+            android:layout_marginRight="@dimen/dp_40"
+            android:maxHeight="@dimen/dp_4"
+            android:minHeight="@dimen/dp_4"
+            android:progressDrawable="@drawable/bg_progressbar" />
+
+        <TextView
+            android:id="@+id/tv_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="@string/text_update_progress"
+            android:textColor="@color/col_26"
+            android:textSize="@dimen/sp_12" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_6"
+            android:text="@string/text_update_warning"
+            android:textColor="@color/col_26"
+            android:textSize="@dimen/sp_12" />
+    </LinearLayout>
+</LinearLayout>

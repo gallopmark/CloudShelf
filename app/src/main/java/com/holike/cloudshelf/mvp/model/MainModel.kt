@@ -2,12 +2,18 @@ package com.holike.cloudshelf.mvp.model
 
 import com.holike.cloudshelf.bean.AdvertisingBean
 import com.holike.cloudshelf.bean.LoginBean
+import com.holike.cloudshelf.bean.VersionInfoBean
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import com.holike.cloudshelf.netapi.NetClient
 
 
 class MainModel : ApiModel() {
 
+    /*获取版本信息*/
+    fun getVersionInfo(callback: HttpRequestCallback<VersionInfoBean>) {
+        remove("get-version")
+        put("get-version", doRequest(NetClient.getInstance().getNetApi().getVersionInfo(), callback))
+    }
 
     /*查询广告位信息*/
     fun getAdvertising(callback: HttpRequestCallback<AdvertisingBean>) {

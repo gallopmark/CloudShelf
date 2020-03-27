@@ -5,25 +5,29 @@ import retrofit2.http.*
 
 
 interface ApiService {
+    /*获取版本信息*/
+    @GET("/cloud/portal/version/getVersionUpdateInfo")
+    fun getVersionInfo(): Observable<String?>
+
     /*首页获取广告位*/
-    @GET("cloud/portal/content")
+    @GET("/cloud/portal/content")
     fun getAdvertising(): Observable<String?>
 
     /*登陆短信验证码*/
-    @GET("cloud/portal/sendSmsCaptcha")
+    @GET("/cloud/portal/sendSmsCaptcha")
     fun getVerificationCode(@Query("phone") phone: String): Observable<String?>
 
     /*登录接口*/
     @FormUrlEncoded
-    @POST("cloud/portal/login")
+    @POST("/cloud/portal/login")
     fun doLogin(@FieldMap fieldMap: HashMap<String, String>): Observable<String?>
 
     /*登出*/
-    @GET("cloud/portal/logout")
+    @GET("/cloud/portal/logout")
     fun doLogout(@Query("cliId") cliId: String, @Query("token") token: String): Observable<String?>
 
     /*产品大全模块列表查询*/
-    @POST("cloud/productDaquan/getPlanContentList")
+    @POST("/cloud/productDaquan/getPlanContentList")
     fun getPlanContentList(): Observable<String?>
 
     /*高德地图web服务 ip定位*/
@@ -32,7 +36,7 @@ interface ApiService {
 
     /*3D万套案例*/
     @FormUrlEncoded
-    @POST("program/getTableModelHouse")
+    @POST("/program/getTableModelHouse")
     fun getTableModeHouse(@FieldMap fieldMap: HashMap<String, String>): Observable<String?>
 
     /*案例详情*/

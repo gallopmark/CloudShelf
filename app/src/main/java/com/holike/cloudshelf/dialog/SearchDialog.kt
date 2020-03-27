@@ -10,7 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
-import com.holike.cloudshelf.util.ClearEditTextUtil
+import com.holike.cloudshelf.helper.ClearEditTextHelper
 import pony.xcode.base.CommonDialog
 
 
@@ -38,7 +38,7 @@ class SearchDialog(context: Context) : CommonDialog(context) {
         val searchEText = contentView.findViewById<EditText>(R.id.searchEText)
         searchEText.requestFocus()
         searchEText.isFocusable = true
-        ClearEditTextUtil.setTargetView(searchEText, object : ClearEditTextUtil.TextChangeListener {
+        ClearEditTextHelper.setTargetView(searchEText, object : ClearEditTextHelper.TextChangeListener {
             override fun textChanged(isEmpty: Boolean) {
                 if (isEmpty) {
                     tipTView.visibility = View.VISIBLE
