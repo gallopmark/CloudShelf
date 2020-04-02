@@ -5,10 +5,7 @@ import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.bean.TableModelDetailBean
 import com.holike.cloudshelf.local.PreferenceSource
-import com.holike.cloudshelf.netapi.CallbackHelper
-import com.holike.cloudshelf.netapi.HttpRequestCallback
-import com.holike.cloudshelf.netapi.MyJsonParser
-import com.holike.cloudshelf.netapi.NetClient
+import com.holike.cloudshelf.netapi.*
 
 
 class GeneralModel : ApiModel() {
@@ -16,7 +13,7 @@ class GeneralModel : ApiModel() {
     fun getTableModelDetail(id: String?, callback: HttpRequestCallback<TableModelDetailBean>) {
         remove("table-model-detail")
         put("table-model-detail", CallbackHelper.deliveryResult(NetClient.getInstance().getNetApi()
-                .getTableModel(id, PreferenceSource.getPhone()), object : HttpRequestCallback<String>() {
+                .getTableModel(ApiService.TABLE_MODEL, id, PreferenceSource.getPhone()), object : HttpRequestCallback<String>() {
             override fun onSuccess(result: String, message: String?) {
                 try {
                     val bean = Gson().fromJson(result, TableModelDetailBean::class.java)

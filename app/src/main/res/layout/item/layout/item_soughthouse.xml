@@ -19,8 +19,7 @@
             android:id="@+id/iv_pic_top"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scaleType="centerCrop" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_name_top"
@@ -55,9 +54,7 @@
             android:id="@+id/iv_pic_bottom"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scaleType="centerCrop"
-            tools:ignore="ContentDescription" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/tv_name_bottom"

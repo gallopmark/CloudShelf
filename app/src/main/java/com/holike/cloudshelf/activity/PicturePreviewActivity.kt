@@ -23,12 +23,20 @@ import kotlinx.android.synthetic.main.include_miniqr_layout.*
 class PicturePreviewActivity : HollyActivity<GeneralPresenter, GeneralView>(), GeneralView {
 
     companion object {
-        const val TYPE_PROGRAM = "type-program"  //方案库类型
-
+        private const val TYPE_PROGRAM = "type-program"  //方案库类型
+        private const val TYPE_PRODUCT = "type-product" //产品大全类型
         //打开方案库详情
         fun openProgramLib(act: BaseActivity, id: String?) {
             val intent = Intent(act, PicturePreviewActivity::class.java).apply {
                 type = TYPE_PROGRAM
+                putExtra("id", id)
+            }
+            act.openActivity(intent)
+        }
+
+        fun openProductClassify(act: BaseActivity, id: String?) {
+            val intent = Intent(act, PicturePreviewActivity::class.java).apply {
+                type = TYPE_PRODUCT
                 putExtra("id", id)
             }
             act.openActivity(intent)
@@ -72,6 +80,12 @@ class PicturePreviewActivity : HollyActivity<GeneralPresenter, GeneralView>(), G
         bottomLayout.visibility = View.VISIBLE
         titleTView.text = bean.title
         Glide.with(this).load(bean.miniQrCode).apply(RequestOptions().error(R.mipmap.ic_wxacode)).into(miniQrUrlIView)
+        if (!bean.viewUrl.isNullOrEmpty()) { //全景url不为空 则显示全景图按钮
+            panoramicTView.visibility = View.VISIBLE
+            panoramicTView.setOnClickListener { WebViewActivity.open(this, bean.viewUrl) }
+        } else {
+            panoramicTView.visibility = View.GONE
+        }
         if (bean.obtainImages().size > 7) {
             val lp = bottomRView.layoutParams as LinearLayout.LayoutParams
             lp.width = getDimensionPixelSize(R.dimen.dp_100) * 6 + getDimensionPixelSize(R.dimen.dp_20) * 6 + getDimensionPixelSize(R.dimen.dp_130)

@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
+import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.adapter.BottomPreviewImageAdapter
 import com.holike.cloudshelf.bean.TableModelDetailBean
 import com.holike.cloudshelf.mvp.model.GeneralModel
 import com.holike.cloudshelf.mvp.view.GeneralView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
+import com.holike.cloudshelf.widget.StereoPagerTransformer
 import pony.xcode.mvp.BasePresenter
 
 
@@ -41,6 +43,8 @@ class GeneralPresenter : BasePresenter<GeneralModel, GeneralView>() {
         }
     }
 
+    private val mBottomImageWidth = CurrentApp.getInstance().resources.getDimensionPixelSize(R.dimen.dp_130)
+    private val mBottomImageHeight = (mBottomImageWidth * 0.68f).toInt()
     private val mPreviewImages = ArrayList<String>()
     private var mPreviewAdapter: PicturePreviewAdapter? = null
     private val mBottomImages = ArrayList<String>()
@@ -49,7 +53,12 @@ class GeneralPresenter : BasePresenter<GeneralModel, GeneralView>() {
     private var mLastVisibleItemPosition = -1
 
     fun initVp(viewPager: ViewPager) {
-        mPreviewAdapter = PicturePreviewAdapter(viewPager.context, mPreviewImages)
+        val context = viewPager.context
+        val pageWidth = CurrentApp.getInstance().getMaxPixels() -
+                context.resources.getDimensionPixelSize(R.dimen.dp_35) * 2 -
+                context.resources.getDimensionPixelSize(R.dimen.dp_80) * 4
+        mPreviewAdapter = PicturePreviewAdapter(context, mPreviewImages)
+        viewPager.setPageTransformer(false, StereoPagerTransformer(pageWidth.toFloat()))
         viewPager.adapter = mPreviewAdapter
         viewPager.addOnPageChangeListener(mOnPageChangeListener)
     }
@@ -87,7 +96,7 @@ class GeneralPresenter : BasePresenter<GeneralModel, GeneralView>() {
             override fun onSuccess(result: TableModelDetailBean, message: String?) {
                 view?.onTableModelResponse(result)
                 updateTableModelPictures(result.obtainImages())
-                updateBottomPictures(result.obtainImages())
+                updateBottomPictures(result.obtainImages(mBottomImageWidth, mBottomImageHeight))
             }
 
             override fun onFailure(code: Int, failReason: String?) {

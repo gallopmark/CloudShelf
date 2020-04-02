@@ -46,7 +46,9 @@ android {
 //            zipAlignEnabled true
                 resValue "string", "app_name", "舒适好家"
                 buildConfigField "boolean", "LOG_DEBUG", "false"
+                //https://programv2.holike.com/marketing/dict/api/cloudshelf/getSysCodes
                 buildConfigField "String", "BASE_URL", "\"https://program.holike.com/\""  //正式服
+                buildConfigField "String", "API_HOST", "\"https://program.holike.com/\""
                 buildConfigField "String", "BUGLY_APP_ID", "\"cfec0856ff\"" //bugly appId
                 buildConfigField "String", "AMAP_URL" , "\"https://restapi.amap.com/v3/ip?&output=json&key=b6dc1ec8dd69a318cec2d15fe4459414\"" //高德地图ip定位appkey
                 /*极光推送正式key配置*/
@@ -66,8 +68,9 @@ android {
 //            zipAlignEnabled true
                 resValue "string", "app_name", "舒适好家"
                 buildConfigField "boolean", "LOG_DEBUG", "true"
-                //"https://program.holike.com/"   "http://120.79.9.159:8888/"
-                buildConfigField "String", "BASE_URL", "\"https://admintest.holike.com/\""  //测试服
+                //"https://program.holike.com/"   https://admintest.holike.com/
+                buildConfigField "String", "BASE_URL", "\"https://programv2.holike.com/\""  //测试服
+                buildConfigField "String", "API_HOST", "\"https://admintest.holike.com/\""
                 buildConfigField "String", "BUGLY_APP_ID", "\"cfec0856ff\"" //bugly appId
                 buildConfigField "String", "AMAP_URL" , "\"https://restapi.amap.com/v3/ip?&output=json&key=b6dc1ec8dd69a318cec2d15fe4459414\"" //高德地图ip定位appkey
                 /*极光推送测试key配置*/

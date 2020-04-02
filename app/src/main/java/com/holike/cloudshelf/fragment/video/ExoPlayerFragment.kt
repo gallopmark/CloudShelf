@@ -1,8 +1,6 @@
 package com.holike.cloudshelf.fragment.video
 
 import android.os.Bundle
-import android.view.View
-import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.holike.cloudshelf.R
@@ -31,7 +29,8 @@ class ExoPlayerFragment : BaseFragment() {
     }
 
     override fun getLayoutResourceId(): Int = R.layout.fragment_exoplayer
-    override fun init(view: View, savedInstanceState: Bundle?) {
+
+    override fun setup(savedInstanceState: Bundle?) {
         val arg = arguments
         arg?.let {
             val videoUrl = it.getString("videoUrl")
@@ -42,10 +41,10 @@ class ExoPlayerFragment : BaseFragment() {
 
     private fun initPlayer(thumbUrl: String?, videoUrl: String?) {
         videoView.setFullscreenEnabled(false)
-        videoView.setUp(videoUrl,"",JZvd.SCREEN_NORMAL, ExoMediaInterface::class.java)
+        videoView.setUp(videoUrl, "", JZvd.SCREEN_NORMAL, ExoMediaInterface::class.java)
         Glide.with(mContext).load(thumbUrl)
-            .apply(RequestOptions().skipMemoryCache(true).error(R.mipmap.ic_video_default))
-            .into(videoView.thumbImageView)
+                .apply(RequestOptions().skipMemoryCache(true).error(R.mipmap.ic_video_default))
+                .into(videoView.thumbImageView)
     }
 
     override fun onResume() {

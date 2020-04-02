@@ -1,6 +1,7 @@
 package com.holike.cloudshelf.bean
 
 import com.google.gson.annotations.SerializedName
+import com.holike.cloudshelf.util.ImageResizeUtils
 
 //搜搜我家户型列表数据
 class PlotTypeBean {
@@ -24,7 +25,7 @@ class PlotTypeBean {
         var area: String? = null //面积
         var houseType: String? = null //户型
         var id: String? = null //户型id
-        var cloudImage: String? = null //云货架的户型图
+        private var cloudImage: String? = null //云货架的户型图
 
         fun getShowName(): String {
             var name = ""
@@ -32,5 +33,7 @@ class PlotTypeBean {
             area?.let { name += "$it ㎡" }
             return name
         }
+
+        fun getImage(size: Int): String? = ImageResizeUtils.resize(cloudImage, size, size)
     }
 }

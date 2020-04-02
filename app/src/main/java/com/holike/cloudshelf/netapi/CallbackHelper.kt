@@ -2,10 +2,6 @@ package com.holike.cloudshelf.netapi
 
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
-import com.holike.cloudshelf.local.PreferenceSource
-import com.holike.cloudshelf.rxbus.EventBus
-import com.holike.cloudshelf.rxbus.EventType
-import com.holike.cloudshelf.rxbus.MessageEvent
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -27,7 +23,7 @@ class CallbackHelper {
             } else {
                 when (val code = MyJsonParser.getCode(s)) {
                     MyJsonParser.SUCCESS_CODE, MyJsonParser.DEFAULT_CODE -> {
-                        val result: T? = MyJsonParser.parseResult<T>(s, type)
+                        val result: T? = MyJsonParser.parseHttpJson<T>(s, type)
                         if (result == null) {
                             callBack.onFailure(code, CurrentApp.getInstance().getString(R.string.no_data_exception))
                         } else {

@@ -43,7 +43,7 @@ class CityPickerFragment : BaseFragment(), InnerListener,
 
     override fun getLayoutResourceId(): Int = R.layout.fragment_citypicker
 
-    override fun init(view: View, savedInstanceState: Bundle?) {
+    override fun setup(savedInstanceState: Bundle?) {
         initData()
         val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
         cityRView.layoutManager = layoutManager

@@ -1,8 +1,8 @@
 package com.holike.cloudshelf.netapi
 
-import android.util.Log
 import com.holike.cloudshelf.BuildConfig
 import com.holike.cloudshelf.local.PreferenceSource
+import com.holike.cloudshelf.util.LogCat
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -39,34 +39,28 @@ class NetClient private constructor() {
             val httpLoggingInterceptor = HttpLoggingInterceptor label@
             { message ->
                 if (message.isNullOrEmpty()) return@label
-                Log.i(TAG, message)
+                LogCat.i(TAG, message)
             }
             httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             okBuilder.addInterceptor(httpLoggingInterceptor)
         }
-        val xInterceptor = Interceptor { chain: Interceptor.Chain ->
-            val request = chain.request().newBuilder()
-                    .addHeader("X-Requested-With", "XMLHttpRequest")
-                    .build()
-            chain.proceed(request)
-        }
-        val authorizationInterceptor = Interceptor { chain: Interceptor.Chain ->
+        val sInterceptor = Interceptor { chain: Interceptor.Chain ->
             val rBuilder = chain.request().newBuilder()
             rBuilder.addHeader("Content-Type", "application/x-www-form-urlencoded")
             val cliId = PreferenceSource.getCliId()
             if (!cliId.isNullOrEmpty()) {
                 rBuilder.addHeader("cliId", cliId)
-                Log.e("api", "cliId:$cliId")
+                LogCat.e("api", "cliId:$cliId")
             }
             val token = PreferenceSource.getToken()
             if (!token.isNullOrEmpty()) {
                 rBuilder.addHeader("token", token)
-                Log.e("api", "token:$token")
+                LogCat.e("api", "token:$token")
             }
             rBuilder.addHeader("Accept", "application/json")
             chain.proceed(rBuilder.build())
         }
-        okBuilder.addInterceptor(xInterceptor).addInterceptor(authorizationInterceptor)
+        okBuilder.addInterceptor(sInterceptor)
         val httpClient = okBuilder.build()
         mRetrofit = Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_URL)

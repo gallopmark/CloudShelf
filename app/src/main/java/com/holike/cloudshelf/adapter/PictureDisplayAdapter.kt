@@ -22,9 +22,9 @@ class PictureDisplayAdapter(context: Context, dataList: MutableList<PictureDispl
         val lp = holder.itemView.layoutParams as RecyclerView.LayoutParams
         lp.width = itemWidth
         holder.itemView.layoutParams = lp
-        Glide.with(mContext).load(t.topUrl).into(holder.getView(R.id.iv_pic_top))
+        Glide.with(mContext).load(t.topUrl).centerCrop().into(holder.getView(R.id.iv_pic_top))
         holder.setText(R.id.tv_name_top, t.topName)
-        Glide.with(mContext).load(t.bottomUrl).into(holder.getView(R.id.iv_pic_bottom))
+        Glide.with(mContext).load(t.bottomUrl).centerCrop().into(holder.getView(R.id.iv_pic_bottom))
         holder.setText(R.id.tv_name_bottom, t.bottomName)
         holder.setOnClickListener(R.id.top_layout) {
             if (!t.topId.isNullOrEmpty()) {

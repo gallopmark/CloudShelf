@@ -5,12 +5,12 @@ import pony.xcode.mvp.BaseView
 import pony.xcode.utils.GenericsUtils
 
 //presenter activity
-@Suppress("UNCHECKED_CAST")
 abstract class HollyActivity<P : BasePresenter<*, V>, V : BaseView> : BaseActivity() {
 
     protected lateinit var mPresenter: P
 
     //通过泛型参数创建presenter对象
+    @Suppress("UNCHECKED_CAST")
     override fun createPresenter() {
         try {
             mPresenter = (GenericsUtils.getGenericsSuperclassType(javaClass) as Class<P>).newInstance()

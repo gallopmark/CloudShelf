@@ -4,6 +4,12 @@ package com.holike.cloudshelf.bean.internal
 class LabelSpec(var id: String?, var iconRes: Int,
                 var name: String?, var specList: MutableList<Spec>) {
 
+    fun obtainSpecList(): MutableList<Spec> {
+        val list = specList
+        if (list.isNullOrEmpty()) return ArrayList()
+        return list
+    }
+
     override fun equals(other: Any?): Boolean {
         return when (other) {
             !is LabelSpec -> false
@@ -19,8 +25,6 @@ class LabelSpec(var id: String?, var iconRes: Int,
 
         var id: String? = null
         var name: String? = null
-        private var specId: String? = null
-        private var parentId: String? = null
         var isMore = false  //是否是更多按钮
 
         constructor(id: String?, name: String?) {
@@ -34,16 +38,15 @@ class LabelSpec(var id: String?, var iconRes: Int,
             this.isMore = isMore
         }
 
-        constructor(id: String?, name: String?, specId: String?, parentId: String?) {
-            this.id = id
-            this.name = name
-            this.specId = specId
-            this.parentId = parentId
+        fun obtainId(): String {
+            val id = this.id
+            if (id.isNullOrEmpty()) return ""
+            return id
         }
 
         override fun equals(other: Any?): Boolean {
             return when (other) {
-                !is LabelSpec -> false
+                !is Spec -> false
                 else -> this === other || this.id == other.id
             }
         }

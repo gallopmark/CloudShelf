@@ -4,8 +4,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.holike.cloudshelf.CurrentApp
+import com.holike.cloudshelf.R
 import com.holike.cloudshelf.adapter.BottomPreviewImageAdapter
 import com.holike.cloudshelf.adapter.PicturePagerAdapter
+import com.holike.cloudshelf.widget.StereoPagerTransformer
 import pony.xcode.mvp.BaseModel
 import pony.xcode.mvp.BasePresenter
 import pony.xcode.mvp.BaseView
@@ -15,12 +17,16 @@ abstract class PicturePagerPresenter<M : BaseModel, V : BaseView> : BasePresente
 
     val mParamWidth: Int
     var mParamHeight: Int
+    val mBottomImageWidth: Int
+    val mBottomImageHeight: Int
 
     init {
         //UI width = 526 height = 370
         val size = CurrentApp.getInstance().getMaxPixels() * 0.57f
         mParamWidth = size.toInt()
         mParamHeight = (size * 0.68f).toInt()
+        mBottomImageWidth = CurrentApp.getInstance().resources.getDimensionPixelSize(R.dimen.dp_130)
+        mBottomImageHeight = (mBottomImageWidth * 0.68f).toInt()
     }
 
     private val mPreviewImages = ArrayList<String>()
@@ -31,6 +37,7 @@ abstract class PicturePagerPresenter<M : BaseModel, V : BaseView> : BasePresente
     private var mLastVisibleItemPosition = -1
 
     fun initVp(viewPager: ViewPager) {
+        viewPager.setPageTransformer(false, StereoPagerTransformer(mParamWidth.toFloat()))
         mPreviewImageAdapter = PicturePagerAdapter(viewPager.context, mPreviewImages, mParamWidth, mParamHeight)
         viewPager.adapter = mPreviewImageAdapter
         viewPager.addOnPageChangeListener(mOnPageChangeListener)

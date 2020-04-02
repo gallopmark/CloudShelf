@@ -30,7 +30,7 @@ class PlotTypeInfoPresenter : PicturePagerPresenter<PlotTypeInfoModel, PlotTypeI
 
             override fun onSuccess(result: PlotTypeInfoBean, message: String?) {
                 view?.onSuccess(result)
-                updatePreviewImages(result.obtainImageList())
+                updatePreviewImages(result.obtainImageList(mBottomImageWidth, mBottomImageHeight))
             }
 
             override fun onFailure(code: Int, failReason: String?) {

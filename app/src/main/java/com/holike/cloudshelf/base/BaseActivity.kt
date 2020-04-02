@@ -9,13 +9,11 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.DimenRes
-import androidx.annotation.DrawableRes
+import androidx.annotation.*
 import androidx.annotation.IntRange
-import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.dialog.LoadingDialog
@@ -231,6 +229,23 @@ abstract class BaseActivity : AppCompatActivity() {
     //重试回调
     open fun onReload() {
 
+    }
+
+    fun addFragment(fragment: Fragment) {
+        addFragment(fragment, null)
+    }
+
+    fun addFragment(fragment: Fragment, extras: Bundle?) {
+        addFragment(R.id.fl_fragment, fragment, extras)
+    }
+
+    fun addFragment(@IdRes containerViewId: Int, fragment: Fragment) {
+        addFragment(containerViewId, fragment, null)
+    }
+
+    fun addFragment(@IdRes containerViewId: Int, fragment: Fragment, extras: Bundle?) {
+        fragment.arguments = extras
+        supportFragmentManager.beginTransaction().add(containerViewId, fragment).commitAllowingStateLoss()
     }
 
     override fun onDestroy() {

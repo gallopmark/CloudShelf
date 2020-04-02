@@ -126,8 +126,8 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
             override fun onFailure(code: Int, failReason: String?) {
 //                view?.onAdvertisingFailure(failReason)
                 //加载失败，3秒后自动重试
-                mHandler.removeCallbacks(mRun)
-                mHandler.postDelayed(mRun, RETRY_TIME)
+//                mHandler.removeCallbacks(mRun)
+//                mHandler.postDelayed(mRun, RETRY_TIME)
             }
         })
     }
@@ -228,7 +228,7 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
         when (viewId) {
             R.id.programmeIView -> {
                 //方案库
-                MultiTypeActivity.open(activity, MultiTypeActivity.TYPE_PROGRAM, R.mipmap.ic_title_programee, activity.getString(R.string.text_program_library))
+                MultiTypeActivity.open(activity, MultiTypeActivity.TYPE_PROGRAM)
             }
             R.id.productsIView -> {
                 //产品大全

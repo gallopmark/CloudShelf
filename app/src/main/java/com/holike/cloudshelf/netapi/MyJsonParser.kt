@@ -13,6 +13,7 @@ class MyJsonParser {
     companion object {
         private const val FIELD_CODE = "code"  //接口返回的json是否保存code字段
         private const val FIELD_RESULT = "result" //接口返回的json中result字段
+        private const val FIELD_DATA = "data" //接口返回的json中的data字段
         private const val FIELD_MSG = "msg" //json中msg字段
         const val SUCCESS_CODE = 0
         const val INVALID_CODE = 210819
@@ -85,25 +86,10 @@ class MyJsonParser {
             return has(json, FIELD_RESULT)
         }
 
-        private fun getResultElement(json: String?): JsonElement {
-            return getAsJsonObject(json)[FIELD_RESULT]
-        }
-
-        /*接口返回结果 result字段*/
-        fun getResultAsString(json: String?): String {
-            return if (!hasResult(json)) "" else try {
-                val element = getResultElement(json)
-                if (element.isJsonNull) "" else element.asString
-            } catch (e: Exception) {
-                LogCat.e(e)
-                ""
-            }
-        }
-
         /*接口返回结果 result字段*/
         fun getResult(json: String?): String {
             return if (!hasResult(json)) "" else try {
-                val element = getResultElement(json)
+                val element = getAsJsonObject(json)[FIELD_RESULT]
                 if (element.isJsonNull) "" else element.toString()
             } catch (e: Exception) {
                 LogCat.e(e)
@@ -111,14 +97,45 @@ class MyJsonParser {
             }
         }
 
-        fun <T> parseResult(json: String?, type: Type): T? {
+        fun getData(json: String?): String {
+            if (!has(json, FIELD_DATA)) return ""
+            return try {
+                val element = getAsJsonObject(json)[FIELD_DATA]
+                if (element.isJsonNull) "" else element.toString()
+            } catch (e: Exception) {
+                LogCat.e(e)
+                ""
+            }
+        }
+
+        fun <T> parseHttpJson(json: String?, type: Type): T? {
             if (json.isNullOrEmpty()) return null
             val result = getResult(json)
-            if (result.isEmpty()) return null
+            if (result.isNotEmpty()) {
+                return try {
+                    Gson().fromJson<T>(result, type)
+                } catch (e: Exception) {
+                    null
+                }
+            } else {
+                val data = getData(json)
+                return if (data.isNotEmpty()) {
+                    try {
+                        Gson().fromJson<T>(data, type)
+                    } catch (e: Exception) {
+                        null
+                    }
+                } else {
+                    null
+                }
+            }
+        }
+
+        fun toJson(obj: Any): String {
             return try {
-                Gson().fromJson<T>(result, type)
+                Gson().toJson(obj)
             } catch (e: Exception) {
-                null
+                ""
             }
         }
     }

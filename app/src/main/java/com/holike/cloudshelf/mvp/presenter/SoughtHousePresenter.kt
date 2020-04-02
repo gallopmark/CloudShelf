@@ -30,18 +30,18 @@ class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() 
             var bottomAddress: String?
     )
 
-    private inner class SoughtHouseAdapter(context: Context, dataList: MutableList<SoughtHouseItem>, private val itemWidth: Int)
+    private inner class SoughtHouseAdapter(context: Context, dataList: MutableList<SoughtHouseItem>)
         : CommonAdapter<SoughtHouseItem>(context, dataList) {
 
         override fun getItemResourceId(viewType: Int): Int = R.layout.item_soughthouse
         override fun bindViewHolder(holder: RecyclerHolder, t: SoughtHouseItem, position: Int) {
             val lp = holder.itemView.layoutParams as RecyclerView.LayoutParams
-            lp.width = itemWidth
+            lp.width = mImageWidth
             holder.itemView.layoutParams = lp
-            Glide.with(mContext).load(t.topUrl).into(holder.getView(R.id.iv_pic_top))
+            Glide.with(mContext).load(t.topUrl).centerCrop().into(holder.getView(R.id.iv_pic_top))
             holder.setText(R.id.tv_name_top, t.topName)
             holder.setText(R.id.tv_address_top, t.topAddress)
-            Glide.with(mContext).load(t.bottomUrl).into(holder.getView(R.id.iv_pic_bottom))
+            Glide.with(mContext).load(t.bottomUrl).centerCrop().into(holder.getView(R.id.iv_pic_bottom))
             holder.setText(R.id.tv_name_bottom, t.bottomName)
             holder.setText(R.id.tv_address_bottom, t.bottomAddress)
             holder.setOnClickListener(R.id.top_layout) {
@@ -57,6 +57,8 @@ class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() 
         }
     }
 
+    private var mImageWidth = 0  //列表图片的宽度
+    private var mImageHeight = 0 //列表图片的高度
     private var mPageNo = 1
     private val mPageSize = 20
     private var mCurrentCity: String? = null  //当前定位的城市
@@ -67,20 +69,25 @@ class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() 
 
     fun initRecyclerView(recyclerView: RecyclerView) {
         val context = recyclerView.context
-        val itemWidth = (CurrentApp.getInstance().getMaxPixels()
+        mImageWidth = ((CurrentApp.getInstance().getMaxPixels()
                 - context.resources.getDimensionPixelSize(R.dimen.dp_45)
-                - context.resources.getDimensionPixelSize(R.dimen.dp_16) * 4) / 5.8f
-        mAdapter = SoughtHouseAdapter(context, mDataList, itemWidth.toInt())
+                - context.resources.getDimensionPixelSize(R.dimen.dp_16) * 4) / 5.8f).toInt()
+        mImageHeight = (mImageWidth * 0.75f).toInt()
+//        val itemWidth = (CurrentApp.getInstance().getMaxPixels()
+//                - context.resources.getDimensionPixelSize(R.dimen.dp_45)
+//                - context.resources.getDimensionPixelSize(R.dimen.dp_16) * 4) / 5.8f
+        mAdapter = SoughtHouseAdapter(context, mDataList)
         recyclerView.adapter = mAdapter
     }
 
     //显示搜索对话框
     fun showSearchDialog(act: SoughtHouseActivity) {
-        SearchDialog(act).setHint(act.getString(R.string.hint_community_name)).setOnSearchListener(object : SearchDialog.OnSearchListener {
-            override fun onSearch(content: String?) {
-                setSearchContent(content)
-            }
-        }).show()
+        SearchDialog(act).setHint(act.getString(R.string.hint_community_name))
+                .setOnSearchListener(object : SearchDialog.OnSearchListener {
+                    override fun onSearch(content: String?) {
+                        setSearchContent(content)
+                    }
+                }).show()
     }
 
     private fun setSearchContent(content: String?) {
@@ -152,12 +159,12 @@ class SoughtHousePresenter : BasePresenter<SoughtHouseModel, SoughtHouseView>() 
         for (i in sList.indices) {
             val item: SoughtHouseItem = if (sList[i].size > 1) {
                 SoughtHouseItem(
-                        sList[i][0].id, sList[i][0].image, sList[i][0].name, sList[i][0].address,
-                        sList[i][1].id, sList[i][1].image, sList[i][1].name, sList[i][1].address
+                        sList[i][0].id, sList[i][0].getResizeImage(mImageWidth, mImageHeight), sList[i][0].name, sList[i][0].address,
+                        sList[i][1].id, sList[i][1].getResizeImage(mImageWidth, mImageHeight), sList[i][1].name, sList[i][1].address
                 )
             } else {
                 SoughtHouseItem(
-                        sList[i][0].id, sList[i][0].image, sList[i][0].name, sList[i][0].address,
+                        sList[i][0].id, sList[i][0].getResizeImage(mImageWidth, mImageHeight), sList[i][0].name, sList[i][0].address,
                         null, null, null, null
                 )
             }

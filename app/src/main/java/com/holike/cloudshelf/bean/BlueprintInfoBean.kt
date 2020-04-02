@@ -1,5 +1,7 @@
 package com.holike.cloudshelf.bean
 
+import com.holike.cloudshelf.util.ImageResizeUtils
+
 //晒晒我家详情数据
 class BlueprintInfoBean {
 
@@ -13,9 +15,13 @@ class BlueprintInfoBean {
     private var imageList: MutableList<String>? = null //晒图的方案图
     var budget: String? = null //响应码
 
-    fun obtainImageList(): MutableList<String> {
+    fun obtainImageList(width: Int, height: Int): MutableList<String> {
         val images = imageList
-        if (images.isNullOrEmpty()) return ArrayList()
-        return images
+        val imageList = ArrayList<String>()
+        if (images.isNullOrEmpty()) return imageList
+        for (url in images) {
+            imageList.add(ImageResizeUtils.resize(url, width, height))
+        }
+        return imageList
     }
 }

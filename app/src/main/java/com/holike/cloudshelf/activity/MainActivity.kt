@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import com.bumptech.glide.Glide
+import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.base.HollyActivity
 import com.holike.cloudshelf.bean.AdvertisingBean
@@ -25,6 +26,8 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
     override fun getLayoutResourceId(): Int = R.layout.activity_main
 
     override fun setup(savedInstanceState: Bundle?) {
+        //进到首页 调用获取字典方法
+        CurrentApp.getInstance().getDictionary()
         mPresenter.initLoginState(this)
         mPresenter.initClickViews(this, programmeIView, productsIView, searchHomeIView, shareHomeIView)
         mPresenter.getAdvertising()
@@ -89,11 +92,6 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         mPresenter.onActivityResult(this, requestCode)
-    }
-
-    override fun finish() {
-        setResult(RESULT_OK)
-        super.finish()
     }
 
     override fun onDestroy() {

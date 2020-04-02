@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.Process
 import android.util.DisplayMetrics
 import android.view.WindowManager
@@ -12,7 +13,11 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import cn.jpush.android.api.JPushInterface
 import com.holike.cloudshelf.activity.MainActivity
+import com.holike.cloudshelf.bean.SystemCodeBean
 import com.holike.cloudshelf.local.PreferenceSource
+import com.holike.cloudshelf.netapi.CallbackHelper
+import com.holike.cloudshelf.netapi.HttpRequestCallback
+import com.holike.cloudshelf.netapi.NetClient
 import com.holike.cloudshelf.rxbus.EventBus
 import com.holike.cloudshelf.rxbus.EventType
 import com.holike.cloudshelf.rxbus.MessageEvent
@@ -22,6 +27,7 @@ import com.scwang.smartrefresh.header.WaterDropHeader
 import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter
 import com.tencent.bugly.crashreport.CrashReport
+import io.reactivex.disposables.Disposable
 import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.HashMap
@@ -36,7 +42,7 @@ class CurrentApp : MultiDexApplication() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             //适配android5.0以下
             /*解决低版本手机vectorDrawable不支持儿闪退问题*/
-            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context, _ -> WaterDropHeader(context) }
@@ -45,7 +51,7 @@ class CurrentApp : MultiDexApplication() {
     }
 
     private var mWeakRef: WeakReference<Activity>? = null
-    private var mActivityCache: LinkedList<Activity>? = null
+    private lateinit var mActivityCache: LinkedList<Activity>
 
     private var mValueMap: HashMap<String, Any?>? = null //用于activity、fragment之间大数据传值
 
@@ -54,6 +60,12 @@ class CurrentApp : MultiDexApplication() {
     private var mScreenHeight: Int = 2160 //屏幕高度
     private var mMaxPixels: Int = mScreenWidth.coerceAtLeast(mScreenHeight)  //取宽度、高度的最大值
     private var mMinPixels: Int = mScreenWidth.coerceAtMost(mScreenHeight)
+
+    //业务字典 全局使用
+    private var mSystemCode: SystemCodeBean? = null
+
+    private var mDisposable: Disposable? = null
+    private var mHandler: Handler? = null
 
     companion object {
 
@@ -65,6 +77,7 @@ class CurrentApp : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         mInstance = this
+        mActivityCache = LinkedList()
         registerActivityLifecycleCallbacks(CustomActivityLifecycleCallback())
         initDisplay()
         initJpush()
@@ -73,15 +86,13 @@ class CurrentApp : MultiDexApplication() {
 
     //获取屏幕宽高，全局使用
     private fun initDisplay() {
-        val wm = getSystemService(Context.WINDOW_SERVICE)
-        if (wm != null && wm is WindowManager) {
-            val outMetrics = DisplayMetrics()
-            wm.defaultDisplay.getMetrics(outMetrics)
-            mScreenWidth = outMetrics.widthPixels
-            mScreenHeight = outMetrics.heightPixels
-            mMaxPixels = mScreenWidth.coerceAtLeast(mScreenHeight)
-            mMinPixels = mScreenWidth.coerceAtMost(mScreenHeight)
-        }
+        val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val outMetrics = DisplayMetrics()
+        wm.defaultDisplay.getMetrics(outMetrics)
+        mScreenWidth = outMetrics.widthPixels
+        mScreenHeight = outMetrics.heightPixels
+        mMaxPixels = mScreenWidth.coerceAtLeast(mScreenHeight)
+        mMinPixels = mScreenWidth.coerceAtMost(mScreenHeight)
     }
 
     //极光推送初始化
@@ -128,7 +139,7 @@ class CurrentApp : MultiDexApplication() {
 
         override fun onActivityDestroyed(activity: Activity) {
             mWeakRef?.clear()
-            mActivityCache?.remove(activity)
+            mActivityCache.remove(activity)
         }
 
         override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
@@ -138,10 +149,7 @@ class CurrentApp : MultiDexApplication() {
         }
 
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-            if (mActivityCache == null) {
-                mActivityCache = LinkedList()
-            }
-            mActivityCache?.add(activity)
+            mActivityCache.add(activity)
         }
 
         override fun onActivityResumed(activity: Activity) {
@@ -155,10 +163,8 @@ class CurrentApp : MultiDexApplication() {
     fun getCurrentActivity(): Activity? = mWeakRef?.get()
 
     fun finishAllActivities() {
-        mActivityCache?.let {
-            for (act in it) {
-                act.finish()
-            }
+        for (act in mActivityCache) {
+            act.finish()
         }
     }
 
@@ -173,8 +179,51 @@ class CurrentApp : MultiDexApplication() {
         PreferenceSource.clear()  //清除本地缓存
         //发送事件通知首页检测登录状态
         EventBus.getInstance().post(MessageEvent(EventType.TYPE_LOGIN_INVALID))
-        //MainActivity为singleTask 把task中在其之上的其它Activity destory掉。
         val intent = Intent(this, MainActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         startActivity(intent)
+        //finish掉MainActivity之上的所有activity
+        for (act in mActivityCache) {
+            if (act is MainActivity) {
+                continue
+            }
+            act.finish()
+        }
+    }
+
+    //获取业务字典 app内全局使用
+    fun getDictionary() {
+        getDictionary(null)
+    }
+
+    fun getDictionary(listen: OnRequestDictListener?) {
+        mDisposable?.dispose()
+        mDisposable = CallbackHelper.deliveryResult(NetClient.getInstance().getNetApi().getDictionary(),
+                object : HttpRequestCallback<SystemCodeBean>() {
+                    override fun onSuccess(result: SystemCodeBean, message: String?) {
+                        mSystemCode = result
+                        listen?.onDictSuccess(result, message)
+                    }
+
+                    override fun onFailure(code: Int, failReason: String?) {
+                        //失败后3秒重新请求
+                        listen?.onDictFailure(code, failReason)
+                        if (mHandler == null) {
+                            mHandler = Handler()
+                        }
+                        mHandler?.removeCallbacks(mRetryRun)
+                        mHandler?.postDelayed(mRetryRun, 3000L)
+                    }
+                })
+    }
+
+    private val mRetryRun = Runnable { getDictionary() }
+
+    fun getSystemCode(): SystemCodeBean? = mSystemCode
+
+    override fun onTerminate() {
+        mDisposable?.dispose()
+        mHandler?.removeCallbacks(mRetryRun)
+        super.onTerminate()
     }
 }

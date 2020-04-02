@@ -34,7 +34,7 @@
         </provider>
 
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".activity.MainActivity"
             android:configChanges="orientation|screenSize|layoutDirection"
             android:screenOrientation="landscape"
             tools:ignore="LockedOrientationActivity">
@@ -45,13 +45,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activity.MainActivity"
-            android:configChanges="orientation|screenSize|layoutDirection"
-            android:launchMode="singleTask"
-            android:screenOrientation="landscape"
-            tools:ignore="LockedOrientationActivity" />
 
         <!--产品大全-->
         <activity android:name=".activity.ProductCatalogActivity" />

@@ -15,6 +15,8 @@ import pony.xcode.mvp.BasePresenter
 
 class BlueprintListPresenter : BasePresenter<BlueprintModel, BlueprintListView>() {
 
+    private var mImageWidth = 0
+    private var mImageHeight = 0
     private val mDataList: MutableList<PictureDisplayItem> = ArrayList()
     private var mImageAdapter: PictureDisplayAdapter? = null
     private val mPageSize = 20  //一次加载20条
@@ -22,10 +24,11 @@ class BlueprintListPresenter : BasePresenter<BlueprintModel, BlueprintListView>(
 
     fun initRecyclerView(recyclerView: RecyclerView) {
         val context = recyclerView.context
-        val itemWidth = (CurrentApp.getInstance().getMaxPixels()
+        mImageWidth = ((CurrentApp.getInstance().getMaxPixels()
                 - context.resources.getDimensionPixelSize(R.dimen.dp_45)
-                - context.resources.getDimensionPixelSize(R.dimen.dp_16) * 4) / 4.2f
-        mImageAdapter = PictureDisplayAdapter(context, mDataList, itemWidth.toInt()).apply {
+                - context.resources.getDimensionPixelSize(R.dimen.dp_16) * 4) / 4.2f).toInt()
+        mImageHeight = (mImageWidth * 0.75f).toInt()
+        mImageAdapter = PictureDisplayAdapter(context, mDataList, mImageWidth).apply {
             setOnPictureItemClickListener(object : PictureDisplayAdapter.OnPictureItemClickListener {
                 override fun onPictureItemClick(id: String?, images: MutableList<String>?) {
                     view?.onPictureItemClick(id)
@@ -75,11 +78,11 @@ class BlueprintListPresenter : BasePresenter<BlueprintModel, BlueprintListView>(
         for (i in sList.indices) {
             val item: PictureDisplayItem
             if (sList[i].size > 1) {
-                item = PictureDisplayItem(sList[i][0].image, sList[i][0].title, sList[i][1].image, sList[i][1].title)
+                item = PictureDisplayItem(sList[i][0].getImageUrl(mImageWidth, mImageHeight), sList[i][0].title, sList[i][1].getImageUrl(mImageWidth, mImageHeight), sList[i][1].title)
                 item.topId = sList[i][0].id
                 item.bottomId = sList[i][1].id
             } else {
-                item = PictureDisplayItem(sList[i][0].image, sList[i][0].title, null, null)
+                item = PictureDisplayItem(sList[i][0].getImageUrl(mImageWidth, mImageHeight), sList[i][0].title, null, null)
                 item.topId = sList[i][0].id
             }
             mDataList.add(item)

@@ -44,6 +44,12 @@
     <string name="text_all">全部</string>
     <string name="text_space">空间</string>
     <string name="text_style">风格</string>
+    <string name="text_series">系列</string>
+    <string name="text_type">类型</string>
+    <string name="text_modeling">造型</string>
+    <string name="text_brand">品牌</string>
+    <string name="text_function">功能</string>
+    <string name="text_category">品类</string>
     <string name="text_more">更多</string>
 
     <string name="text_scan_code_view_scheme">扫码查看方案</string>

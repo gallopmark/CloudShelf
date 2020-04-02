@@ -4,6 +4,7 @@ import com.holike.cloudshelf.bean.ProductOptionBean
 import com.holike.cloudshelf.bean.ProductSpecBean
 import com.holike.cloudshelf.bean.TableModelHouseBean
 import com.holike.cloudshelf.local.PreferenceSource
+import com.holike.cloudshelf.netapi.ApiService
 import com.holike.cloudshelf.netapi.CallbackHelper
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import com.holike.cloudshelf.netapi.NetClient
@@ -20,7 +21,7 @@ class MultiTypeModel : ApiModel() {
             put("pageNo", pageNo.toString())
             put("pageSize", pageSize.toString())
         }
-        put("table-mode-house", CallbackHelper.deliveryResult(NetClient.getInstance().getNetApi().getTableModeHouse(fieldMap), callback))
+        put("table-mode-house", CallbackHelper.deliveryResult(NetClient.getInstance().getNetApi().getTableModeHouse(ApiService.TABLE_MODEL_HOUSE, fieldMap), callback))
     }
 
     /*获取产品大全标签列表*/

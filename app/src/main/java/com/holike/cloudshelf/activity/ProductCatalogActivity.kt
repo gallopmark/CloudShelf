@@ -40,18 +40,22 @@ class ProductCatalogActivity : HollyActivity<ProductCatalogPresenter, ProductCat
 
     override fun onResponse(bean: ProductCatalogBean) {
         Glide.with(this).load(bean.miniQrUrl).apply(RequestOptions().error(R.mipmap.ic_wxacode)).into(miniQrUrlIView)
-        mPresenter.setContentList(contentLayout, bean.getContentList(), mItemWidth)
+        mPresenter.setContentList(contentLayout, bean.getModuleContentList(), mItemWidth)
     }
 
     override fun onFailure(failReason: String?) {
         showShortToast(failReason)
     }
 
-    override fun onItemClick(templateId: String?, name: String?) {
+    override fun onItemClick(dictCode: String?, name: String?) {
         var title = getString(R.string.text_product_catalog)
         if (!name.isNullOrEmpty()) {
             title += " > $name"
         }
-        MultiTypeActivity.open(this, MultiTypeActivity.TYPE_PRODUCT, R.mipmap.ic_title_products, title, templateId)
+        val extras = Bundle().apply {
+            putString("title", title)
+            putString("dictCode", dictCode)
+        }
+        MultiTypeActivity.open(this, MultiTypeActivity.TYPE_PRODUCT, extras)
     }
 }

@@ -1,6 +1,7 @@
 package com.holike.cloudshelf.bean
 
 import com.google.gson.annotations.SerializedName
+import com.holike.cloudshelf.util.ImageResizeUtils
 
 //晒晒我家数据
 class BlueprintBean {
@@ -19,7 +20,9 @@ class BlueprintBean {
     class DataBean {
         @SerializedName("id")
         var id: String? = null //晒图id
-        var image: String? = null //晒图展示图(url):上传位置在第一的图
         var title: String? = null  //晒图标题
+        private var image: String? = null //晒图展示图(url):上传位置在第一的图
+
+        fun getImageUrl(width: Int, height: Int): String? = ImageResizeUtils.resize(image, width, height)
     }
 }

@@ -1,6 +1,7 @@
 package com.holike.cloudshelf.bean
 
 import com.google.gson.annotations.SerializedName
+import com.holike.cloudshelf.util.ImageResizeUtils
 
 
 class PlotTypeInfoBean {
@@ -19,9 +20,13 @@ class PlotTypeInfoBean {
     @SerializedName("cloudImageList")
     private var imageList: MutableList<String>? = null
 
-    fun obtainImageList(): MutableList<String> {
+    fun obtainImageList(width: Int, height: Int): MutableList<String> {
         val images = imageList
-        if (images.isNullOrEmpty()) return ArrayList()
-        return images
+        val imageList = ArrayList<String>()
+        if (images.isNullOrEmpty()) return imageList
+        for (url in images) {
+            imageList.add(ImageResizeUtils.resize(url, width, height))
+        }
+        return imageList
     }
 }

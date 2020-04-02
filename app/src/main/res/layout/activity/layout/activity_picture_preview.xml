@@ -54,6 +54,7 @@
             android:orientation="vertical">
 
             <pony.xcode.widget.DrawableTextView
+                android:id="@+id/videoTView"
                 android:layout_width="@dimen/dp_80"
                 android:layout_height="@dimen/dp_80"
                 android:layout_gravity="center"
@@ -68,6 +69,7 @@
                 android:visibility="gone" />
 
             <pony.xcode.widget.DrawableTextView
+                android:id="@+id/panoramicTView"
                 android:layout_width="@dimen/dp_80"
                 android:layout_height="@dimen/dp_80"
                 android:layout_gravity="center"

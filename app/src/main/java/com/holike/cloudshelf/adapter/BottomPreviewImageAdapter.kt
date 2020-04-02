@@ -40,7 +40,7 @@ class BottomPreviewImageAdapter(context: Context, images: MutableList<String>)
             lp.height = unSelectHeight
         }
         pictureIView.layoutParams = lp
-        Glide.with(mContext).load(t).into(holder.getView(R.id.iv_pic))
+        Glide.with(mContext).load(t).centerCrop().into(holder.getView(R.id.iv_pic))
         holder.itemView.setOnClickListener { setSelectPosition(position) }
     }
 

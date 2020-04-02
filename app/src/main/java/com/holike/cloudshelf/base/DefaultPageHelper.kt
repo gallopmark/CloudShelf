@@ -51,5 +51,48 @@ internal class DefaultPageHelper {
         fun hide(act: BaseActivity) {
             act.findViewById<View>(R.id.vg_default_page)?.visibility = View.GONE
         }
+
+        /**
+         * 展示无结果缺省页
+         * @param iconRes 缺省图标
+         * @param text 缺省提示语
+         */
+        fun noResult(fragment: BaseFragment, @DrawableRes iconRes: Int, text: CharSequence?) {
+            val defaultPage = fragment.contentView.findViewById<View>(R.id.vg_default_page)
+            defaultPage?.let {
+                it.visibility = View.VISIBLE
+                val centerTView = it.findViewById<TextView>(R.id.centerTView)
+                centerTView.setCompoundDrawablesWithIntrinsicBounds(null, fragment.getDrawableCompat(iconRes), null, null)
+                centerTView.text = if (text.isNullOrEmpty()) fragment.context?.getString(R.string.text_no_result) else text
+                it.findViewById<TextView>(R.id.refreshTView).visibility = View.GONE
+            }
+        }
+
+        /**
+         * 无网络或者其他错误缺省页
+         * @param iconRes 错误提示图标
+         * @param failReason 错误原因
+         */
+        fun noNetwork(fragment: BaseFragment, @DrawableRes iconRes: Int, failReason: CharSequence?) {
+            val defaultPage = fragment.contentView.findViewById<View>(R.id.vg_default_page)
+            defaultPage?.let { dePage ->
+                dePage.visibility = View.VISIBLE
+                val centerTView = dePage.findViewById<TextView>(R.id.centerTView)
+                centerTView.setCompoundDrawablesWithIntrinsicBounds(null, fragment.getDrawableCompat(iconRes),
+                        null, null)
+                centerTView.text = if (failReason.isNullOrEmpty())
+                    fragment.context?.getString(R.string.text_network_error) else failReason
+                val refreshTView = dePage.findViewById<TextView>(R.id.refreshTView)
+                refreshTView.visibility = View.VISIBLE
+                refreshTView.setOnClickListener {
+                    dePage.visibility = View.GONE
+                    fragment.onReload()
+                }
+            }
+        }
+
+        fun hide(fragment: BaseFragment) {
+            fragment.contentView.findViewById<View>(R.id.vg_default_page)?.visibility = View.GONE
+        }
     }
 }

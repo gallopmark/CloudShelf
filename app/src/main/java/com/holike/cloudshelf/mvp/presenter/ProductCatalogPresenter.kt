@@ -49,7 +49,7 @@ class ProductCatalogPresenter : BasePresenter<ProductCatalogModel, ProductCatalo
             itemView.layoutParams = lp
             itemView.visibility = View.INVISIBLE
             contentLayout.addView(itemView)
-            itemView.setOnClickListener { view?.onItemClick(dataList[i].templateId, dataList[i].name) }
+            itemView.setOnClickListener { view?.onItemClick(dataList[i].dictCode, dataList[i].name) }
             mHandler?.postDelayed({
                 itemView.visibility = View.VISIBLE
                 itemView.startAnimation(AnimationUtils.loadAnimation(context, R.anim.translate_from_left))

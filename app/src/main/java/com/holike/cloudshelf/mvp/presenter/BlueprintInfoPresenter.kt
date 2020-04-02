@@ -30,7 +30,7 @@ class BlueprintInfoPresenter : PicturePagerPresenter<BlueprintModel, BlueprintIn
 
             override fun onSuccess(result: BlueprintInfoBean, message: String?) {
                 view?.onSuccess(result)
-                updatePreviewImages(result.obtainImageList())
+                updatePreviewImages(result.obtainImageList(mBottomImageWidth, mBottomImageHeight))
             }
 
             override fun onFailure(code: Int, failReason: String?) {
