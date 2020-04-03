@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.include_miniqr_layout.*
 
 //产品大全
 class ProductCatalogActivity : HollyActivity<ProductCatalogPresenter, ProductCatalogView>(), ProductCatalogView {
-    private var mItemWidth: Int = 0
+
     override fun getLayoutResourceId(): Int = R.layout.activity_product_catalog
 
     override fun setup(savedInstanceState: Bundle?) {
@@ -34,13 +34,24 @@ class ProductCatalogActivity : HollyActivity<ProductCatalogPresenter, ProductCat
         val lp = miniQrLayout.layoutParams as FrameLayout.LayoutParams
         lp.width = dp80
         miniQrLayout.layoutParams = lp
-        mItemWidth = ((CurrentApp.getInstance().getMaxPixels() - containerRL.paddingLeft - containerRL.paddingRight - ((rightRL.layoutParams as RelativeLayout.LayoutParams).leftMargin)
+        val itemWidth = ((CurrentApp.getInstance().getMaxPixels() - containerRL.paddingLeft - containerRL.paddingRight
+                - ((rightRL.layoutParams as RelativeLayout.LayoutParams).leftMargin)
                 - dp80 - resources.getDimensionPixelSize(R.dimen.dp_10) * 3) / 4f).toInt()
+        mPresenter.attach(contentRView, itemWidth)
+    }
+
+    override fun onShowLoading() {
+        showLoading()
+    }
+
+    override fun onDismissLoading() {
+        dismissLoading()
     }
 
     override fun onResponse(bean: ProductCatalogBean) {
         Glide.with(this).load(bean.miniQrUrl).apply(RequestOptions().error(R.mipmap.ic_wxacode)).into(miniQrUrlIView)
-        mPresenter.setContentList(contentLayout, bean.getModuleContentList(), mItemWidth)
+        mPresenter.setItems(bean.getModuleContentList())
+        mPresenter.setLayoutAnimation(contentRView)
     }
 
     override fun onFailure(failReason: String?) {

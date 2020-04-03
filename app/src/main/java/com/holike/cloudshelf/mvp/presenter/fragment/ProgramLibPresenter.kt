@@ -2,6 +2,8 @@ package com.holike.cloudshelf.mvp.presenter.fragment
 
 import android.content.Context
 import android.text.TextUtils
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
 import androidx.collection.ArrayMap
 import androidx.recyclerview.widget.RecyclerView
 import com.holike.cloudshelf.CurrentApp
@@ -53,8 +55,8 @@ class ProgramLibPresenter : BasePresenter<ProgramLibModel, ProgramLibView>() {
                     showOptionDialog(context, dataSource, getSelected())
                 }
 
-                override fun onSpecSelected(targetPos: Int, map: ArrayMap<String, LabelSpec.Spec>) {
-                    onProgramSpecSelect(map, false)
+                override fun onSpecSelected(targetPos: Int, selected: ArrayMap<String, LabelSpec.Spec>) {
+                    onProgramSpecSelect(selected, false)
                     initData()
                 }
             })
@@ -65,8 +67,8 @@ class ProgramLibPresenter : BasePresenter<ProgramLibModel, ProgramLibView>() {
     private fun showOptionDialog(context: Context, data: MutableList<LabelSpec>, selected: ArrayMap<String, LabelSpec.Spec>) {
         LabelSpecDialog(context).withData(data, selected)
                 .listen(object : LabelSpecDialog.OnConfirmListener {
-                    override fun onConfirm(map: ArrayMap<String, LabelSpec.Spec>, isDataChanged: Boolean) {
-                        onProgramSpecSelect(map, true)
+                    override fun onConfirm(selected: ArrayMap<String, LabelSpec.Spec>, isDataChanged: Boolean) {
+                        onProgramSpecSelect(selected, true)
                     }
                 }).show()
     }
@@ -125,6 +127,18 @@ class ProgramLibPresenter : BasePresenter<ProgramLibModel, ProgramLibView>() {
             updateTableModelHouseData(bean)
         }
         updateTableModelSpec(bean)
+    }
+
+    fun setLayoutAnimation(contentRView: RecyclerView) {
+        //通过加载XML动画设置文件来创建一个Animation对象；
+        val animation = AnimationUtils.loadAnimation(contentRView.context, R.anim.item_anim_from_right)
+        //为ListView设置LayoutAnimationController属性；
+        contentRView.layoutAnimation = LayoutAnimationController(animation).apply {
+            //设置控件显示的顺序；
+            order = LayoutAnimationController.ORDER_NORMAL
+            //设置控件显示间隔时间；
+            delay = 0.8f
+        }
     }
 
     //方案库列表更新

@@ -213,7 +213,7 @@ class SpecListAdapter : CommonAdapter<LabelSpec> {
         setDataSource(dataSource)
         this.mDataList.clear()
         this.mDataList.addAll(dataList)
-        if (selected == null) {
+        if (selected == null || selected.isEmpty) {
             mSelected.clear()
             val selectIndex = labelSpec.obtainSpecList().indexOf(LabelSpec.Spec(dictCode, null))
             if (selectIndex != -1) {
@@ -289,8 +289,8 @@ class SpecListAdapter : CommonAdapter<LabelSpec> {
                     mOnSpecItemClickListener?.onOpenMore(mDataSource)
                 } else {
                     if (position != mOldSelectIndex) {
-                        mOldSelectIndex = position
                         mSelected[parentId] = t
+                        mOldSelectIndex = position
                         notifyDataSetChanged()
                         mOnSpecItemClickListener?.onSpecSelected(targetPos, mSelected)
                     }
@@ -311,6 +311,6 @@ class SpecListAdapter : CommonAdapter<LabelSpec> {
 
         }
 
-        abstract fun onSpecSelected(targetPos: Int, map: ArrayMap<String, LabelSpec.Spec>)
+        abstract fun onSpecSelected(targetPos: Int, selected: ArrayMap<String, LabelSpec.Spec>)
     }
 }

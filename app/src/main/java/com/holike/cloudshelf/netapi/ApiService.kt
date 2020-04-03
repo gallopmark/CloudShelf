@@ -2,6 +2,8 @@ package com.holike.cloudshelf.netapi
 
 import com.holike.cloudshelf.BuildConfig
 import io.reactivex.Observable
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 
@@ -9,6 +11,11 @@ interface ApiService {
     companion object {
         const val TABLE_MODEL_HOUSE = BuildConfig.API_HOST + "program/getTableModelHouse"
         const val TABLE_MODEL = BuildConfig.API_HOST + "program/getTableModel"
+
+        //map转json请求体
+        fun createRequestBody(params: HashMap<String, String?>): RequestBody {
+            return RequestBody.create(MediaType.parse("application/json"), MyJsonParser.toJson(params))
+        }
     }
 
     /*获取业务字典*/

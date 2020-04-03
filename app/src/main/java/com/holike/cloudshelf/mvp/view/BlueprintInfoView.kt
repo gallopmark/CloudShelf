@@ -4,15 +4,11 @@ import com.holike.cloudshelf.bean.BlueprintInfoBean
 import pony.xcode.mvp.BaseView
 
 
-interface BlueprintInfoView : BaseView {
+interface BlueprintInfoView : IView {
 
     fun onPageSelected(position: Int, size: Int)
 
     fun onBottomImageSelected(position: Int)
-
-    fun onShowLoading()
-
-    fun onDismissLoading()
 
     fun onSuccess(bean: BlueprintInfoBean)
 

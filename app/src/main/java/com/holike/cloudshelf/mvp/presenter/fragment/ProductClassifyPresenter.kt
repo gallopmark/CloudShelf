@@ -57,9 +57,9 @@ class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClas
                     showOptionDialog(context, dataSource, getSelected())
                 }
 
-                override fun onSpecSelected(targetPos: Int, map: ArrayMap<String, LabelSpec.Spec>) {
+                override fun onSpecSelected(targetPos: Int, selected: ArrayMap<String, LabelSpec.Spec>) {
                     if (mDictCode == ProductCatalog.AMBRY && targetPos == 0) {
-                        onProductSpecSelect(map, false)
+                        onProductSpecSelect(selected, false)
                     }
                     initData()
                 }
@@ -79,10 +79,15 @@ class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClas
     }
 
     private fun setBottomSpec() {
-        if (mDictCode == ProductCatalog.AMBRY) {
-            mSpecAdapter?.onCupboardTypeSelected(ProductCatalog.AMBRY_CUSTOM_MADE, null)
-        } else {
-            mSpecAdapter?.updateProductSpec(mDictCode)
+        if (!mSpecUpdated) {
+            mSpecAdapter?.let { adapter ->
+                if (mDictCode == ProductCatalog.AMBRY) {
+                    adapter.onCupboardTypeSelected(ProductCatalog.AMBRY_CUSTOM_MADE, null)
+                } else {
+                    adapter.updateProductSpec(mDictCode)
+                }
+            }
+            mSpecUpdated = true
         }
     }
 
@@ -90,9 +95,11 @@ class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClas
         LabelSpecDialog(context).withData(data, selected)
                 .withDictCode(mDictCode)
                 .listen(object : LabelSpecDialog.OnConfirmListener {
-                    override fun onConfirm(map: ArrayMap<String, LabelSpec.Spec>, isDataChanged: Boolean) {
+                    override fun onConfirm(selected: ArrayMap<String, LabelSpec.Spec>, isDataChanged: Boolean) {
                         if (mDictCode == ProductCatalog.AMBRY && isDataChanged) {
-                            onProductSpecSelect(map, true)
+                            onProductSpecSelect(selected, true)
+                        } else {
+                            mSpecAdapter?.setSelected(selected)
                         }
                         initData()
                     }

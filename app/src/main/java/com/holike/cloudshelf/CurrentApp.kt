@@ -2,7 +2,6 @@ package com.holike.cloudshelf
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -179,16 +178,18 @@ class CurrentApp : MultiDexApplication() {
         PreferenceSource.clear()  //清除本地缓存
         //发送事件通知首页检测登录状态
         EventBus.getInstance().post(MessageEvent(EventType.TYPE_LOGIN_INVALID))
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startActivity(intent)
         //finish掉MainActivity之上的所有activity
-        for (act in mActivityCache) {
+        for (i in mActivityCache.size - 1 downTo 0) {
+            val act = mActivityCache[i]
             if (act is MainActivity) {
                 continue
             }
+            act.overridePendingTransition(0, 0)
             act.finish()
         }
+//        val intent = Intent(this, MainActivity::class.java)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//        startActivity(intent)
     }
 
     //获取业务字典 app内全局使用

@@ -17,7 +17,8 @@ import kotlinx.android.synthetic.main.include_backtrack2.*
 import kotlinx.android.synthetic.main.include_main_layout.*
 
 //产品大全-全屋定制、橱柜定制、木门定制、家居家品
-class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, ProductClassifyView>(), ProductClassifyView, OnLoadMoreListener {
+class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, ProductClassifyView>(),
+        ProductClassifyView, OnLoadMoreListener {
     override fun getLayoutResourceId(): Int = R.layout.fragment_multi_type
 
     override fun setup(savedInstanceState: Bundle?) {

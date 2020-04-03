@@ -1,12 +1,9 @@
 package com.holike.cloudshelf.mvp.view
 
 import com.holike.cloudshelf.bean.PlotTypeInfoBean
-import pony.xcode.mvp.BaseView
 
 
-interface PlotTypeInfoView : BaseView {
-    fun onShowLoading()
-    fun onDismissLoading()
+interface PlotTypeInfoView : IView {
     fun onSuccess(bean: PlotTypeInfoBean)
     fun onFailure(failReason: String?)
     fun onPageSelected(position:Int,size:Int)

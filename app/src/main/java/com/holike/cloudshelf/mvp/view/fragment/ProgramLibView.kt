@@ -1,12 +1,10 @@
 package com.holike.cloudshelf.mvp.view.fragment
 
 import com.holike.cloudshelf.bean.TableModelHouseBean
-import pony.xcode.mvp.BaseView
+import com.holike.cloudshelf.mvp.view.IView
 
 
-interface ProgramLibView : BaseView {
-    fun onShowLoading()
-    fun onDismissLoading()
+interface ProgramLibView : IView {
     fun onTableModelHouseResponse(bean: TableModelHouseBean, isLoadMoreEnabled: Boolean)
     fun onNoQueryResults()
     fun onTableModelHouseFailure(failReason: String?, isInit: Boolean)

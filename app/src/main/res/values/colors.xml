@@ -3,6 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#D6001D</color>
+    <color name="col_default">@color/col_06</color>
+    <color name="col_hint_default">#989898</color>
 
     <color name="ic_launcher_background">#1F88FD</color>
     <color name="col_launch">#007AFF</color>

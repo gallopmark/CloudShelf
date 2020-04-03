@@ -60,10 +60,10 @@ class LabelSpecDialog(context: Context) : CommonDialog(context, R.style.AppDialo
             SpecListAdapter(mContext, mDataList)
         }
         adapter.setOnSpecItemClickListener(object : SpecListAdapter.OnSpecItemClickListener() {
-            override fun onSpecSelected(targetPos: Int, map: ArrayMap<String, LabelSpec.Spec>) {
+            override fun onSpecSelected(targetPos: Int, selected: ArrayMap<String, LabelSpec.Spec>) {
                 mDataChanged = true
                 if (mDictCode == ProductCatalog.AMBRY && targetPos == 0) {
-                    val spec = map[ProductCatalog.DICT_CUPBOARD_TYPE]
+                    val spec = selected[ProductCatalog.DICT_CUPBOARD_TYPE]
                     spec?.let {
                         val dictCode = it.id
                         if (dictCode == ProductCatalog.AMBRY_CUSTOM_MADE || dictCode == ProductCatalog.AMBRY_APPLIANCES) {
@@ -82,6 +82,6 @@ class LabelSpecDialog(context: Context) : CommonDialog(context, R.style.AppDialo
     }
 
     interface OnConfirmListener {
-        fun onConfirm(map: ArrayMap<String, LabelSpec.Spec>, isDataChanged: Boolean)
+        fun onConfirm(selected: ArrayMap<String, LabelSpec.Spec>, isDataChanged: Boolean)
     }
 }

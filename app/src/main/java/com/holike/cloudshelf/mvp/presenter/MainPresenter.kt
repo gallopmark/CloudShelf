@@ -126,8 +126,8 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
             override fun onFailure(code: Int, failReason: String?) {
 //                view?.onAdvertisingFailure(failReason)
                 //加载失败，3秒后自动重试
-//                mHandler.removeCallbacks(mRun)
-//                mHandler.postDelayed(mRun, RETRY_TIME)
+                mHandler.removeCallbacks(mRun)
+                mHandler.postDelayed(mRun, RETRY_TIME)
             }
         })
     }

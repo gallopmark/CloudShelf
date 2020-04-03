@@ -16,6 +16,7 @@ import com.holike.cloudshelf.mvp.view.MainView
 import com.holike.cloudshelf.rxbus.EventBus
 import com.holike.cloudshelf.rxbus.EventType
 import com.holike.cloudshelf.rxbus.MessageEvent
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -32,12 +33,13 @@ class MainActivity : HollyActivity<MainPresenter, MainView>(), MainView {
         mPresenter.initClickViews(this, programmeIView, productsIView, searchHomeIView, shareHomeIView)
         mPresenter.getAdvertising()
         mPresenter.getVersionInfo()
-        mDisposable = EventBus.getInstance().toObservable(MessageEvent::class.java).subscribe {
-            if (TextUtils.equals(it.type, EventType.TYPE_LOGIN_INVALID)) {  //收到被挤出登录的通知
-                logoutTextView.visibility = View.GONE  //隐藏退出登录按钮
-                mPresenter.initLoginState(this)
-            }
-        }
+        mDisposable = EventBus.getInstance().toObservable(MessageEvent::class.java)
+                .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    if (TextUtils.equals(it.type, EventType.TYPE_LOGIN_INVALID)) {  //收到被挤出登录的通知
+                        logoutTextView.visibility = View.GONE  //隐藏退出登录按钮
+                        mPresenter.initLoginState(this)
+                    }
+                }
     }
 
     //获取广告成功

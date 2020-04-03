@@ -44,6 +44,7 @@ class ProgramLibFragment : HollyFragment<ProgramLibPresenter, ProgramLibView>(),
     override fun onTableModelHouseResponse(bean: TableModelHouseBean, isLoadMoreEnabled: Boolean) {
         countTView.text = String.format(getString(R.string.text_program_count, bean.total))
         hideDefaultPage()
+        mPresenter.setLayoutAnimation(centerRView)
         if (refreshLayout.visibility != View.VISIBLE) {
             refreshLayout.visibility = View.VISIBLE
         }

@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!--默认字体颜色-->
+        <item name="android:textColor">@color/col_default</item>
+        <item name="android:textColorHint">@color/col_hint_default</item>
         <!-- 页面默认背景-->
         <item name="android:windowBackground">@mipmap/pic_bg</item>
     </style>

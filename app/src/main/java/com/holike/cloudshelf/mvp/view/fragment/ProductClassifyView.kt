@@ -1,13 +1,10 @@
 package com.holike.cloudshelf.mvp.view.fragment
 
 import com.holike.cloudshelf.bean.ProductOptionBean
-import pony.xcode.mvp.BaseView
+import com.holike.cloudshelf.mvp.view.IView
 
+interface ProductClassifyView : IView {
 
-interface ProductClassifyView : BaseView {
-
-    fun onShowLoading()
-    fun onDismissLoading()
     fun onProductProgramResponse(bean: ProductOptionBean, isLoadMoreEnabled: Boolean)
     fun onNoQueryResults()
     fun onProductProgramFailure(failReason: String?, isInit: Boolean)

@@ -1,11 +1,8 @@
 package com.holike.cloudshelf.base
 
-import pony.xcode.mvp.BaseView
+import com.holike.cloudshelf.mvp.view.IView
 
-interface RefreshView<B> : BaseView {
-
-    fun onShowLoading()
-    fun onDismissLoading()
+interface RefreshView<B> : IView {
 
     fun onSuccess(bean: B, isLoadMoreEnabled: Boolean)
 
