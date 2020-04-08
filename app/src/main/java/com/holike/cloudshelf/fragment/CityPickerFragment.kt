@@ -37,6 +37,7 @@ class CityPickerFragment : BaseFragment(), InnerListener,
     private var mOnPickListener: OnPickListener? = null
 
     //设置当前定位城市
+    @Suppress("unused")
     fun setLocationCity(locatedCity: LocatedCity?) {
         this.mLocatedCity = locatedCity
     }
@@ -70,6 +71,7 @@ class CityPickerFragment : BaseFragment(), InnerListener,
         sideIndexBar.setNavigationBarHeight(ScreenUtil.getNavigationBarHeight(mContext))
         sideIndexBar.setOverlayTextView(overlayTView).setOnIndexChangedListener(this)
         searchTView.setOnClickListener { showSearchDialog() }
+        cityPickerContainer.scheduleLayoutAnimation()
     }
 
     private fun initData() {

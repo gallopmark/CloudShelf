@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--通用view style 返回键、视频按钮、全景按钮等-->
+    <style name="CommonViewStyle">
+        <item name="android:layout_width">@dimen/dp_80</item>
+        <item name="android:layout_height">@dimen/dp_80</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_col11_corners2dp</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textColor">@color/col_10</item>
+        <item name="android:drawablePadding">@dimen/dp_6</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+</resources>

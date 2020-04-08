@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pony.xcode.widget.DrawableTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@id/view_back"
-    android:layout_width="@dimen/dp_80"
-    android:layout_height="@dimen/dp_80"
-    android:background="@drawable/bg_backtrack2"
+    style="@style/CommonViewStyle"
+    android:background="@drawable/bg_col13_corners2dp"
     android:drawableTop="@mipmap/ic_back_black"
-    android:drawablePadding="@dimen/dp_6"
-    android:gravity="center"
-    android:layout_gravity="center"
-    android:text="@string/text_back"
     android:textColor="@color/col_14"
-    android:textSize="@dimen/sp_12" />
+    android:text="@string/text_back" />

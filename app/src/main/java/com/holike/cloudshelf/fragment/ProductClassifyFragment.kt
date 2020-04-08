@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
 import com.holike.cloudshelf.R
-import com.holike.cloudshelf.activity.PicturePreviewActivity
+import com.holike.cloudshelf.activity.ContentInfoActivity
 import com.holike.cloudshelf.base.BaseActivity
 import com.holike.cloudshelf.base.HollyFragment
 import com.holike.cloudshelf.bean.ProductOptionBean
@@ -13,32 +13,46 @@ import com.holike.cloudshelf.mvp.view.fragment.ProductClassifyView
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import kotlinx.android.synthetic.main.fragment_multi_type.*
-import kotlinx.android.synthetic.main.include_backtrack2.*
 import kotlinx.android.synthetic.main.include_main_layout.*
 
-//产品大全-全屋定制、橱柜定制、木门定制、家居家品
-class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, ProductClassifyView>(),
+//产品大全-全屋定制、橱柜定制、木门定制
+open class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, ProductClassifyView>(),
         ProductClassifyView, OnLoadMoreListener {
     override fun getLayoutResourceId(): Int = R.layout.fragment_multi_type
 
     override fun setup(savedInstanceState: Bundle?) {
+        initViewData()
+    }
+
+    private fun initViewData() {
         typeTView.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_title_products, 0, 0, 0)
         val extras = arguments
         extras?.let {
             typeTView.text = it.getString("title")
-            mPresenter.setDictCode(it.getString("dictCode"))
+            mPresenter.setDictCode(it, it.getString("dictCode"))
         }
         mPresenter.initRView(mContext, centerRView, bottomRView)
-        startAnim()
-        mPresenter.initData()
+        initData()
+        startLayoutAnimation()
         refreshLayout.setOnLoadMoreListener(this)
     }
 
-    private fun startAnim() {
-        topLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_bottom_to_top))
-        centerRView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_bottom_to_top_slow))
-        bottomRView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_bottom_to_top_more_slow))
-        view_back.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_bottom_to_top_more_slow))
+    private fun startLayoutAnimation() {
+        containerLayout.layoutAnimation = AnimationUtils.loadLayoutAnimation(mContext, R.anim.la_layout_from_bottom)
+    }
+
+    override fun onShowNavigation(isShow: Boolean) {
+        bottomRView.visibility = if (isShow) View.VISIBLE else View.INVISIBLE
+    }
+
+    override fun onBottomSpecUpdate() {
+        if (bottomRView.visibility != View.INVISIBLE) {
+            bottomRView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom))
+        }
+    }
+
+    private fun initData() {
+        mPresenter.initData()
     }
 
     override fun onLoadMore(refreshLayout: RefreshLayout) {
@@ -46,7 +60,7 @@ class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, ProductC
     }
 
     override fun onReload() {
-        mPresenter.initData()
+        initData()
     }
 
     override fun onShowLoading() {
@@ -57,8 +71,8 @@ class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, ProductC
         dismissLoading()
     }
 
-    override fun onProductProgramResponse(bean: ProductOptionBean, isLoadMoreEnabled: Boolean) {
-        countTView.text = String.format(getString(R.string.text_program_count, bean.pageTotal))
+    override fun onProductClassifyResponse(bean: ProductOptionBean, isLoadMoreEnabled: Boolean) {
+        countTView.text = String.format(getString(R.string.text_total_count, bean.totalCount))
         hideDefaultPage()
         if (refreshLayout.visibility != View.VISIBLE) {
             refreshLayout.visibility = View.VISIBLE
@@ -67,7 +81,7 @@ class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, ProductC
         refreshLayout.setEnableLoadMore(isLoadMoreEnabled)
     }
 
-    override fun onProductProgramFailure(failReason: String?, isInit: Boolean) {
+    override fun onProductClassifyFailure(failReason: String?, isInit: Boolean) {
         refreshLayout.finishLoadMore()
         if (isInit) {
             countTView.text = String.format(getString(R.string.text_program_count, "0"))
@@ -88,7 +102,6 @@ class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, ProductC
     }
 
     override fun onItemClick(id: String?) {
-        multiTypeContent.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.translate_to_bottom))
-        multiTypeContent.postDelayed({ PicturePreviewActivity.openProductClassify(mContext as BaseActivity, id) }, 400)
+        ContentInfoActivity.openProductClassify(mContext as BaseActivity, id)
     }
 }

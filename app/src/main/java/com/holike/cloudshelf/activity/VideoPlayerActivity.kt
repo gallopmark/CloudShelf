@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.FrameLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.holike.cloudshelf.BuildConfig
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.base.BaseActivity
@@ -15,12 +17,18 @@ import pony.xcode.media.jz.JZvd
 class VideoPlayerActivity : BaseActivity() {
 
     companion object {
+
         fun open(act: BaseActivity, videoUrl: String?) {
+            open(act, videoUrl, null)
             val intent = Intent(act, VideoPlayerActivity::class.java)
-            intent.putExtra(
-                    "videoUrl",
-                    "https://file.holike.com/miniprogram/test/video/5f839692-8eeb-40e0-aa69-aee594e73ada.mp4"
-            )
+            intent.putExtra("videoUrl", videoUrl)
+            act.openActivity(intent)
+        }
+
+        fun open(act: BaseActivity, videoUrl: String?, videoPic: String?) {
+            val intent = Intent(act, VideoPlayerActivity::class.java)
+            intent.putExtra("videoUrl", videoUrl)
+            intent.putExtra("videoPic", videoPic)
             act.openActivity(intent)
         }
     }
@@ -28,10 +36,11 @@ class VideoPlayerActivity : BaseActivity() {
     override fun getLayoutResourceId(): Int = R.layout.activity_videoplayer
 
     override fun setup(savedInstanceState: Bundle?) {
-        super.setup(savedInstanceState)
+        JZvd.setDebugMode(BuildConfig.LOG_DEBUG)
         initVideoView()
         videoView.setUp(intent.getStringExtra("videoUrl"), "", JZvd.SCREEN_NORMAL, ExoMediaInterface::class.java)
-        Glide.with(this).load(R.mipmap.ic_video_default).into(videoView.thumbImageView)
+        val videoPic = intent.getStringExtra("videoPic")
+        Glide.with(this).load(videoPic).apply(RequestOptions().placeholder(R.mipmap.ic_video_default)).into(videoView.thumbImageView)
     }
 
     private fun initVideoView() {

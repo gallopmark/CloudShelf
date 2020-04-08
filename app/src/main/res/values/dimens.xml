@@ -22,6 +22,7 @@
     <dimen name="dp_100">100dp</dimen>
     <dimen name="dp_120">120dp</dimen>
     <dimen name="dp_130">130dp</dimen>
+    <dimen name="dp_170">170dp</dimen>
     <dimen name="dp_200">200dp</dimen>
     <dimen name="dp_270">270dp</dimen>
     <dimen name="dp_330">330dp</dimen>

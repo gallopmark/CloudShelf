@@ -46,19 +46,16 @@
             </intent-filter>
         </activity>
 
-        <!--产品大全-->
-        <activity android:name=".activity.ProductCatalogActivity" />
-
         <activity android:name=".activity.MultiTypeActivity" />
-        <activity android:name=".activity.PicturePreviewActivity" />
+        <activity android:name=".activity.ContentInfoActivity" />
 
         <!--晒晒我家-->
-        <activity android:name=".activity.BlueprintListActivity" />
+        <activity android:name=".activity.BleachedHouseActivity" />
         <!--晒晒我家详情-->
-        <activity android:name=".activity.BlueprintInfoActivity" />
+        <activity android:name=".activity.BleachedHouseInfoActivity" />
         <!--搜搜我家-->
         <activity
-            android:name=".activity.SoughtHouseActivity"
+            android:name=".activity.NearMyHouseActivity"
             android:theme="@style/DefaultCityPickerTheme"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--小区户型列表-->

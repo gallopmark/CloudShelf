@@ -26,19 +26,16 @@
         <item name="android:windowExitAnimation">@anim/dialog_bottom_out</item>
     </style>
 
+    <!--loading加载框 背景透明-->
     <style name="LoadingDialogStyle" parent="@android:style/Theme.Dialog">
-        <!-- 边框 -->
-        <item name="android:windowFrame">@color/transparent</item>
-        <!-- 是否浮现在activity之上 -->
-        <item name="android:windowIsFloating">true</item>
-        <!-- 半透明 -->
-        <item name="android:windowIsTranslucent">false</item>
-        <!-- 无标题 -->
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+        <item name="android:windowAnimationStyle">@style/LoadingDialogWindowStyle</item>
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
-        <item name="android:windowBackground">@color/transparent</item>
     </style>
 
     <style name="LoadingDialogWindowStyle">
@@ -46,7 +43,7 @@
         <item name="android:windowExitAnimation">@anim/anim_modal_out</item>
     </style>
 
-
+    <!--城市选择主题-->
     <style name="AppCityPickerTheme" parent="AppTheme">
         <item name="cpBackground">@color/col_20</item>
 

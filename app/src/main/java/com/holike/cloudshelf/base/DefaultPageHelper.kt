@@ -1,5 +1,6 @@
 package com.holike.cloudshelf.base
 
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -15,12 +16,26 @@ internal class DefaultPageHelper {
          * @param text 缺省提示语
          */
         fun noResult(act: BaseActivity, @DrawableRes iconRes: Int, text: CharSequence?) {
-            val defaultPage = act.findViewById<View>(R.id.vg_default_page)
+            val textInfo = if (text.isNullOrEmpty()) act.getString(R.string.text_no_result) else text
+            noResult(act.findViewById(R.id.vg_default_page), act.getDrawableCompat(iconRes), textInfo)
+        }
+
+        /**
+         * 展示无结果缺省页
+         * @param iconRes 缺省图标
+         * @param text 缺省提示语
+         */
+        fun noResult(fragment: BaseFragment, @DrawableRes iconRes: Int, text: CharSequence?) {
+            val textInfo = if (text.isNullOrEmpty()) fragment.context?.getString(R.string.text_no_result) else text
+            noResult(fragment.contentView.findViewById(R.id.vg_default_page), fragment.getDrawableCompat(iconRes), textInfo)
+        }
+
+        private fun noResult(defaultPage: View?, drawableTop: Drawable?, textInfo: CharSequence?) {
             defaultPage?.let {
                 it.visibility = View.VISIBLE
                 val centerTView = it.findViewById<TextView>(R.id.centerTView)
-                centerTView.setCompoundDrawablesWithIntrinsicBounds(null, act.getDrawableCompat(iconRes), null, null)
-                centerTView.text = if (text.isNullOrEmpty()) act.getString(R.string.text_no_result) else text
+                centerTView.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
+                centerTView.text = textInfo
                 it.findViewById<TextView>(R.id.refreshTView).visibility = View.GONE
             }
         }
@@ -31,41 +46,9 @@ internal class DefaultPageHelper {
          * @param failReason 错误原因
          */
         fun noNetwork(act: BaseActivity, @DrawableRes iconRes: Int, failReason: CharSequence?) {
-            val defaultPage = act.findViewById<View>(R.id.vg_default_page)
-            defaultPage?.let { dePage ->
-                dePage.visibility = View.VISIBLE
-                val centerTView = dePage.findViewById<TextView>(R.id.centerTView)
-                centerTView.setCompoundDrawablesWithIntrinsicBounds(null, act.getDrawableCompat(iconRes),
-                        null, null)
-                centerTView.text = if (failReason.isNullOrEmpty())
-                    act.getString(R.string.text_network_error) else failReason
-                val refreshTView = dePage.findViewById<TextView>(R.id.refreshTView)
-                refreshTView.visibility = View.VISIBLE
-                refreshTView.setOnClickListener {
-                    dePage.visibility = View.GONE
-                    act.onReload()
-                }
-            }
-        }
-
-        fun hide(act: BaseActivity) {
-            act.findViewById<View>(R.id.vg_default_page)?.visibility = View.GONE
-        }
-
-        /**
-         * 展示无结果缺省页
-         * @param iconRes 缺省图标
-         * @param text 缺省提示语
-         */
-        fun noResult(fragment: BaseFragment, @DrawableRes iconRes: Int, text: CharSequence?) {
-            val defaultPage = fragment.contentView.findViewById<View>(R.id.vg_default_page)
-            defaultPage?.let {
-                it.visibility = View.VISIBLE
-                val centerTView = it.findViewById<TextView>(R.id.centerTView)
-                centerTView.setCompoundDrawablesWithIntrinsicBounds(null, fragment.getDrawableCompat(iconRes), null, null)
-                centerTView.text = if (text.isNullOrEmpty()) fragment.context?.getString(R.string.text_no_result) else text
-                it.findViewById<TextView>(R.id.refreshTView).visibility = View.GONE
-            }
+            noNetwork(act.findViewById(R.id.vg_default_page), act.getDrawableCompat(iconRes)
+                    , if (failReason.isNullOrEmpty()) act.getString(R.string.text_network_error) else failReason,
+                    View.OnClickListener { act.onReload() })
         }
 
         /**
@@ -74,21 +57,28 @@ internal class DefaultPageHelper {
          * @param failReason 错误原因
          */
         fun noNetwork(fragment: BaseFragment, @DrawableRes iconRes: Int, failReason: CharSequence?) {
-            val defaultPage = fragment.contentView.findViewById<View>(R.id.vg_default_page)
-            defaultPage?.let { dePage ->
-                dePage.visibility = View.VISIBLE
-                val centerTView = dePage.findViewById<TextView>(R.id.centerTView)
-                centerTView.setCompoundDrawablesWithIntrinsicBounds(null, fragment.getDrawableCompat(iconRes),
-                        null, null)
-                centerTView.text = if (failReason.isNullOrEmpty())
-                    fragment.context?.getString(R.string.text_network_error) else failReason
-                val refreshTView = dePage.findViewById<TextView>(R.id.refreshTView)
+            noNetwork(fragment.contentView.findViewById(R.id.vg_default_page), fragment.getDrawableCompat(iconRes)
+                    , if (failReason.isNullOrEmpty()) fragment.context?.getString(R.string.text_network_error) else failReason,
+                    View.OnClickListener { fragment.onReload() })
+        }
+
+        private fun noNetwork(defaultPage: View?, drawableTop: Drawable?, textInfo: CharSequence?, l: View.OnClickListener) {
+            defaultPage?.let {
+                it.visibility = View.VISIBLE
+                val centerTView = it.findViewById<TextView>(R.id.centerTView)
+                centerTView.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
+                centerTView.text = textInfo
+                val refreshTView = it.findViewById<TextView>(R.id.refreshTView)
                 refreshTView.visibility = View.VISIBLE
-                refreshTView.setOnClickListener {
-                    dePage.visibility = View.GONE
-                    fragment.onReload()
+                refreshTView.setOnClickListener { v ->
+                    it.visibility = View.GONE
+                    l.onClick(v)
                 }
             }
+        }
+
+        fun hide(act: BaseActivity) {
+            act.findViewById<View>(R.id.vg_default_page)?.visibility = View.GONE
         }
 
         fun hide(fragment: BaseFragment) {

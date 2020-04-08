@@ -2,16 +2,18 @@ package com.holike.cloudshelf.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
-import com.holike.cloudshelf.base.BaseActivity
+import com.holike.cloudshelf.base.BaseFragment
 import com.holike.cloudshelf.base.HollyActivity
 import com.holike.cloudshelf.bean.AMapLocationBean
 import com.holike.cloudshelf.fragment.CityPickerFragment
 import com.holike.cloudshelf.mvp.presenter.LocationPresenter
 import com.holike.cloudshelf.mvp.view.LocationView
 import kotlinx.android.synthetic.main.activity_citypicker.*
+import kotlinx.android.synthetic.main.include_backtrack2.*
 import pony.xcode.citypicker.adapter.OnPickListener
 import pony.xcode.citypicker.model.City
 import pony.xcode.citypicker.model.LocateState
@@ -24,8 +26,12 @@ class CityPickerActivity : HollyActivity<LocationPresenter, LocationView>(), Loc
         private const val TAG = "city-picker"
 
         //当前城市
-        fun openForResult(act: BaseActivity, requestCode: Int) {
-            act.openActivityForResult(CityPickerActivity::class.java, requestCode)
+//        fun openForResult(act: BaseActivity, requestCode: Int) {
+//            act.openActivityForResult(CityPickerActivity::class.java, requestCode)
+//        }
+
+        fun openForResult(fragment: BaseFragment, requestCode: Int) {
+            fragment.openActivityForResult(CityPickerActivity::class.java, requestCode)
         }
     }
 
@@ -33,6 +39,17 @@ class CityPickerActivity : HollyActivity<LocationPresenter, LocationView>(), Loc
 
     override fun setup(savedInstanceState: Bundle?) {
         super.setup(savedInstanceState)
+        startLayoutAnimation()
+        initPicker()
+        mPresenter.onLocate()
+    }
+
+    private fun startLayoutAnimation() {
+        titleTView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom))
+        view_back.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom))
+    }
+
+    private fun initPicker() {
         val width = CurrentApp.getInstance().getMaxPixels() / 2
         val lp = pickerLayout.layoutParams as FrameLayout.LayoutParams
         lp.width = width
@@ -53,13 +70,12 @@ class CityPickerActivity : HollyActivity<LocationPresenter, LocationView>(), Loc
             }
         })
         supportFragmentManager.beginTransaction().add(R.id.picker_container, cityPickerFragment, TAG).commitAllowingStateLoss()
-        mPresenter.onLocate()
     }
 
     override fun onLocationSuccess(bean: AMapLocationBean) {
         val fragment = supportFragmentManager.findFragmentByTag(TAG)
-        if (fragment != null && fragment is CityPickerFragment) {
-            fragment.locationChanged(LocatedCity(bean.city, bean.province, bean.adcode), LocateState.SUCCESS)
+        if (fragment != null) {
+            (fragment as CityPickerFragment).locationChanged(LocatedCity(bean.city, bean.province, bean.adcode), LocateState.SUCCESS)
         }
     }
 

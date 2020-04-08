@@ -2,9 +2,7 @@ package com.holike.cloudshelf.helper
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
@@ -27,7 +25,7 @@ class ClearEditTextHelper {
                         listener?.textChanged(true)
                         setIconChange(edt, 0)
                     } else {
-                        setIconChange(edt, R.mipmap.delet_zhaopian_1x)
+                        setIconChange(edt, R.mipmap.ic_clear)
                         listener?.textChanged(false)
                     }
                 }

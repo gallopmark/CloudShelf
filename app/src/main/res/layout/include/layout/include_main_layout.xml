@@ -20,6 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:drawablePadding="@dimen/dp_6"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:gravity="center"
             android:textColor="@color/col_03"
             android:textSize="@dimen/sp_18"

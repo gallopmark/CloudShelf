@@ -35,10 +35,10 @@ class SystemCodeBean {
     private var homeProClaMap: HashMap<String, String>? = null //家品分类(家居家品)
 
     @SerializedName("series_Furnished")
-    private var seriesFurnishedMap: HashMap<String, String>? = null
+    private var seriesFurnishedMap: HashMap<String, String>? = null //系列(成品家具)
 
     @SerializedName("style_curtain")
-    private var styleCurtainMap: HashMap<String, String>? = null
+    private var styleCurtainMap: HashMap<String, String>? = null //风格（定制窗帘）
 
     @SerializedName("show_navigation")
     private var showNavigationMap: HashMap<String, String>? = null

@@ -89,9 +89,10 @@ class SpecListAdapter : CommonAdapter<LabelSpec> {
     //来自产品大全的字典集
     fun updateProductSpec(dictType: String?) {
         val code = CurrentApp.getInstance().getSystemCode() ?: return
-        if (dictType != ProductCatalog.WHOLE_HOUSE
-                && dictType != ProductCatalog.DOOR
-                && dictType != ProductCatalog.HOME_PRO) {
+        if (dictType != ProductCatalog.WHOLE_HOUSE &&
+                dictType != ProductCatalog.DOOR &&
+                dictType != ProductCatalog.HOME_PRO_FURNISHED &&
+                dictType != ProductCatalog.HOME_PRO_CURTAIN) {
             return
         }
         val dataList = ArrayList<LabelSpec>()
@@ -124,12 +125,15 @@ class SpecListAdapter : CommonAdapter<LabelSpec> {
                 dataList.add(obtainLabelSpecSub(seriesSource, ProductCatalog.DICT_DOOR_SERIES,
                         R.mipmap.ic_classification_style, mContext.getString(R.string.text_series), true))
             }
-            else -> {  //家居家品
-//            val proClaSource = code.getHomeProClaCode()
-//            dataSource.add(obtainLabelSpec(seriesSource, ProductCatalog.DICT_DOOR_SERIES,
-//                    R.mipmap.ic_classification_style, mContext.getString(R.string.text_series)))
-//            dataList.add(obtainLabelSpecSub(seriesSource, ProductCatalog.DICT_DOOR_SERIES,
-//                    R.mipmap.ic_classification_style, mContext.getString(R.string.text_series)))
+            ProductCatalog.HOME_PRO_FURNISHED -> { //家居家品-成品家具
+                val seriesSource = code.getSeriesFurnishedCode()
+                dataSource.add(obtainLabelSpec(seriesSource, ProductCatalog.HOME_PRO_FURNISHED, R.mipmap.ic_classification_style, mContext.getString(R.string.text_series), true))
+                dataList.add(obtainLabelSpecSub(seriesSource, ProductCatalog.HOME_PRO_FURNISHED, R.mipmap.ic_classification_style, mContext.getString(R.string.text_series), true))
+            }
+            else -> {
+                val styleSource = code.getStyleCurtainCode()
+                dataSource.add(obtainLabelSpec(styleSource, ProductCatalog.HOME_PRO_CURTAIN, R.mipmap.ic_classification_style, mContext.getString(R.string.text_style), true))
+                dataList.add(obtainLabelSpecSub(styleSource, ProductCatalog.HOME_PRO_CURTAIN, R.mipmap.ic_classification_style, mContext.getString(R.string.text_style), true))
             }
         }
         setDataSource(dataSource)
@@ -175,7 +179,7 @@ class SpecListAdapter : CommonAdapter<LabelSpec> {
     }
 
     //橱柜定制-类型切换
-    fun onCupboardTypeSelected(dictCode: String?, selected: ArrayMap<String, LabelSpec.Spec>?) {
+    fun onCupboardTypeSelected(dictCode: String?, selected: ArrayMap<String, LabelSpec.Spec>?, includeEdge: Boolean) {
         val code = CurrentApp.getInstance().getSystemCode() ?: return
         val dataList = ArrayList<LabelSpec>()
         val dataSource = ArrayList<LabelSpec>()
@@ -188,27 +192,41 @@ class SpecListAdapter : CommonAdapter<LabelSpec> {
         if (dictCode == ProductCatalog.AMBRY_CUSTOM_MADE) {
             //橱柜定制-橱柜类型
             val modelSource = code.getModelAmBryCode() //橱柜定制-造型字典
-            dataSource.add(obtainLabelSpec(modelSource, ProductCatalog.DICT_CUPBOARD_MODEL,
-                    R.mipmap.ic_classifiton_modelling, mContext.getString(R.string.text_modeling), true))
-            dataList.add(obtainLabelSpecSub(modelSource, ProductCatalog.DICT_CUPBOARD_MODEL,
-                    R.mipmap.ic_classifiton_modelling, mContext.getString(R.string.text_modeling), true))
+            val modelSpec = obtainLabelSpec(modelSource, ProductCatalog.DICT_CUPBOARD_MODEL,
+                    R.mipmap.ic_classifiton_modelling, mContext.getString(R.string.text_modeling), true)
+            dataSource.add(modelSpec)
             val seriesSource = code.getSeriesAmBryCode()
-            dataSource.add(obtainLabelSpec(seriesSource, ProductCatalog.DICT_CUPBOARD_SERIES,
-                    R.mipmap.ic_classification_style, mContext.getString(R.string.text_series), true))
-            dataList.add(obtainLabelSpecSub(seriesSource, ProductCatalog.DICT_CUPBOARD_SERIES,
-                    R.mipmap.ic_classification_style, mContext.getString(R.string.text_series), true))
+            val seriesSpec = obtainLabelSpec(seriesSource, ProductCatalog.DICT_CUPBOARD_SERIES,
+                    R.mipmap.ic_classification_style, mContext.getString(R.string.text_series), true)
+            dataSource.add(seriesSpec)
+            if (includeEdge) {
+                dataList.add(modelSpec)
+                dataList.add(seriesSpec)
+            } else {
+                dataList.add(obtainLabelSpecSub(modelSource, ProductCatalog.DICT_CUPBOARD_MODEL,
+                        R.mipmap.ic_classifiton_modelling, mContext.getString(R.string.text_modeling), true))
+                dataList.add(obtainLabelSpecSub(seriesSource, ProductCatalog.DICT_CUPBOARD_SERIES,
+                        R.mipmap.ic_classification_style, mContext.getString(R.string.text_series), true))
+            }
         } else {
             //橱柜定制-电器类型
-            val brandSource = code.getBrandApplianceCode()  //橱柜电器-品牌字典
-            dataSource.add(obtainLabelSpec(brandSource, ProductCatalog.DICT_BRAND_APPLIANCE,
-                    R.mipmap.ic_classifiton_modelling, mContext.getString(R.string.text_brand), true))
-            dataList.add(obtainLabelSpecSub(brandSource, ProductCatalog.DICT_BRAND_APPLIANCE,
-                    R.mipmap.ic_classifiton_modelling, mContext.getString(R.string.text_brand), true))
+            val brandSource = code.getBrandApplianceCode() //橱柜电器-品牌字典
+            val brandSpec = obtainLabelSpec(brandSource, ProductCatalog.DICT_BRAND_APPLIANCE,
+                    R.mipmap.ic_classifiton_modelling, mContext.getString(R.string.text_brand), true)
+            dataSource.add(brandSpec)
             val funcSource = code.getFunctionApplianceCode() //橱柜电器-功能字典
-            dataSource.add(obtainLabelSpec(funcSource, ProductCatalog.DICT_FUNCTION_APPLIANCE,
-                    R.mipmap.ic_classification_style, mContext.getString(R.string.text_function), true))
-            dataList.add(obtainLabelSpecSub(funcSource, ProductCatalog.DICT_FUNCTION_APPLIANCE,
-                    R.mipmap.ic_classification_style, mContext.getString(R.string.text_function), true))
+            val funcSpec = obtainLabelSpec(code.getFunctionApplianceCode(), ProductCatalog.DICT_FUNCTION_APPLIANCE,
+                    R.mipmap.ic_classification_style, mContext.getString(R.string.text_function), true)
+            dataSource.add(funcSpec)
+            if (includeEdge) {
+                dataList.add(brandSpec)
+                dataList.add(funcSpec)
+            } else {
+                dataList.add(obtainLabelSpecSub(brandSource, ProductCatalog.DICT_BRAND_APPLIANCE,
+                        R.mipmap.ic_classifiton_modelling, mContext.getString(R.string.text_brand), true))
+                dataList.add(obtainLabelSpecSub(funcSource, ProductCatalog.DICT_FUNCTION_APPLIANCE,
+                        R.mipmap.ic_classification_style, mContext.getString(R.string.text_function), true))
+            }
         }
         setDataSource(dataSource)
         this.mDataList.clear()

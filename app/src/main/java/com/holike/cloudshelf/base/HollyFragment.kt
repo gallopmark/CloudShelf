@@ -18,7 +18,7 @@ abstract class HollyFragment<P : BasePresenter<*, V>, V : BaseView> : BaseFragme
                 mPresenter.register(this as V)
             }
         } catch (e: Exception) {
-            //You should extends BaseActivity only
+            //You should extends BaseFragment only
         }
     }
 

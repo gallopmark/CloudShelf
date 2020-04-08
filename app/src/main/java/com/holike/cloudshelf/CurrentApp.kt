@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.Process
 import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDelegate
@@ -31,7 +30,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.HashMap
 
-
+//程序入口
 class CurrentApp : MultiDexApplication() {
     init {
         /*
@@ -85,13 +84,16 @@ class CurrentApp : MultiDexApplication() {
 
     //获取屏幕宽高，全局使用
     private fun initDisplay() {
-        val wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val outMetrics = DisplayMetrics()
-        wm.defaultDisplay.getMetrics(outMetrics)
-        mScreenWidth = outMetrics.widthPixels
-        mScreenHeight = outMetrics.heightPixels
-        mMaxPixels = mScreenWidth.coerceAtLeast(mScreenHeight)
-        mMinPixels = mScreenWidth.coerceAtMost(mScreenHeight)
+        val ws = getSystemService(Context.WINDOW_SERVICE)
+        ws?.let {
+            val wm = it as WindowManager
+            val outMetrics = DisplayMetrics()
+            wm.defaultDisplay.getMetrics(outMetrics)
+            mScreenWidth = outMetrics.widthPixels
+            mScreenHeight = outMetrics.heightPixels
+            mMaxPixels = mScreenWidth.coerceAtLeast(mScreenHeight)
+            mMinPixels = mScreenWidth.coerceAtMost(mScreenHeight)
+        }
     }
 
     //极光推送初始化
@@ -109,13 +111,13 @@ class CurrentApp : MultiDexApplication() {
         }
     }
 
-    fun getScreenWidth() = mScreenWidth
+//    fun getScreenWidth() = mScreenWidth
 
     fun getScreenHeight() = mScreenHeight
 
     fun getMaxPixels() = mMaxPixels
 
-    fun getMinPixels() = mMinPixels
+//    fun getMinPixels() = mMinPixels
 
     fun putExtra(name: String, obj: Any?) {
         if (mValueMap == null) {
@@ -161,17 +163,17 @@ class CurrentApp : MultiDexApplication() {
      */
     fun getCurrentActivity(): Activity? = mWeakRef?.get()
 
-    fun finishAllActivities() {
-        for (act in mActivityCache) {
-            act.finish()
-        }
-    }
+//    fun finishAllActivities() {
+//        for (act in mActivityCache) {
+//            act.finish()
+//        }
+//    }
 
     //退出app
-    fun exit() {
-        finishAllActivities()
-        Process.killProcess(Process.myPid())
-    }
+//    fun exit() {
+//        finishAllActivities()
+//        Process.killProcess(Process.myPid())
+//    }
 
     //app收到登录认证失效时-即被挤出登录时 退回到首页
     fun backToHome() {

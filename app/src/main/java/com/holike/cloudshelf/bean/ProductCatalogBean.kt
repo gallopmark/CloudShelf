@@ -1,6 +1,8 @@
 package com.holike.cloudshelf.bean
 
 import com.google.gson.annotations.SerializedName
+import com.holike.cloudshelf.R
+import com.holike.cloudshelf.enumc.ProductCatalog
 
 //产品大全数据
 class ProductCatalogBean {
@@ -31,5 +33,35 @@ class ProductCatalogBean {
 
         @SerializedName("icon")
         var icon: String? = null
+
+        fun getBackgroundPic(): Int {
+            return when (dictCode) {
+                ProductCatalog.WHOLE_HOUSE -> {
+                    R.mipmap.pic_products_wholehome
+                }
+                ProductCatalog.AMBRY -> {
+                    R.mipmap.pic_products_cupboards
+                }
+                ProductCatalog.DOOR -> {
+                    R.mipmap.pic_products_wodeendoors
+                }
+                else -> R.mipmap.pic_products_finishedprod
+            }
+        }
+
+        fun getPlaceholderIcon(): Int {
+            return when (dictCode) {
+                ProductCatalog.WHOLE_HOUSE -> {
+                    R.mipmap.ic_products_wholehome
+                }
+                ProductCatalog.AMBRY -> {
+                    R.mipmap.ic_products_cupboards
+                }
+                ProductCatalog.DOOR -> {
+                    R.mipmap.ic_products_wodeendoors
+                }
+                else -> R.mipmap.ic_products_finishedprod
+            }
+        }
     }
 }

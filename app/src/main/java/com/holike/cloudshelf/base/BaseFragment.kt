@@ -1,6 +1,8 @@
 package com.holike.cloudshelf.base
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,10 +11,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.IntRange
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.holike.cloudshelf.R
+import com.holike.cloudshelf.util.CheckUtils
 import com.holike.cloudshelf.widget.CustomToast
 
 
@@ -23,18 +27,17 @@ abstract class BaseFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         this.mContext = context
+        createPresenter()
     }
 
+    internal open fun createPresenter() {}
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contentView = inflater.inflate(getLayoutResourceId(), container, false)
         contentView.findViewById<View>(R.id.view_back)?.setOnClickListener { onBackPressed() }
-        createPresenter()
         return contentView
     }
 
     abstract fun getLayoutResourceId(): Int
-
-    internal open fun createPresenter() {}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -142,6 +145,40 @@ abstract class BaseFragment : Fragment() {
     //重试回调
     open fun onReload() {
 
+    }
+
+    open fun openActivity(intent: Intent) {
+        if (CheckUtils.isFastDoubleClick() || activity == null) return
+        startActivity(intent)
+    }
+
+    /*启动activity*/
+    open fun openActivity(clz: Class<out Activity>) {
+        openActivity(clz, null)
+    }
+
+    /*启动activity，带bundle参数*/
+    open fun openActivity(clz: Class<out Activity>, extras: Bundle?) {
+        if (CheckUtils.isFastDoubleClick() || activity == null) return
+        val intent = Intent(mContext, clz)
+        extras?.let { intent.putExtras(it) }
+        startActivity(intent)
+    }
+
+    open fun openActivityForResult(intent: Intent, @IntRange(from = 0, to = 65535) requestCode: Int) {
+        if (CheckUtils.isFastDoubleClick() || activity == null) return
+        startActivityForResult(intent, requestCode)
+    }
+
+    open fun openActivityForResult(clz: Class<out Activity>, @IntRange(from = 0, to = 65535) requestCode: Int) {
+        openActivityForResult(clz, requestCode, null)
+    }
+
+    open fun openActivityForResult(clz: Class<out Activity>, @IntRange(from = 0, to = 65535) requestCode: Int, extras: Bundle?) {
+        if (CheckUtils.isFastDoubleClick() || activity == null) return
+        val intent = Intent(mContext, clz)
+        extras?.let { intent.putExtras(it) }
+        startActivityForResult(intent, requestCode)
     }
 
     fun onBackPressed() {

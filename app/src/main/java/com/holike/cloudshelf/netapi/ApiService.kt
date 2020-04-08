@@ -14,7 +14,7 @@ interface ApiService {
 
         //map转json请求体
         fun createRequestBody(params: HashMap<String, String?>): RequestBody {
-            return RequestBody.create(MediaType.parse("application/json"), MyJsonParser.toJson(params))
+            return RequestBody.create(MediaType.parse("application/json"), JsonParserHelper.toJson(params))
         }
     }
 
@@ -37,7 +37,7 @@ interface ApiService {
     /*登录接口*/
     @FormUrlEncoded
     @POST("/marketing/exservice/cloud/portal/login")
-    fun doLogin(@FieldMap fieldMap: HashMap<String, String>): Observable<String?>
+    fun doLogin(@Field("phone") phone: String, @Field("captcha") captcha: String, @Field("devid") devId: String): Observable<String?>
 
     /*登出*/
     @GET("/marketing/exservice/cloud/portal/logout")
@@ -62,17 +62,30 @@ interface ApiService {
     fun getTableModel(@Url url: String?, @Field("id") id: String?, @Field("openid") phone: String?): Observable<String?>
 
     /*产品大全各模块标签查询*/
+    @Deprecated("")
     @FormUrlEncoded
     @POST("/marketing/exservice/cloud/productDaquan/product/getSpecList")
     fun getProductSpecList(@Field("templateId") templateId: String?): Observable<String?>
 
     /*产品大全各模块的方案列表(分页)*/
+    @Deprecated("")
     @FormUrlEncoded
     @POST("/marketing/exservice/cloud/productDaquan/product/searchBySpecOption")
     fun getProductOptionList(@Field("pageNo") pageNo: String,
                              @Field("pageSize") pageSize: String,
                              @Field("templateId") templateId: String?,
                              @Field("specificationOptionIds") optionIds: String?): Observable<String?>
+
+    @POST("/marketing/exservice/cloud/productDaquan/product/list")
+    fun getProductCatalogList(@Body body: RequestBody): Observable<String?>
+
+    /*家居家品分类3.0(成品家具、定制窗帘)*/
+    @GET("/marketing/exservice/cloud/productDaquan/homeProduct/config/list")
+    fun getProductHomeProList(@Query("classification") classification: String?, @Query("type") type: String?): Observable<String?>
+
+    /*产品大全各模块的方案详情(新3.0)*/
+    @GET("/marketing/exservice/cloud/productDaquan/product/info")
+    fun getProductCatalogInfo(@Query("id") id: String?): Observable<String?>
 
     /*晒晒好晒图家列表查询(分页)*/
     @FormUrlEncoded

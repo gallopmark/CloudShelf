@@ -11,8 +11,7 @@
         android:id="@+id/iv_pic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@mipmap/pic_products_wholehome" />
+        android:scaleType="fitXY" />
 
     <ImageView
         android:id="@+id/iv_icon"
@@ -20,6 +19,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:minWidth="@dimen/dp_80"
-        android:minHeight="@dimen/dp_80"
-        android:src="@mipmap/ic_products_wholehome" />
+        android:minHeight="@dimen/dp_80" />
 </FrameLayout>

@@ -12,6 +12,8 @@ class ProductCatalog private constructor(){
         //--
         const val DOOR = "DOOR"  //木门定制
         const val HOME_PRO = "HOME_PRO" //家居家品
+        const val HOME_PRO_FURNISHED = "HOME_PRO_FURNISHED" //家居家品-成品家具
+        const val HOME_PRO_CURTAIN = "HOME_PRO_CURTAIN" //家居家品-定制窗帘
 
         /*************************************************************/
         const val DICT_SPACE_HOUSE = "space_house"  //全屋定制-空间
@@ -23,5 +25,7 @@ class ProductCatalog private constructor(){
         const val DICT_FUNCTION_APPLIANCE   ="function_appliance"  //(橱柜电器) -功能
         const val DICT_DOOR_CATEGORY = "category_door" //木门定制-品类
         const val DICT_DOOR_SERIES = "series_door" //木门定制-系列
+        const val DICT_HOME_PRO_FURNISHED = "HOME_PRO_FURNISHED" //家居家品-成品家具
+        const val DICT_HOME_PRO_CURTAIN = "HOME_PRO_CURTAIN" //家居家品-定制窗帘
     }
 }

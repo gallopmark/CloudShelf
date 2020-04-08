@@ -1,6 +1,5 @@
 package com.holike.cloudshelf.dialog
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -15,8 +14,8 @@ import androidx.core.content.FileProvider
 import com.holike.cloudshelf.BuildConfig
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.bean.VersionInfoBean
-import com.holike.cloudshelf.netapi.DownloadCallBack
-import com.holike.cloudshelf.netapi.DownloadHelper
+import com.holike.cloudshelf.netapi.download.DownloadCallBack
+import com.holike.cloudshelf.netapi.download.DownloadEngine
 import com.holike.cloudshelf.widget.CustomToast
 import io.reactivex.disposables.Disposable
 import pony.xcode.base.CommonDialog
@@ -24,7 +23,7 @@ import pony.xcode.utils.AppUtils
 import java.io.File
 
 //版本更新对话框
-class VersionUpdateDialog(context: Context, private val bean: VersionInfoBean) :
+class VersionUpdateDialog(context: Context, private val bean: VersionInfoBean, private val listener: OnApkInstallListener) :
         CommonDialog(context, R.style.AppDialogStyle) {
     private var mDisposable: Disposable? = null
     private var mApkFile: File? = null //下载后的apk文件
@@ -43,7 +42,6 @@ class VersionUpdateDialog(context: Context, private val bean: VersionInfoBean) :
     override fun getWidth(): Int = mContext.resources.getDimensionPixelSize(R.dimen.dp_270)
 
     override fun initView(contentView: View) {
-        bean.updatePath = "https://file.holike.com/crmtest.apk"
         contentView.findViewById<TextView>(R.id.tv_title).text = mContext.getString(R.string.text_version_update)
         contentView.findViewById<TextView>(R.id.tv_update_message).text = bean.updateTips
         contentView.findViewById<TextView>(R.id.update_button).setOnClickListener { doDownload() }
@@ -88,7 +86,7 @@ class VersionUpdateDialog(context: Context, private val bean: VersionInfoBean) :
     }
 
     private fun download(url: String, filepath: String, filename: String) {
-        mDisposable = DownloadHelper.download(url, filepath, filename, object : DownloadCallBack() {
+        mDisposable = DownloadEngine.download(url, filepath, filename, object : DownloadCallBack() {
             override fun onStart() {
                 onDownloadStart()
             }
@@ -155,8 +153,7 @@ class VersionUpdateDialog(context: Context, private val bean: VersionInfoBean) :
         if (AppUtils.canInstallApk(mContext)) {
             installApk()
         } else {
-            AppUtils.startUnknownAppSourceSetting(mContext as Activity, UNKNOWN_APP_REQUEST_CODE)
-            //需要再MainActivity重写onActivityResult方法
+            listener.onStartUnknownAppSourceSetting()
         }
     }
 
@@ -172,7 +169,7 @@ class VersionUpdateDialog(context: Context, private val bean: VersionInfoBean) :
                 val data: Uri
                 val type = "application/vnd.android.package-archive"
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    val authority = "${BuildConfig.APPLICATION_ID}.apkFileProvider";
+                    val authority = "${BuildConfig.APPLICATION_ID}.apkFileProvider"
                     data = FileProvider.getUriForFile(context, authority, file)
                     intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 } else {
@@ -182,6 +179,8 @@ class VersionUpdateDialog(context: Context, private val bean: VersionInfoBean) :
                 intent.setDataAndType(data, type)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 mContext.startActivity(intent)
+                dismiss()
+                listener.onInstallApk()
             } catch (ignored: Exception) {
             }
         }
@@ -190,5 +189,10 @@ class VersionUpdateDialog(context: Context, private val bean: VersionInfoBean) :
     override fun dismiss() {
         mDisposable?.dispose()
         super.dismiss()
+    }
+
+    interface OnApkInstallListener {
+        fun onStartUnknownAppSourceSetting()
+        fun onInstallApk()
     }
 }

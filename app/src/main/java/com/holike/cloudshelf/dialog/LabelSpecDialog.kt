@@ -67,7 +67,7 @@ class LabelSpecDialog(context: Context) : CommonDialog(context, R.style.AppDialo
                     spec?.let {
                         val dictCode = it.id
                         if (dictCode == ProductCatalog.AMBRY_CUSTOM_MADE || dictCode == ProductCatalog.AMBRY_APPLIANCES) {
-                            adapter.onCupboardTypeSelected(dictCode, null)
+                            adapter.onCupboardTypeSelected(dictCode, null, true)
                         }
                     }
                 }

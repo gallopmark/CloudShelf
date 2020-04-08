@@ -129,18 +129,6 @@ class ProgramLibPresenter : BasePresenter<ProgramLibModel, ProgramLibView>() {
         updateTableModelSpec(bean)
     }
 
-    fun setLayoutAnimation(contentRView: RecyclerView) {
-        //通过加载XML动画设置文件来创建一个Animation对象；
-        val animation = AnimationUtils.loadAnimation(contentRView.context, R.anim.item_anim_from_right)
-        //为ListView设置LayoutAnimationController属性；
-        contentRView.layoutAnimation = LayoutAnimationController(animation).apply {
-            //设置控件显示的顺序；
-            order = LayoutAnimationController.ORDER_NORMAL
-            //设置控件显示间隔时间；
-            delay = 0.8f
-        }
-    }
-
     //方案库列表更新
     private fun updateTableModelHouseData(bean: TableModelHouseBean) {
         val dataList = ListUtils.averageAssignFixLength(bean.getData(), 2)
@@ -165,6 +153,7 @@ class ProgramLibPresenter : BasePresenter<ProgramLibModel, ProgramLibView>() {
     private fun updateTableModelSpec(bean: TableModelHouseBean) {
         if (!mSpecUpdated) {
             mSpecAdapter?.updateTableModelSpec(bean)
+            view?.onBottomSpecUpdate()
             mSpecUpdated = true
         }
     }

@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.dialog.LoadingDialog
+import com.holike.cloudshelf.util.CheckUtils
 import com.holike.cloudshelf.widget.CustomToast
 import pony.xcode.system.SystemTintHelper
 
@@ -35,6 +36,8 @@ abstract class BaseActivity : AppCompatActivity() {
     private var mToast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //进场动画
+        overridePendingTransition(R.anim.activity_anim_enter,R.anim.activity_anim_silent)
         requestedOrientation = getScreenOrientation()
         setScreenStyle()
         super.onCreate(savedInstanceState)
@@ -158,20 +161,27 @@ abstract class BaseActivity : AppCompatActivity() {
         return resources.getDimensionPixelOffset(id)
     }
 
-    open fun openActivity(intent: Intent?) {
+    open fun openActivity(intent: Intent) {
+        if (CheckUtils.isFastDoubleClick()) return
         startActivity(intent)
     }
 
     /*启动activity*/
-    open fun openActivity(clz: Class<out Activity?>) {
+    open fun openActivity(clz: Class<out Activity>) {
         openActivity(clz, null)
     }
 
     /*启动activity，带bundle参数*/
-    open fun openActivity(clz: Class<out Activity?>, extras: Bundle?) {
+    open fun openActivity(clz: Class<out Activity>, extras: Bundle?) {
+        if (CheckUtils.isFastDoubleClick()) return
         val intent = Intent(this, clz)
         extras?.let { intent.putExtras(it) }
         startActivity(intent)
+    }
+
+    open fun openActivityForResult(intent: Intent, @IntRange(from = 0, to = 65535) requestCode: Int) {
+        if (CheckUtils.isFastDoubleClick()) return
+        startActivityForResult(intent, requestCode)
     }
 
     open fun openActivityForResult(clz: Class<out Activity>, @IntRange(from = 0, to = 65535) requestCode: Int) {
@@ -179,6 +189,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun openActivityForResult(clz: Class<out Activity>, @IntRange(from = 0, to = 65535) requestCode: Int, extras: Bundle?) {
+        if (CheckUtils.isFastDoubleClick()) return
         val intent = Intent(this, clz)
         extras?.let { intent.putExtras(it) }
         startActivityForResult(intent, requestCode)
@@ -231,23 +242,32 @@ abstract class BaseActivity : AppCompatActivity() {
 
     }
 
-    fun addFragment(fragment: Fragment) {
-        addFragment(fragment, null)
+    fun startFragment(fragment: Fragment) {
+        startFragment(fragment, null)
     }
 
-    fun addFragment(fragment: Fragment, extras: Bundle?) {
-        addFragment(R.id.fl_fragment, fragment, extras)
+    fun startFragment(fragment: Fragment, extras: Bundle?) {
+        startFragment(R.id.fl_fragment, fragment, extras)
     }
 
-    fun addFragment(@IdRes containerViewId: Int, fragment: Fragment) {
-        addFragment(containerViewId, fragment, null)
+    fun startFragment(@IdRes containerViewId: Int, fragment: Fragment) {
+        startFragment(containerViewId, fragment, null)
     }
 
-    fun addFragment(@IdRes containerViewId: Int, fragment: Fragment, extras: Bundle?) {
+    fun startFragment(@IdRes containerViewId: Int, fragment: Fragment, extras: Bundle?) {
+        startFragment(containerViewId, fragment, extras, null)
+    }
+
+    fun startFragment(@IdRes containerViewId: Int, fragment: Fragment, extras: Bundle?, tag: String?) {
         fragment.arguments = extras
-        supportFragmentManager.beginTransaction().add(containerViewId, fragment).commitAllowingStateLoss()
+        supportFragmentManager.beginTransaction().add(containerViewId, fragment, tag).commitAllowingStateLoss()
     }
 
+    override fun finish() {
+        super.finish()
+        //退场动画
+        overridePendingTransition(R.anim.activity_anim_silent,R.anim.activity_anim_exit)
+    }
     override fun onDestroy() {
         mLoadingDialog?.dismiss()
         mLoadingDialog = null
