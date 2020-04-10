@@ -96,8 +96,7 @@ class JsonParserHelper {
         /**
          * 解析json里面的result字段或data字段，如果两者都没有，则返回null代表无数据
          */
-        fun <T> parseHttpJson(json: String?, type: Type): T? {
-            if (json.isNullOrEmpty()) return null
+        fun <T> parseHttpJson(json: String, type: Type): T? {
             //首先获取result字段
             val result = getResult(json)
             if (result.isNotEmpty()) {

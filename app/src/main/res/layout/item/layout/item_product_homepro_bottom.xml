@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tv_dict"
-    android:layout_width="@dimen/dp_170"
+    android:layout_width="@dimen/dp_200"
     android:layout_height="@dimen/dp_60"
     android:gravity="center"
     android:textColor="@color/col_03"

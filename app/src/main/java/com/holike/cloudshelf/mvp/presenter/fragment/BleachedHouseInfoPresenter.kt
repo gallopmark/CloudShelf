@@ -2,7 +2,7 @@ package com.holike.cloudshelf.mvp.presenter.fragment
 
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import com.holike.cloudshelf.base.PicturePagerPresenter
+import com.holike.cloudshelf.mvp.presenter.PicturePagerPresenter
 import com.holike.cloudshelf.bean.BleachedHouseInfoBean
 import com.holike.cloudshelf.mvp.model.BleachedHouseModel
 import com.holike.cloudshelf.mvp.view.fragment.BleachedHouseInfoView
@@ -13,7 +13,7 @@ import io.reactivex.disposables.Disposable
 class BleachedHouseInfoPresenter : PicturePagerPresenter<BleachedHouseModel, BleachedHouseInfoView>() {
 
     fun resizeContent(container: FrameLayout, infoLayout: LinearLayout) {
-        val lp = container.layoutParams as FrameLayout.LayoutParams
+        val lp = container.layoutParams as LinearLayout.LayoutParams
         lp.width = mParamWidth
         lp.height = mParamHeight
         container.layoutParams = lp
@@ -30,7 +30,8 @@ class BleachedHouseInfoPresenter : PicturePagerPresenter<BleachedHouseModel, Ble
 
             override fun onSuccess(result: BleachedHouseInfoBean, message: String?) {
                 view?.onSuccess(result)
-                updatePreviewImages(result.obtainImageList(mBottomImageWidth, mBottomImageHeight))
+                updatePreviewImages(result.obtainImageList())
+                updateBottomImages(result.obtainImageList(mBottomImageWidth, mBottomImageHeight))
             }
 
             override fun onFailure(code: Int, failReason: String?) {

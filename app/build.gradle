@@ -123,13 +123,14 @@ dependencies {
             But because upgrading is difficult we will backport critical fixes to the 3.12.x branch through December 31, 2020.*/
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+    //gson
     implementation 'com.google.code.gson:gson:2.8.6'
 
 //    implementation 'com.github.gallopmark:banner:2.0.3'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-    //基础工程库
-    implementation 'com.github.gallopmark:BaseLib:1.1.2'
+    //recyclerView adapter-helper
+    implementation 'com.github.gallopmark:adapter-base:1.0.0'
     //极光推送
     implementation 'cn.jiguang.sdk:jpush:3.5.6'
     implementation 'cn.jiguang.sdk:jcore:2.2.8'
@@ -142,6 +143,7 @@ dependencies {
     implementation project(':smartrefreshhorizontal')
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-andx-11'
     implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
+    //flexbox
     implementation 'com.google.android:flexbox:2.0.1'
     /*城市选择库*/
     implementation 'com.github.gallopmark:CityPicker:1.0.0'

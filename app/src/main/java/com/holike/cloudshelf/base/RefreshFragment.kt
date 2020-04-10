@@ -1,9 +1,9 @@
 package com.holike.cloudshelf.base
 
 import android.view.View
+import com.holike.cloudshelf.mvp.BasePresenter
+import com.holike.cloudshelf.mvp.BaseView
 import com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal
-import pony.xcode.mvp.BasePresenter
-import pony.xcode.mvp.BaseView
 
 //通用加载更多fragment
 abstract class RefreshFragment<P : BasePresenter<*, V>, V : BaseView, B> : HollyFragment<P, V>(), RefreshView<B> {

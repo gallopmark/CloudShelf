@@ -2,7 +2,7 @@ package com.holike.cloudshelf.mvp.view.fragment
 
 import com.holike.cloudshelf.bean.AdvertisingBean
 import com.holike.cloudshelf.bean.VersionInfoBean
-import pony.xcode.mvp.BaseView
+import com.holike.cloudshelf.mvp.BaseView
 
 
 interface MainView : BaseView {

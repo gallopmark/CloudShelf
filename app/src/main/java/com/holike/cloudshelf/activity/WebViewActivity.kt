@@ -25,6 +25,8 @@ class WebViewActivity : BaseActivity() {
 
     override fun getLayoutResourceId(): Int = R.layout.activity_webview
 
+    override fun getBacktrackResource(): Int = R.layout.include_backtrack_light
+
     override fun setup(savedInstanceState: Bundle?) {
         super.setup(savedInstanceState)
         initWebView()

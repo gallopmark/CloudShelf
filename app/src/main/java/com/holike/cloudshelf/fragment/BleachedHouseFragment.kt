@@ -9,7 +9,7 @@ import com.holike.cloudshelf.bean.BleachedHouseBean
 import com.holike.cloudshelf.mvp.presenter.fragment.BleachedHousePresenter
 import com.holike.cloudshelf.mvp.view.fragment.BleachedHouseView
 import com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal
-import kotlinx.android.synthetic.main.include_backtrack2.*
+import kotlinx.android.synthetic.main.include_backtrack_light.*
 import kotlinx.android.synthetic.main.include_main_layout.*
 
 //晒晒我家
@@ -17,6 +17,8 @@ class BleachedHouseFragment : RefreshFragment<BleachedHousePresenter, BleachedHo
         BleachedHouseView {
 
     override fun getLayoutResourceId(): Int = R.layout.fragment_bleachedhouse
+
+    override fun getBacktrackResource(): Int = R.layout.include_backtrack_light
 
     override fun getRefreshLayout(): SmartRefreshHorizontal = refreshLayout
 
@@ -32,7 +34,7 @@ class BleachedHouseFragment : RefreshFragment<BleachedHousePresenter, BleachedHo
     //view过度动画
     private fun startLayoutAnimation() {
         topLayout.layoutAnimation = AnimationUtils.loadLayoutAnimation(mContext, R.anim.la_layout_from_bottom)
-        view_back.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom))
+        backtrack.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom))
     }
 
     override fun whenLoadSuccess(bean: BleachedHouseBean) {

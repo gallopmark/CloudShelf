@@ -4,18 +4,19 @@ import android.os.Bundle
 import android.view.animation.AnimationUtils
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.activity.PlotTypeInfoActivity
-import com.holike.cloudshelf.base.BaseActivity
 import com.holike.cloudshelf.base.RefreshFragment
 import com.holike.cloudshelf.bean.PlotTypeBean
 import com.holike.cloudshelf.mvp.presenter.fragment.PlotTypeListPresenter
 import com.holike.cloudshelf.mvp.view.fragment.PlotTypeListView
 import com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal
-import kotlinx.android.synthetic.main.include_backtrack2.*
+import kotlinx.android.synthetic.main.include_backtrack_light.*
 import kotlinx.android.synthetic.main.include_main_layout.*
 
 //小区户型列表
 class PlotTypeListFragment : RefreshFragment<PlotTypeListPresenter, PlotTypeListView, PlotTypeBean>(), PlotTypeListView {
     override fun getLayoutResourceId(): Int = R.layout.fragment_plottype_list
+
+    override fun getBacktrackResource(): Int = R.layout.include_backtrack_light
 
     override fun getRefreshLayout(): SmartRefreshHorizontal = refreshLayout
 
@@ -34,7 +35,7 @@ class PlotTypeListFragment : RefreshFragment<PlotTypeListPresenter, PlotTypeList
     //view过度动画
     private fun startLayoutAnimation() {
         topLayout.layoutAnimation = AnimationUtils.loadLayoutAnimation(mContext, R.anim.la_layout_from_bottom)
-        view_back.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom))
+        backtrack.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom))
     }
 
     override fun whenLoadSuccess(bean: PlotTypeBean) {

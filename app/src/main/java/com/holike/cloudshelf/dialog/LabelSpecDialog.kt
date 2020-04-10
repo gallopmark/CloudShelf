@@ -11,8 +11,6 @@ import com.holike.cloudshelf.R
 import com.holike.cloudshelf.adapter.SpecListAdapter
 import com.holike.cloudshelf.bean.internal.LabelSpec
 import com.holike.cloudshelf.enumc.ProductCatalog
-import pony.xcode.base.CommonDialog
-
 
 class LabelSpecDialog(context: Context) : CommonDialog(context, R.style.AppDialogStyle) {
 

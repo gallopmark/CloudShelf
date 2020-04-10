@@ -10,42 +10,49 @@ import io.reactivex.schedulers.Schedulers
 
 class CallbackHelper {
     companion object {
-        fun <T> deliveryResult(observable: Observable<String?>, callBack: HttpRequestCallback<T>): Disposable {
+        fun <T> deliveryResult(observable: Observable<String?>, callback: HttpRequestCallback<T>): Disposable {
             return observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ onDeliverySuccess(it, callBack) }, { onDeliveryFailure(it, callBack) }, {}, { callBack.onStart(it) })
+                    .subscribe({ onDeliverySuccess(it, callback) },
+                            { onDeliveryFailure(it, callback) },
+                            {},
+                            { callback.onStart(it) })
         }
 
-        private fun <T> onDeliverySuccess(s: String?, callBack: HttpRequestCallback<T>) {
-            val type = JsonParserHelper.getSuperclassTypeParameter(callBack.javaClass)
-            if (type === String::class.java) {
-                @Suppress("UNCHECKED_CAST")
-                callBack.onSuccess(s as T,  JsonParserHelper.getMsg(s))
+        private fun <T> onDeliverySuccess(s: String?, callback: HttpRequestCallback<T>) {
+            if (s.isNullOrEmpty()) {
+                //json为null或empty
+                callback.onFailure(JsonParserHelper.DEFAULT_CODE, CurrentApp.getInstance().getString(R.string.no_data_exception))
             } else {
-                when (val code = JsonParserHelper.getCode(s)) {
-                    JsonParserHelper.SUCCESS_CODE, JsonParserHelper.DEFAULT_CODE -> {
-                        val result: T? = JsonParserHelper.parseHttpJson<T>(s, type)
-                        if (result == null) {
-                            callBack.onFailure(code, CurrentApp.getInstance().getString(R.string.no_data_exception))
-                        } else {
-                            callBack.onSuccess(result, JsonParserHelper.getMsg(s))
+                val type = JsonParserHelper.getSuperclassTypeParameter(callback.javaClass)
+                if (type === String::class.java) {
+                    @Suppress("UNCHECKED_CAST")
+                    callback.onSuccess(s as T, JsonParserHelper.getMsg(s))
+                } else {
+                    when (val code = JsonParserHelper.getCode(s)) {
+                        JsonParserHelper.SUCCESS_CODE, JsonParserHelper.DEFAULT_CODE -> {
+                            val result: T? = JsonParserHelper.parseHttpJson<T>(s, type)
+                            if (result == null) {
+                                callback.onFailure(code, CurrentApp.getInstance().getString(R.string.no_data_exception))
+                            } else {
+                                callback.onSuccess(result, JsonParserHelper.getMsg(s))
+                            }
                         }
-                    }
-                    JsonParserHelper.INVALID_CODE -> {
-                        CurrentApp.getInstance().backToHome()
-                        callBack.onFailure(code, JsonParserHelper.getMsg(s))
-                    }
-                    else -> {
-                        callBack.onFailure(code, JsonParserHelper.getMsg(s))
+                        JsonParserHelper.INVALID_CODE -> {
+                            CurrentApp.getInstance().backToHome()
+                            callback.onFailure(code, JsonParserHelper.getMsg(s))
+                        }
+                        else -> {
+                            callback.onFailure(code, JsonParserHelper.getMsg(s))
+                        }
                     }
                 }
             }
-            callBack.onCompleted()
+            callback.onCompleted()
         }
 
         private fun <T> onDeliveryFailure(throwable: Throwable?, callBack: HttpRequestCallback<T>) {
             callBack.onFailure(JsonParserHelper.DEFAULT_CODE, ApiException.handleException(throwable).getErrorMessage())
             callBack.onCompleted()
         }
-
     }
 }

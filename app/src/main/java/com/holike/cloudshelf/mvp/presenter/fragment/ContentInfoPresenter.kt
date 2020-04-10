@@ -2,6 +2,8 @@ package com.holike.cloudshelf.mvp.presenter.fragment
 
 import android.content.Context
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -12,18 +14,18 @@ import com.holike.cloudshelf.adapter.BottomPreviewImageAdapter
 import com.holike.cloudshelf.base.BasePagerAdapter
 import com.holike.cloudshelf.bean.ProductCatalogInfoBean
 import com.holike.cloudshelf.bean.TableModelDetailBean
+import com.holike.cloudshelf.mvp.BasePresenter
 import com.holike.cloudshelf.mvp.model.fragment.ContentInfoModel
 import com.holike.cloudshelf.mvp.view.fragment.ContentInfoView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import com.holike.cloudshelf.widget.StereoPagerTransformer
 import io.reactivex.disposables.Disposable
-import pony.xcode.mvp.BasePresenter
 
 
 class ContentInfoPresenter : BasePresenter<ContentInfoModel, ContentInfoView>() {
 
     private inner class PicturePreviewAdapter(context: Context, images: MutableList<String>) :
-        BasePagerAdapter<String>(context, images) {
+            BasePagerAdapter<String>(context, images) {
 
         override fun getLayoutResourceId(): Int = R.layout.item_picture_preview
         override fun convert(convertView: View, bean: String, position: Int) {
@@ -39,6 +41,13 @@ class ContentInfoPresenter : BasePresenter<ContentInfoModel, ContentInfoView>() 
     private var mBottomImageAdapter: BottomPreviewImageAdapter? = null
     private var mFirstVisibleItemPosition = -1
     private var mLastVisibleItemPosition = -1
+
+    fun resizeContainer(container: FrameLayout) {
+        val lp = container.layoutParams as LinearLayout.LayoutParams
+        lp.width = CurrentApp.getInstance().getPreviewWindowWidth()
+        lp.height = CurrentApp.getInstance().getPreviewWindowHeight()
+        container.layoutParams = lp
+    }
 
     fun initVp(viewPager: ViewPager) {
         val context = viewPager.context
@@ -85,6 +94,7 @@ class ContentInfoPresenter : BasePresenter<ContentInfoModel, ContentInfoView>() 
             }
 
             override fun onSuccess(result: TableModelDetailBean, message: String?) {
+                view?.onRequestSuccess()
                 view?.onTableModelResp(result)
                 updatePictures(result.obtainImages())
                 updateBottomPictures(result.obtainImages(mBottomImageWidth, mBottomImageHeight))
@@ -108,14 +118,10 @@ class ContentInfoPresenter : BasePresenter<ContentInfoModel, ContentInfoView>() 
             }
 
             override fun onSuccess(result: ProductCatalogInfoBean, message: String?) {
+                view?.onRequestSuccess()
                 view?.onProductCatalogResp(result)
                 updatePictures(result.info?.getImageList())
-                updateBottomPictures(
-                    result.info?.getImageList(
-                        mBottomImageWidth,
-                        mBottomImageHeight
-                    )
-                )
+                updateBottomPictures(result.info?.getImageList(mBottomImageWidth, mBottomImageHeight))
             }
 
             override fun onFailure(code: Int, failReason: String?) {

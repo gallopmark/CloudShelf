@@ -5,6 +5,7 @@ import com.holike.cloudshelf.BuildConfig
 import java.io.PrintWriter
 import java.io.StringWriter
 
+//日志打印
 class LogCat {
     companion object {
         private const val TAG: String = BuildConfig.VERSION_NAME
@@ -42,30 +43,16 @@ class LogCat {
             print("v", TAG, msg)
         }
 
-        fun w(msg: String?) {
-            print("w", TAG, msg)
-        }
-
-        fun w(TAG: String, msg: String?) {
-            print("w", TAG, msg)
-        }
-
-        /*
-        打印请求
-         */
-        fun request(msg: String?) {
-            print("v", "request:", msg)
-        }
-
-        /*
-        打印响应结果
-         */
-        fun response(msg: String?) {
-            print("i", "response:", msg)
-        }
+//        fun w(msg: String?) {
+//            print("w", TAG, msg)
+//        }
+//
+//        fun w(TAG: String, msg: String?) {
+//            print("w", TAG, msg)
+//        }
 
         fun e(tag: String, e: Throwable?) {
-            if(e == null) return
+            if (e == null) return
             val sw = StringWriter()
             e.printStackTrace(PrintWriter(sw, true))
             print("e", tag, sw.toString())

@@ -11,4 +11,30 @@
         <item name="android:drawablePadding">@dimen/dp_6</item>
         <item name="android:layout_gravity">center</item>
     </style>
+
+    <!--返回键风格 白底黑字风格-->
+    <style name="BackViewStyle" parent="CommonViewStyle">
+        <item name="android:drawableTop">@mipmap/ic_back_white</item>
+        <item name="android:text">@string/text_back</item>
+        <item name="android:layout_gravity">center|end</item>
+        <item name="android:layout_marginRight">@dimen/dp_45</item>
+        <item name="android:layout_marginEnd">@dimen/dp_45</item>
+    </style>
+
+    <style name="BackViewStyleNoMargin" parent="BackViewStyle">
+        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
+    </style>
+
+    <!--返回键风格 黑色箭头黑色文字-->
+    <style name="BackViewStyleLight" parent="BackViewStyle">
+        <item name="android:background">@drawable/bg_col13_corners2dp</item>
+        <item name="android:drawableTop">@mipmap/ic_back_black</item>
+        <item name="android:textColor">@color/col_14</item>
+    </style>
+
+    <style name="BackViewStyleLightNoMargin" parent="BackViewStyleLight">
+        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
+    </style>
 </resources>

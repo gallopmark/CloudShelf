@@ -19,7 +19,6 @@ import com.holike.cloudshelf.bean.TableModelDetailBean
 import com.holike.cloudshelf.mvp.presenter.fragment.ContentInfoPresenter
 import com.holike.cloudshelf.mvp.view.fragment.ContentInfoView
 import kotlinx.android.synthetic.main.fragment_content_info.*
-import kotlinx.android.synthetic.main.include_backtrack.*
 import kotlinx.android.synthetic.main.include_bottom_images_layout.*
 import kotlinx.android.synthetic.main.include_qrcode_layout.*
 
@@ -29,20 +28,22 @@ class ContentInfoFragment : HollyFragment<ContentInfoPresenter, ContentInfoView>
     private lateinit var mAnimation: Animation
 
     override fun getLayoutResourceId(): Int = R.layout.fragment_content_info
+    override fun getBacktrackResource(): Int = R.layout.include_backtrack
 
     override fun setup(savedInstanceState: Bundle?) {
         mAnimation = AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom)
+        mPresenter.resizeContainer(pictureContainer)
         mPresenter.initVp(previewVP)
         mPresenter.initBottomRV(bottomRView)
-        startLayoutAnimation()
         getDataByType()
+        backtrackTView.setOnClickListener { onBackPressed() }
         preIView.setOnClickListener { bottomRView.scrollToPosition(mPresenter.getLeftScrollNum()) }
         nextIView.setOnClickListener { bottomRView.scrollToPosition(mPresenter.getRightScrollNum()) }
     }
 
     private fun startLayoutAnimation() {
         miniQrLayout.startAnimation(mAnimation)
-        view_back.startAnimation(mAnimation)
+        backtrackTView.startAnimation(mAnimation)
     }
 
     private fun getDataByType() {
@@ -71,11 +72,17 @@ class ContentInfoFragment : HollyFragment<ContentInfoPresenter, ContentInfoView>
     }
 
     override fun onShowLoading() {
-        showLoading()
+        showLoading(true)
     }
 
     override fun onDismissLoading() {
         dismissLoading()
+    }
+
+    override fun onRequestSuccess() {
+        removeBacktrack()
+        showContentView()
+        startLayoutAnimation()
     }
 
     override fun onTableModelResp(bean: TableModelDetailBean) {
@@ -121,7 +128,9 @@ class ContentInfoFragment : HollyFragment<ContentInfoPresenter, ContentInfoView>
             bottomLayout.startAnimation(mAnimation)
             if (images.size > 7) {
                 val lp = bottomRView.layoutParams as LinearLayout.LayoutParams
-                lp.width = getDimensionPixelSize(R.dimen.dp_100) * 6 + getDimensionPixelSize(R.dimen.dp_20) * 6 + getDimensionPixelSize(R.dimen.dp_130)
+                lp.width = getDimensionPixelSize(R.dimen.dp_100) * 6 + getDimensionPixelSize(R.dimen.dp_20) * 6 + getDimensionPixelSize(
+                        R.dimen.dp_130
+                )
                 bottomRView.layoutParams = lp
             }
         }

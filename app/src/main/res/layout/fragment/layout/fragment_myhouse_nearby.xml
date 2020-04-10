@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/dp_30"
-    android:paddingBottom="@dimen/dp_30">
+    android:layout_marginTop="@dimen/dp_30"
+    android:layout_marginBottom="@dimen/dp_30"
+    android:orientation="vertical">
 
     <include
         layout="@layout/include_main_layout"
@@ -32,7 +32,7 @@
             android:textColor="@color/col_03"
             android:textSize="@dimen/sp_16" />
 
-        <pony.xcode.widget.DrawableTextView
+        <com.holike.cloudshelf.widget.DrawableTextView
             android:id="@+id/searchTView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

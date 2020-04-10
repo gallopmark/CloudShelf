@@ -9,14 +9,12 @@ import com.holike.cloudshelf.fragment.MainFragment
 //首页
 class MainActivity : BaseActivity() {
 
-    override fun getLayoutResourceId(): Int = R.layout.activity_common
-
     override fun setup(savedInstanceState: Bundle?) {
         //进到首页 调用获取字典方法
         CurrentApp.getInstance().getDictionary()
         val fragment = supportFragmentManager.findFragmentByTag("tag-main")
         if (fragment == null) {
-            startFragment(R.id.fl_fragment, MainFragment(), null, "tag-main")
+            startFragment(R.id.decorViewContainer, MainFragment(), null, "tag-main")
         }
     }
 }

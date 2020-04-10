@@ -11,7 +11,7 @@ class AdvertisingBean {
     var id: String? = null  //广告id
 
     @SerializedName("pic")
-    var pic: String? = null; //广告图片链接
+    var pic: String? = null //广告图片链接
 
     @SerializedName("title")
     var title: String? = null //广告标题

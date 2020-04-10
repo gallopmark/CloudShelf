@@ -15,13 +15,14 @@ import com.holike.cloudshelf.bean.internal.LabelSpec
 import com.holike.cloudshelf.bean.internal.PictureDisplayItem
 import com.holike.cloudshelf.dialog.LabelSpecDialog
 import com.holike.cloudshelf.enumc.ProductCatalog
+import com.holike.cloudshelf.mvp.BasePresenter
 import com.holike.cloudshelf.mvp.model.fragment.ProductClassifyModel
 import com.holike.cloudshelf.mvp.view.fragment.ProductClassifyView
 import com.holike.cloudshelf.netapi.ApiService
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import com.holike.cloudshelf.util.ListUtils
+import io.reactivex.disposables.Disposable
 import okhttp3.RequestBody
-import pony.xcode.mvp.BasePresenter
 
 class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClassifyView>(),
         OnRequestDictListener {
@@ -32,7 +33,7 @@ class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClas
 
     private var mDictCode: String? = null  //字典码:产品大全个模块类型:WHOLE_HOUSE/DOOR/AMBRY/HOME_PRO
     private var mSpaceFurnished: String? = null //空间的id(成品家具)与category_Furnished同时传值
-    private var mCategoryFurnished: String? = null //品类的id(成品家具).与space_Furnished同时传值
+    private var mCategoryFurnished: String? = null //品类的id(成品家具).与space_furnished同时传值
 
     private var mCategoryCurtain: String? = null //品类的id(定制窗帘)
     private var mPageNo = 1  //页面
@@ -52,7 +53,7 @@ class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClas
             val showNavigation = extras.getBoolean("isShowNavigation")
             view?.onShowNavigation(showNavigation)
             if (dictCode == ProductCatalog.HOME_PRO_FURNISHED) {
-                mSpaceFurnished = extras.getString("space_Furnished")
+                mSpaceFurnished = extras.getString("space_furnished")
                 mCategoryFurnished = extras.getString("categoryId")
             } else {
                 mCategoryCurtain = extras.getString("categoryId")
@@ -146,7 +147,6 @@ class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClas
 
     fun initData() {
         mPageNo = 1
-        view?.onShowLoading()
         getProductProgramData()
     }
 
@@ -158,16 +158,24 @@ class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClas
     //获取各个模块产品方案列表
     private fun getProductProgramData() {
         mModel.getProductCatalogList(paramToJsonByType(), object : HttpRequestCallback<ProductOptionBean>() {
+            override fun onStart(d: Disposable?) {
+                if (mPageNo == 1) {
+                    view?.onShowLoading()
+                }
+            }
+
             override fun onSuccess(result: ProductOptionBean, message: String?) {
-                view?.onDismissLoading()
                 view?.onProductClassifyResponse(result, result.obtainDataList().size >= PAGE_SIZE)
                 updatePage(result)
                 mPageNo += 1  //数据加载成功 页面自增
             }
 
             override fun onFailure(code: Int, failReason: String?) {
-                view?.onDismissLoading()
                 view?.onProductClassifyFailure(failReason, mPageNo == 1)
+            }
+
+            override fun onCompleted() {
+                view?.onDismissLoading()
             }
         })
     }
@@ -202,9 +210,9 @@ class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClas
                     ProductCatalog.HOME_PRO_FURNISHED -> { //家居家品-成品
                         put("module_type", ProductCatalog.HOME_PRO)
                         put("home_pro_cla", mDictCode)
-                        put("space_Furnished", mSpaceFurnished)
-                        put("category_Furnished", mCategoryFurnished)
-                        put("series_Furnished", selected[ProductCatalog.HOME_PRO_FURNISHED]?.id)
+                        put("space_furnished", mSpaceFurnished)
+                        put("category_furnished", mCategoryFurnished)
+                        put("series_furnished", selected[ProductCatalog.HOME_PRO_FURNISHED]?.id)
                     }
                     ProductCatalog.HOME_PRO_CURTAIN -> { //家居家品-窗帘
                         put("module_type", ProductCatalog.HOME_PRO)
@@ -240,7 +248,8 @@ class ProductClassifyPresenter : BasePresenter<ProductClassifyModel, ProductClas
         for (i in sList.indices) {
             val item: PictureDisplayItem
             if (sList[i].size > 1) {
-                item = PictureDisplayItem(sList[i][0].getImageUrl(mImageWidth, mImageHeight), sList[i][0].title, sList[i][1].getImageUrl(mImageWidth, mImageHeight), sList[i][1].title)
+                item = PictureDisplayItem(sList[i][0].getImageUrl(mImageWidth, mImageHeight), sList[i][0].title,
+                        sList[i][1].getImageUrl(mImageWidth, mImageHeight), sList[i][1].title)
                 item.topId = sList[i][0].id
                 item.bottomId = sList[i][1].id
             } else {

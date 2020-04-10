@@ -1,10 +1,10 @@
 package com.holike.cloudshelf.mvp.model
 
+import com.holike.cloudshelf.mvp.BaseModel
 import com.holike.cloudshelf.netapi.CallbackHelper
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
-import pony.xcode.mvp.BaseModel
 
 
 abstract class ApiModel : BaseModel() {
@@ -34,8 +34,17 @@ abstract class ApiModel : BaseModel() {
         addDisposable(disposable)
     }
 
+    fun clearMap() {
+        mMap?.let {
+            for ((_, v) in it) {
+                v.dispose()
+            }
+            it.clear()
+        }
+    }
+
     override fun destroy() {
-        mMap?.clear()
+        clearMap()
         super.destroy()
     }
 }

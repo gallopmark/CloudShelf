@@ -19,11 +19,11 @@ import com.holike.cloudshelf.dialog.VersionUpdateDialog
 import com.holike.cloudshelf.fragment.MainFragment
 import com.holike.cloudshelf.fragment.ExoPlayerFragment
 import com.holike.cloudshelf.local.PreferenceSource
+import com.holike.cloudshelf.mvp.BasePresenter
 import com.holike.cloudshelf.mvp.model.fragment.MainModel
 import com.holike.cloudshelf.mvp.view.fragment.MainView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
-import pony.xcode.mvp.BasePresenter
-import pony.xcode.utils.AppUtils
+import com.holike.cloudshelf.util.AppUtils
 
 class MainPresenter : BasePresenter<MainModel, MainView>() {
 
@@ -34,7 +34,7 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
     //登录对话框
     private var mLoginDialog: LoginDialog? = null
     private var mVersionUpdateDialog: VersionUpdateDialog? = null
-    private val mHandler: Handler = Handler()
+    private var mHandler: Handler? = null
 
     /*检测登录状态*/
     fun initLoginState(context: Context) {
@@ -118,17 +118,22 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
 
     /*获取首页广告位*/
     fun getAdvertising() {
+        mHandler?.removeCallbacks(mRun)
         mModel.getAdvertising(object : HttpRequestCallback<AdvertisingBean>() {
             override fun onSuccess(result: AdvertisingBean, message: String?) {
                 view?.onAdvertisingSuccess(result)
-                mHandler.removeCallbacks(mRun)
             }
 
             override fun onFailure(code: Int, failReason: String?) {
 //                view?.onAdvertisingFailure(failReason)
                 //加载失败，3秒后自动重试
-                mHandler.removeCallbacks(mRun)
-                mHandler.postDelayed(mRun, RETRY_TIME)
+                if (mHandler == null) {
+                    mHandler = Handler()
+                }
+                mHandler?.apply {
+                    removeCallbacks(mRun)
+                    postDelayed(mRun, RETRY_TIME)
+                }
             }
         })
     }
@@ -137,9 +142,9 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
 
     /*获取版本信息*/
     fun getVersionInfo() {
+        mHandler?.removeCallbacks(mVersionRun)
         mModel.getVersionInfo(object : HttpRequestCallback<VersionInfoBean>() {
             override fun onSuccess(result: VersionInfoBean, message: String?) {
-                mHandler.removeCallbacks(mVersionRun)
                 if (result.obtainVersion() > BuildConfig.VERSION_CODE) {
                     //服务器的版本号大于当前app版本号  则提示更新
                     view?.onVersionUpdate(result)
@@ -148,8 +153,13 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
 
             override fun onFailure(code: Int, failReason: String?) {
                 //失败后3秒自动重试
-                mHandler.removeCallbacks(mVersionRun)
-                mHandler.postDelayed(mVersionRun, RETRY_TIME)
+                if (mHandler == null) {
+                    mHandler = Handler()
+                }
+                mHandler?.apply {
+                    removeCallbacks(mVersionRun)
+                    postDelayed(mVersionRun, RETRY_TIME)
+                }
             }
         })
     }
@@ -170,8 +180,7 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
     }
 
     fun onActivityResult(context: Context, requestCode: Int) {
-        if (requestCode == VersionUpdateDialog.UNKNOWN_APP_REQUEST_CODE
-                && AppUtils.canInstallApk(context)) {
+        if (requestCode == VersionUpdateDialog.UNKNOWN_APP_REQUEST_CODE && AppUtils.canInstallApk(context)) {
             mVersionUpdateDialog?.installApk()
         }
     }
@@ -233,10 +242,19 @@ class MainPresenter : BasePresenter<MainModel, MainView>() {
         mLoginDialog = null
     }
 
-    override fun unregister() {
+    private fun release() {
         gcLoginDialog()
         mVersionUpdateDialog?.dismiss()
-        mHandler.removeCallbacksAndMessages(null)
+        mVersionUpdateDialog = null
+        mHandler?.apply {
+            removeCallbacks(mVersionRun)
+            removeCallbacks(mRun)
+            mHandler = null
+        }
+    }
+
+    override fun unregister() {
+        release()
         super.unregister()
     }
 

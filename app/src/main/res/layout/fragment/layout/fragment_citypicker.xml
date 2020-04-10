@@ -38,7 +38,7 @@
         <include layout="@layout/include_city_empty_view" />
     </FrameLayout>
 
-    <pony.xcode.widget.DrawableTextView
+    <com.holike.cloudshelf.widget.DrawableTextView
         android:id="@+id/searchTView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"

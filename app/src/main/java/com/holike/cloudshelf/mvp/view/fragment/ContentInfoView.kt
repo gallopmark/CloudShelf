@@ -10,6 +10,8 @@ interface ContentInfoView : IView {
 
     fun onProductCatalogResp(bean: ProductCatalogInfoBean)
 
+    fun onRequestSuccess()
+
     fun onFailure(failReason: String?)
 
     fun onPageSelected(position: Int, size: Int)

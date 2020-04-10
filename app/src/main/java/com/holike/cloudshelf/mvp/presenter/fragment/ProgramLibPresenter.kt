@@ -2,8 +2,6 @@ package com.holike.cloudshelf.mvp.presenter.fragment
 
 import android.content.Context
 import android.text.TextUtils
-import android.view.animation.AnimationUtils
-import android.view.animation.LayoutAnimationController
 import androidx.collection.ArrayMap
 import androidx.recyclerview.widget.RecyclerView
 import com.holike.cloudshelf.CurrentApp
@@ -14,11 +12,11 @@ import com.holike.cloudshelf.bean.TableModelHouseBean
 import com.holike.cloudshelf.bean.internal.LabelSpec
 import com.holike.cloudshelf.bean.internal.PictureDisplayItem
 import com.holike.cloudshelf.dialog.LabelSpecDialog
+import com.holike.cloudshelf.mvp.BasePresenter
 import com.holike.cloudshelf.mvp.model.fragment.ProgramLibModel
 import com.holike.cloudshelf.mvp.view.fragment.ProgramLibView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import com.holike.cloudshelf.util.ListUtils
-import pony.xcode.mvp.BasePresenter
 
 
 class ProgramLibPresenter : BasePresenter<ProgramLibModel, ProgramLibView>() {
@@ -99,7 +97,7 @@ class ProgramLibPresenter : BasePresenter<ProgramLibModel, ProgramLibView>() {
         if (mPageNo == 1) {
             view?.onShowLoading()
         }
-        mModel?.getTableModelHouse(mRoomId, mStyleId, mPageNo, PAGE_SIZE, object : HttpRequestCallback<TableModelHouseBean>() {
+        mModel.getTableModelHouse(mRoomId, mStyleId, mPageNo, PAGE_SIZE, object : HttpRequestCallback<TableModelHouseBean>() {
             override fun onSuccess(result: TableModelHouseBean, message: String?) {
                 view?.onDismissLoading()
                 view?.onTableModelHouseResponse(result, result.getData().size >= PAGE_SIZE)

@@ -1,27 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/dp_35"
-    android:paddingTop="@dimen/dp_40"
-    android:paddingRight="@dimen/dp_35"
-    android:paddingBottom="@dimen/dp_40"
     tools:ignore="ContentDescription">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:baselineAligned="false">
-
-        <include
-            layout="@layout/include_qrcode_layout"
-            android:layout_width="@dimen/dp_80"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|start" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dp_35"
+        android:paddingTop="@dimen/dp_30"
+        android:paddingRight="@dimen/dp_35">
 
         <FrameLayout
             android:id="@+id/pictureContainer"
@@ -108,31 +100,44 @@
             </LinearLayout>
         </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|end"
-            android:orientation="vertical">
+        <include layout="@layout/include_bottom_images_layout" />
+    </LinearLayout>
 
-            <pony.xcode.widget.DrawableTextView
-                android:id="@+id/videoTView"
-                style="@style/CommonViewStyle"
-                android:layout_marginBottom="@dimen/dp_10"
-                android:drawableTop="@mipmap/ic_videosplay"
-                android:text="@string/text_video"
-                android:visibility="gone" />
+    <include
+        layout="@layout/include_qrcode_layout"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|start"
+        android:layout_marginStart="@dimen/dp_45"
+        android:layout_marginLeft="@dimen/dp_45" />
 
-            <pony.xcode.widget.DrawableTextView
-                android:id="@+id/panoramicTView"
-                style="@style/CommonViewStyle"
-                android:layout_marginBottom="@dimen/dp_10"
-                android:drawableTop="@mipmap/ic_panorama"
-                android:text="@string/text_panoramic"
-                android:visibility="gone" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|end"
+        android:layout_marginEnd="@dimen/dp_45"
+        android:layout_marginRight="@dimen/dp_45"
+        android:orientation="vertical">
 
-            <include layout="@layout/include_backtrack" />
-        </LinearLayout>
-    </FrameLayout>
+        <com.holike.cloudshelf.widget.DrawableTextView
+            android:id="@+id/videoTView"
+            style="@style/CommonViewStyle"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:drawableTop="@mipmap/ic_videosplay"
+            android:text="@string/text_video"
+            android:visibility="gone" />
 
-    <include layout="@layout/include_bottom_images_layout" />
-</LinearLayout>
+        <com.holike.cloudshelf.widget.DrawableTextView
+            android:id="@+id/panoramicTView"
+            style="@style/CommonViewStyle"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:drawableTop="@mipmap/ic_panorama"
+            android:text="@string/text_panoramic"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/backtrackTView"
+            style="@style/BackViewStyleNoMargin"
+            layout="@layout/include_backtrack" />
+    </LinearLayout>
+</FrameLayout>

@@ -14,10 +14,10 @@ class CountTimerHelper {
 
         fun execute(millisInFuture: Long, callback: CountDownCallback) {
             mTimer?.cancel()
-            if (mLastRemainTime > 0L) {
-                mTimer = CountTimer(mLastRemainTime, COUNT_DOWN_INTERVAL, callback)
+            mTimer = if (mLastRemainTime > 0L) {
+                CountTimer(mLastRemainTime, COUNT_DOWN_INTERVAL, callback)
             } else {
-                mTimer = CountTimer(millisInFuture, COUNT_DOWN_INTERVAL, callback)
+                CountTimer(millisInFuture, COUNT_DOWN_INTERVAL, callback)
             }
             mTimer?.start()
         }

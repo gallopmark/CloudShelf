@@ -13,7 +13,7 @@ import com.holike.cloudshelf.mvp.presenter.fragment.MyHouseNearbyPresenter
 import com.holike.cloudshelf.mvp.view.fragment.MyHouseNearbyHouseView
 import com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal
 import kotlinx.android.synthetic.main.fragment_myhouse_nearby.*
-import kotlinx.android.synthetic.main.include_backtrack2.*
+import kotlinx.android.synthetic.main.include_backtrack_light.*
 import kotlinx.android.synthetic.main.include_main_layout.*
 
 //搜搜我家
@@ -21,6 +21,7 @@ class NearMyHouseFragment : RefreshFragment<MyHouseNearbyPresenter, MyHouseNearb
 
     override fun getLayoutResourceId(): Int = R.layout.fragment_myhouse_nearby
 
+    override fun getBacktrackResource(): Int = R.layout.include_backtrack_light
     override fun getRefreshLayout(): SmartRefreshHorizontal = refreshLayout
 
     override fun setup(savedInstanceState: Bundle?) {
@@ -37,7 +38,7 @@ class NearMyHouseFragment : RefreshFragment<MyHouseNearbyPresenter, MyHouseNearb
     //view过度动画
     private fun startLayoutAnimation() {
         topLayout.layoutAnimation = AnimationUtils.loadLayoutAnimation(mContext, R.anim.la_layout_from_bottom)
-        view_back.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom))
+        backtrack.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom))
         bottomCityLayout.scheduleLayoutAnimation()
     }
 

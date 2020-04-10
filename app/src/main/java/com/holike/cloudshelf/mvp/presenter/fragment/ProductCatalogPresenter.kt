@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.bean.ProductCatalogBean
+import com.holike.cloudshelf.mvp.BasePresenter
 import com.holike.cloudshelf.mvp.model.fragment.ProductCatalogModel
 import com.holike.cloudshelf.mvp.view.fragment.ProductCatalogView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import io.reactivex.disposables.Disposable
-import pony.xcode.mvp.BasePresenter
-import pony.xcode.recycler.CommonAdapter
+import pony.xcode.recycler.lib.CommonAdapter
 
 
 //产品大全
@@ -61,6 +61,11 @@ class ProductCatalogPresenter : BasePresenter<ProductCatalogModel, ProductCatalo
 
         override fun bindViewHolder(holder: RecyclerHolder, t: ProductCatalogBean.PlansContentsBean, position: Int) {
             val lp = holder.itemView.layoutParams as RecyclerView.LayoutParams
+            if (position == 0) {
+                lp.leftMargin = 0
+            } else {
+                lp.leftMargin = mContext.resources.getDimensionPixelSize(R.dimen.dp_10)
+            }
             lp.width = itemWidth
             holder.itemView.layoutParams = lp
             val iconIView = holder.getView<ImageView>(R.id.iv_icon)

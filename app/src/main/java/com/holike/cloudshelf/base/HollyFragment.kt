@@ -1,8 +1,8 @@
 package com.holike.cloudshelf.base
 
-import pony.xcode.mvp.BasePresenter
-import pony.xcode.mvp.BaseView
-import pony.xcode.utils.GenericsUtils
+import com.holike.cloudshelf.mvp.BasePresenter
+import com.holike.cloudshelf.mvp.BaseView
+import com.holike.cloudshelf.util.GenericsUtils
 
 
 abstract class HollyFragment<P : BasePresenter<*, V>, V : BaseView> : BaseFragment() {

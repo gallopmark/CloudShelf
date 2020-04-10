@@ -1,7 +1,6 @@
 package com.holike.cloudshelf.base
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.Drawable
@@ -14,12 +13,11 @@ import androidx.annotation.IntRange
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
-import com.holike.cloudshelf.dialog.LoadingDialog
+import com.holike.cloudshelf.helper.SystemTintHelper
 import com.holike.cloudshelf.util.CheckUtils
 import com.holike.cloudshelf.widget.CustomToast
-import pony.xcode.system.SystemTintHelper
+import kotlinx.android.synthetic.main.activity_common.*
 
 //app内所有activity的父类
 abstract class BaseActivity : AppCompatActivity() {
@@ -29,22 +27,20 @@ abstract class BaseActivity : AppCompatActivity() {
         const val EXTRA_DATA = "extra-data"
     }
 
-    /*加载loading对话框*/
-    private var mLoadingDialog: Dialog? = null
-
     //自定义toast 解决频繁显示问题
     private var mToast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //进场动画
-        overridePendingTransition(R.anim.activity_anim_enter,R.anim.activity_anim_silent)
+        overridePendingTransition(R.anim.activity_anim_enter, R.anim.activity_anim_silent)
         requestedOrientation = getScreenOrientation()
         setScreenStyle()
         super.onCreate(savedInstanceState)
-        setContentView(getLayoutResourceId())
         createPresenter()
+        setContentView(R.layout.activity_common)
+        setContentLayout()
         //查找返回键是否存在layout中，设置点击返回上一级
-        findViewById<View>(R.id.view_back)?.setOnClickListener { onBackPressed() }
+        findViewById<View>(R.id.backtrack)?.setOnClickListener { onBackPressed() }
         setup(savedInstanceState)
     }
 
@@ -76,27 +72,46 @@ abstract class BaseActivity : AppCompatActivity() {
         SystemTintHelper.setTransparentStatusBar(this)
     }
 
-    @LayoutRes
-    protected abstract fun getLayoutResourceId(): Int
-
-    protected open fun setup(savedInstanceState: Bundle?) {}
-
     internal open fun createPresenter() {}
 
-    open fun showLoading() {
-        dismissLoading()
-        if (mLoadingDialog == null) {
-            mLoadingDialog = getLoadingDialog()
-        }
-        mLoadingDialog?.show()
+    protected open fun setContentLayout() {
+        decorViewContainer.setContentView(getLayoutResourceId())
+        decorViewContainer.setBacktrack(getBacktrackResource())
     }
 
-    open fun getLoadingDialog(): Dialog {
-        return LoadingDialog(this)
+    //子类重写此方法 设置主视图layout
+    @LayoutRes
+    protected open fun getLayoutResourceId(): Int = 0
+
+    //子类重写此方法 设置返回键风格样式
+    @LayoutRes
+    protected open fun getBacktrackResource(): Int = 0
+
+    //初始化方法
+    protected open fun setup(savedInstanceState: Bundle?) {}
+
+    open fun showLoading() {
+        decorViewContainer.showLoadingView()
+    }
+
+    open fun showLoading(hide: Boolean) {
+        decorViewContainer.showLoadingView(hide)
+    }
+
+    open fun hideContentView() {
+        decorViewContainer.hideContentView()
     }
 
     open fun dismissLoading() {
-        mLoadingDialog?.dismiss()
+        decorViewContainer.removeLoadingView()
+    }
+
+    open fun dismissLoading(show: Boolean) {
+        decorViewContainer.removeLoadingView(show)
+    }
+
+    open fun showContentView() {
+        decorViewContainer.showContentView()
     }
 
     open fun showShortToast(@StringRes resId: Int) {
@@ -195,46 +210,36 @@ abstract class BaseActivity : AppCompatActivity() {
         startActivityForResult(intent, requestCode)
     }
 
-    open fun getCurrentApp(): CurrentApp {
-        return application as CurrentApp
-    }
-
-    open fun putExtra(name: String, obj: Any?) {
-        getCurrentApp().putExtra(name, obj)
-    }
-
-    open fun removeExtra(name: String) {
-        getCurrentApp().removeExtra(name)
-    }
-
     //无结果缺省页
     fun onNoResult() {
         onNoResult(getString(R.string.text_no_result))
     }
 
     /**
-     * @param text 传入提示文字
+     * @param cs 传入提示文字
      */
-    fun onNoResult(text: CharSequence?) {
-        onNoResult(R.mipmap.pic_emptypage_nonescreen, text)
+    fun onNoResult(cs: CharSequence?) {
+        onNoResult(R.mipmap.pic_emptypage_nonescreen, cs)
     }
 
-    fun onNoResult(@DrawableRes iconRes: Int, text: CharSequence?) {
-        DefaultPageHelper.noResult(this, iconRes, text)
+    fun onNoResult(@DrawableRes iconRes: Int, cs: CharSequence?) {
+        DefaultPageHelper.noResult(findViewById(R.id.defaultViewContainer),
+                getDrawableCompat(iconRes), if (cs.isNullOrEmpty()) getString(R.string.text_no_result) else cs)
     }
 
-    fun onNetworkError() {
-        onNetworkError(getString(R.string.text_network_error))
+    fun onPageError() {
+        onPageError(getString(R.string.text_network_error))
     }
 
     //网络异常、请求失败等 缺省页
-    fun onNetworkError(failReason: CharSequence?) {
-        DefaultPageHelper.noNetwork(this, R.mipmap.pic_emptypage_nonenetwork, failReason)
+    fun onPageError(cs: CharSequence?) {
+        DefaultPageHelper.onPageError(findViewById(R.id.defaultViewContainer), getDrawableCompat(R.mipmap.pic_emptypage_nonenetwork),
+                if (cs.isNullOrEmpty()) getString(R.string.text_network_error) else cs, View.OnClickListener { onReload() })
     }
 
     //隐藏缺省页
     fun hideDefaultPage() {
-        DefaultPageHelper.hide(this)
+        findViewById<View>(R.id.defaultViewContainer)?.visibility = View.GONE
     }
 
     //重试回调
@@ -247,7 +252,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun startFragment(fragment: Fragment, extras: Bundle?) {
-        startFragment(R.id.fl_fragment, fragment, extras)
+        startFragment(R.id.decorViewContainer, fragment, extras)
     }
 
     fun startFragment(@IdRes containerViewId: Int, fragment: Fragment) {
@@ -266,11 +271,6 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun finish() {
         super.finish()
         //退场动画
-        overridePendingTransition(R.anim.activity_anim_silent,R.anim.activity_anim_exit)
-    }
-    override fun onDestroy() {
-        mLoadingDialog?.dismiss()
-        mLoadingDialog = null
-        super.onDestroy()
+        overridePendingTransition(R.anim.activity_anim_silent, R.anim.activity_anim_exit)
     }
 }

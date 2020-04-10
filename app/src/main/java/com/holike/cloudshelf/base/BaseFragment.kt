@@ -9,17 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.DimenRes
-import androidx.annotation.DrawableRes
+import androidx.annotation.*
 import androidx.annotation.IntRange
-import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.util.CheckUtils
 import com.holike.cloudshelf.widget.CustomToast
+import kotlinx.android.synthetic.main.fragment_common.*
 
-
+//app内所有fragment的父类
 abstract class BaseFragment : Fragment() {
     protected lateinit var mContext: Context
     lateinit var contentView: View
@@ -32,28 +31,62 @@ abstract class BaseFragment : Fragment() {
 
     internal open fun createPresenter() {}
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        contentView = inflater.inflate(getLayoutResourceId(), container, false)
-        contentView.findViewById<View>(R.id.view_back)?.setOnClickListener { onBackPressed() }
+        contentView = inflater.inflate(R.layout.fragment_common, container, false)
         return contentView
     }
 
-    abstract fun getLayoutResourceId(): Int
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setContentLayout()
+        contentView.findViewById<View>(R.id.backtrack)?.setOnClickListener { onBackPressed() }
         setup(savedInstanceState)
     }
 
+    protected open fun setContentLayout() {
+        decorViewContainer.setContentView(getLayoutResourceId())
+        decorViewContainer.setBacktrack(getBacktrackResource())
+    }
+
+    //主视图layout id
+    @LayoutRes
+    abstract fun getLayoutResourceId(): Int
+
+    //返回键layout id
+    @LayoutRes
+    protected open fun getBacktrackResource(): Int = 0
+
+    //kotlin-android-extensions id引用必须在onViewCreated之后使用，否则报空指针异常
     open fun setup(savedInstanceState: Bundle?) {
 
     }
 
     open fun showLoading() {
-        (mContext as BaseActivity).showLoading()
+        decorViewContainer.showLoadingView()
+    }
+
+    open fun showLoading(hide: Boolean) {
+        decorViewContainer.showLoadingView(hide)
+    }
+
+    open fun hideContentView() {
+        decorViewContainer.hideContentView()
     }
 
     open fun dismissLoading() {
-        (mContext as BaseActivity).dismissLoading()
+        decorViewContainer.removeLoadingView()
+    }
+
+    open fun dismissLoading(show: Boolean) {
+        decorViewContainer.removeLoadingView(show)
+    }
+
+    open fun showContentView() {
+        decorViewContainer.showContentView()
+    }
+
+    //移除返回键
+    open fun removeBacktrack(){
+        decorViewContainer.removeBacktrack()
     }
 
     open fun showShortToast(@StringRes resId: Int) {
@@ -92,8 +125,13 @@ abstract class BaseFragment : Fragment() {
         (mContext as BaseActivity).showToast(text, gravity, duration)
     }
 
+    /*获取string*/
+    open fun getStringRes(@StringRes resId: Int): String {
+        return mContext.getString(resId)
+    }
+
     /*获取drawable*/
-    open fun getDrawableCompat(@DrawableRes id: Int): Drawable? {
+    open fun getDrawableRes(@DrawableRes id: Int): Drawable? {
         return ContextCompat.getDrawable(mContext, id)
     }
 
@@ -125,7 +163,9 @@ abstract class BaseFragment : Fragment() {
     }
 
     fun onNoResult(@DrawableRes iconRes: Int, text: CharSequence?) {
-        DefaultPageHelper.noResult(this, iconRes, text)
+        DefaultPageHelper.noResult(contentView.findViewById(R.id.defaultViewContainer),
+                getDrawableRes(iconRes),
+                if (text.isNullOrEmpty()) getStringRes(R.string.text_no_result) else text)
     }
 
     fun onNetworkError() {
@@ -133,13 +173,16 @@ abstract class BaseFragment : Fragment() {
     }
 
     //网络异常、请求失败等 缺省页
-    fun onNetworkError(failReason: CharSequence?) {
-        DefaultPageHelper.noNetwork(this, R.mipmap.pic_emptypage_nonenetwork, failReason)
+    fun onNetworkError(cs: CharSequence?) {
+        DefaultPageHelper.onPageError(contentView.findViewById(R.id.defaultViewContainer),
+                getDrawableRes(R.mipmap.pic_emptypage_nonenetwork),
+                if (cs.isNullOrEmpty()) getStringRes(R.string.text_network_error) else cs,
+                View.OnClickListener { onReload() })
     }
 
     //隐藏缺省页
     fun hideDefaultPage() {
-        DefaultPageHelper.hide(this)
+        contentView.findViewById<View>(R.id.defaultViewContainer)?.visibility = View.GONE
     }
 
     //重试回调

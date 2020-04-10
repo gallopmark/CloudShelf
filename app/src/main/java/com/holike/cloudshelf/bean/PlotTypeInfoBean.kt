@@ -20,6 +20,12 @@ class PlotTypeInfoBean {
     @SerializedName("cloudImageList")
     private var imageList: MutableList<String>? = null
 
+    fun obtainImageList(): MutableList<String> {
+        val images = imageList
+        if (images.isNullOrEmpty()) return ArrayList()
+        return images
+    }
+
     fun obtainImageList(width: Int, height: Int): MutableList<String> {
         val images = imageList
         val imageList = ArrayList<String>()

@@ -5,7 +5,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.holike.cloudshelf.R
-import pony.xcode.recycler.CommonAdapter
+import pony.xcode.recycler.lib.CommonAdapter
 
 //页面底部图片预览与选择适配器
 class BottomPreviewImageAdapter(context: Context, images: MutableList<String>)
@@ -40,7 +40,7 @@ class BottomPreviewImageAdapter(context: Context, images: MutableList<String>)
             lp.height = unSelectHeight
         }
         pictureIView.layoutParams = lp
-        Glide.with(mContext).load(t).centerCrop().into(holder.getView(R.id.iv_pic))
+        Glide.with(mContext).load(t).placeholder(R.color.col_03).centerCrop().into(holder.getView(R.id.iv_pic))
         holder.itemView.setOnClickListener { setSelectPosition(position) }
     }
 

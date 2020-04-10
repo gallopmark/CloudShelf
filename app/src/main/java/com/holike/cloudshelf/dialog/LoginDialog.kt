@@ -8,7 +8,6 @@ import com.holike.cloudshelf.R
 import com.holike.cloudshelf.util.CheckUtils
 import com.holike.cloudshelf.helper.ClearEditTextHelper
 import com.holike.cloudshelf.helper.CountTimerHelper
-import pony.xcode.base.CommonDialog
 
 //登录对话框
 class LoginDialog(context: Context) : CommonDialog(context, R.style.AppDialogStyle) {

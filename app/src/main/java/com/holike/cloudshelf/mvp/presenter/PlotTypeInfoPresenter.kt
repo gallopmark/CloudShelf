@@ -2,7 +2,6 @@ package com.holike.cloudshelf.mvp.presenter
 
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import com.holike.cloudshelf.base.PicturePagerPresenter
 import com.holike.cloudshelf.bean.PlotTypeInfoBean
 import com.holike.cloudshelf.mvp.model.PlotTypeInfoModel
 import com.holike.cloudshelf.mvp.view.PlotTypeInfoView
@@ -13,7 +12,7 @@ import io.reactivex.disposables.Disposable
 class PlotTypeInfoPresenter : PicturePagerPresenter<PlotTypeInfoModel, PlotTypeInfoView>() {
 
     fun resizeContent(container: FrameLayout, infoLayout: LinearLayout) {
-        val lp = container.layoutParams as FrameLayout.LayoutParams
+        val lp = container.layoutParams as LinearLayout.LayoutParams
         lp.width = mParamWidth
         lp.height = mParamHeight
         container.layoutParams = lp
@@ -30,7 +29,8 @@ class PlotTypeInfoPresenter : PicturePagerPresenter<PlotTypeInfoModel, PlotTypeI
 
             override fun onSuccess(result: PlotTypeInfoBean, message: String?) {
                 view?.onSuccess(result)
-                updatePreviewImages(result.obtainImageList(mBottomImageWidth, mBottomImageHeight))
+                updatePreviewImages(result.obtainImageList())
+                updateBottomImages(result.obtainImageList(mBottomImageWidth, mBottomImageHeight))
             }
 
             override fun onFailure(code: Int, failReason: String?) {

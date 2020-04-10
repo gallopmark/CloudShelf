@@ -1,7 +1,6 @@
 package com.holike.cloudshelf.mvp.view
 
-import pony.xcode.mvp.BaseView
-
+import com.holike.cloudshelf.mvp.BaseView
 
 interface IView : BaseView {
     fun onShowLoading()

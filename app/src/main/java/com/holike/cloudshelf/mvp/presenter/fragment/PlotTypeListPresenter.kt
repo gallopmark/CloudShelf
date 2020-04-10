@@ -9,12 +9,12 @@ import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.bean.PlotTypeBean
 import com.holike.cloudshelf.bean.internal.PictureDisplayItem
+import com.holike.cloudshelf.mvp.BasePresenter
 import com.holike.cloudshelf.mvp.model.fragment.PlotTypeListModel
 import com.holike.cloudshelf.mvp.view.fragment.PlotTypeListView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import com.holike.cloudshelf.util.ListUtils
-import pony.xcode.mvp.BasePresenter
-import pony.xcode.recycler.CommonAdapter
+import pony.xcode.recycler.lib.CommonAdapter
 
 
 class PlotTypeListPresenter : BasePresenter<PlotTypeListModel, PlotTypeListView>() {
@@ -31,13 +31,13 @@ class PlotTypeListPresenter : BasePresenter<PlotTypeListModel, PlotTypeListView>
             val tlp = topIView.layoutParams as LinearLayout.LayoutParams
             tlp.height = mImageSize
             topIView.layoutParams = tlp
-            Glide.with(mContext).load(t.topUrl).into(topIView)
+            Glide.with(mContext).load(t.topUrl).placeholder(R.color.col_03).centerCrop().into(topIView)
             holder.setText(R.id.tv_name_top, t.topName)
             val bottomIView = holder.getView<ImageView>(R.id.iv_pic_bottom)
             val blp = bottomIView.layoutParams as LinearLayout.LayoutParams
             blp.height = mImageSize
             bottomIView.layoutParams = blp
-            Glide.with(mContext).load(t.bottomUrl).into(bottomIView)
+            Glide.with(mContext).load(t.bottomUrl).placeholder(R.color.col_03).centerCrop().into(bottomIView)
             holder.setText(R.id.tv_name_bottom, t.bottomName)
             holder.setOnClickListener(R.id.top_layout) {
                 if (!t.topId.isNullOrEmpty()) {

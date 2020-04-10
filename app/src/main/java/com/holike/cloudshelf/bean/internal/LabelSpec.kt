@@ -38,11 +38,11 @@ class LabelSpec(var id: String?, var iconRes: Int,
             this.isMore = isMore
         }
 
-        fun obtainId(): String {
-            val id = this.id
-            if (id.isNullOrEmpty()) return ""
-            return id
-        }
+//        fun obtainId(): String {
+//            val id = this.id
+//            if (id.isNullOrEmpty()) return ""
+//            return id
+//        }
 
         override fun equals(other: Any?): Boolean {
             return when (other) {

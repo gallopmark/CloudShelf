@@ -121,7 +121,7 @@ class CityPickerFragment : BaseFragment(), InnerListener,
     }
 
     private fun showSearchDialog() {
-        SearchDialog(mContext).setHint(mContext.getString(R.string.hint_input_city))
+        SearchDialog(mContext).setHint(getStringRes(R.string.hint_input_city))
                 .setOnSearchListener(object : SearchDialog.OnSearchListener {
                     override fun onSearch(content: String?) {
                         val keyword = content.toString()

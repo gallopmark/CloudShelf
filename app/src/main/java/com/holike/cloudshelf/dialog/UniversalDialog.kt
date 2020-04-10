@@ -6,8 +6,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
 import com.holike.cloudshelf.R
-import pony.xcode.base.CommonDialog
-
 
 class UniversalDialog(context: Context) : CommonDialog(context, R.style.AppDialogStyle) {
 

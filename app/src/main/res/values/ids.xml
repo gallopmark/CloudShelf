@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="fl_fragment" type="id"/>
-    <item name="view_back" type="id" />
-    <item name="vg_default_page" type="id" />
+    <!--基础视图id activity_common fragment_common-->
+    <item name="decorViewContainer" type="id" />
+    <!--返回键 id-->
+    <item name="backtrack" type="id" />
+    <!--缺省页id-->
+    <item name="defaultViewContainer" type="id" />
+    <!--加载框id-->
+    <item name="loadingContainer" type="id"/>
 </resources>

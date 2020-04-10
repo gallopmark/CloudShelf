@@ -1,7 +1,7 @@
 package com.holike.cloudshelf.mvp.view
 
 import com.holike.cloudshelf.bean.AMapLocationBean
-import pony.xcode.mvp.BaseView
+import com.holike.cloudshelf.mvp.BaseView
 
 
 interface LocationView : BaseView {

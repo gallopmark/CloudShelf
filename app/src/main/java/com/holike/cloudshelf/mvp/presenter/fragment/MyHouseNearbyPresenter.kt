@@ -9,13 +9,13 @@ import com.holike.cloudshelf.R
 import com.holike.cloudshelf.bean.AMapLocationBean
 import com.holike.cloudshelf.bean.SoughtHouseBean
 import com.holike.cloudshelf.dialog.SearchDialog
+import com.holike.cloudshelf.mvp.BasePresenter
 import com.holike.cloudshelf.mvp.model.fragment.MyHouseNearbyModel
 import com.holike.cloudshelf.mvp.view.fragment.MyHouseNearbyHouseView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import com.holike.cloudshelf.util.ListUtils
 import io.reactivex.disposables.Disposable
-import pony.xcode.mvp.BasePresenter
-import pony.xcode.recycler.CommonAdapter
+import pony.xcode.recycler.lib.CommonAdapter
 
 //搜搜我家presenter
 class MyHouseNearbyPresenter : BasePresenter<MyHouseNearbyModel, MyHouseNearbyHouseView>() {
@@ -37,7 +37,7 @@ class MyHouseNearbyPresenter : BasePresenter<MyHouseNearbyModel, MyHouseNearbyHo
             val lp = holder.itemView.layoutParams as RecyclerView.LayoutParams
             lp.width = mImageWidth
             holder.itemView.layoutParams = lp
-            Glide.with(mContext).load(t.topUrl).centerCrop().into(holder.getView(R.id.iv_pic_top))
+            Glide.with(mContext).load(t.topUrl).placeholder(R.color.col_03).centerCrop().into(holder.getView(R.id.iv_pic_top))
             holder.setText(R.id.tv_name_top, t.topName)
             holder.setText(R.id.tv_address_top, t.topAddress)
             Glide.with(mContext).load(t.bottomUrl).centerCrop().into(holder.getView(R.id.iv_pic_bottom))

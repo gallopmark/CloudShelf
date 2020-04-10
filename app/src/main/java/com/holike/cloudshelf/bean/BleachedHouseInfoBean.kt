@@ -15,6 +15,12 @@ class BleachedHouseInfoBean {
     private var imageList: MutableList<String>? = null //晒图的方案图
     var budget: String? = null //响应码
 
+    fun obtainImageList(): MutableList<String> {
+        val images = imageList
+        if (images.isNullOrEmpty()) return ArrayList()
+        return images
+    }
+
     fun obtainImageList(width: Int, height: Int): MutableList<String> {
         val images = imageList
         val imageList = ArrayList<String>()

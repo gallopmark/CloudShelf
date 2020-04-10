@@ -59,6 +59,10 @@ class CurrentApp : MultiDexApplication() {
     private var mMaxPixels: Int = mScreenWidth.coerceAtLeast(mScreenHeight)  //取宽度、高度的最大值
     private var mMinPixels: Int = mScreenWidth.coerceAtMost(mScreenHeight)
 
+    //图片预览窗口的宽和高
+    private var mPreviewWindowWidth: Int = (mMaxPixels * 0.57f).toInt()
+    private var mPreviewWindowHeight: Int = (mPreviewWindowWidth * 0.68f).toInt()
+
     //业务字典 全局使用
     private var mSystemCode: SystemCodeBean? = null
 
@@ -93,6 +97,8 @@ class CurrentApp : MultiDexApplication() {
             mScreenHeight = outMetrics.heightPixels
             mMaxPixels = mScreenWidth.coerceAtLeast(mScreenHeight)
             mMinPixels = mScreenWidth.coerceAtMost(mScreenHeight)
+            mPreviewWindowWidth = (mMaxPixels * 0.57f).toInt()
+            mPreviewWindowHeight = (mPreviewWindowWidth * 0.68f).toInt()
         }
     }
 
@@ -117,7 +123,11 @@ class CurrentApp : MultiDexApplication() {
 
     fun getMaxPixels() = mMaxPixels
 
-//    fun getMinPixels() = mMinPixels
+    fun getMinPixels() = mMinPixels
+
+    fun getPreviewWindowWidth() = mPreviewWindowWidth
+
+    fun getPreviewWindowHeight() = mPreviewWindowHeight
 
     fun putExtra(name: String, obj: Any?) {
         if (mValueMap == null) {
@@ -186,8 +196,8 @@ class CurrentApp : MultiDexApplication() {
             if (act is MainActivity) {
                 continue
             }
-            act.overridePendingTransition(0, 0)
             act.finish()
+            act.overridePendingTransition(R.anim.activity_anim_silent, R.anim.activity_anim_exit_alpha)
         }
 //        val intent = Intent(this, MainActivity::class.java)
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)

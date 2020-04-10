@@ -2,7 +2,6 @@ package com.holike.cloudshelf.activity
 
 import android.content.Intent
 import android.os.Bundle
-import com.holike.cloudshelf.R
 import com.holike.cloudshelf.base.BaseActivity
 import com.holike.cloudshelf.fragment.ContentInfoFragment
 
@@ -32,9 +31,6 @@ class ContentInfoActivity : BaseActivity() {
             act.openActivity(intent)
         }
     }
-
-    //底部弹出动画
-    override fun getLayoutResourceId(): Int = R.layout.activity_common
 
     override fun setup(savedInstanceState: Bundle?) {
         startFragment(ContentInfoFragment(), intent.extras)

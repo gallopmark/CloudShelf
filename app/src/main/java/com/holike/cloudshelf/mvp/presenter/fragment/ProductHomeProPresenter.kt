@@ -2,6 +2,7 @@ package com.holike.cloudshelf.mvp.presenter.fragment
 
 import android.content.Context
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -11,90 +12,15 @@ import com.holike.cloudshelf.R
 import com.holike.cloudshelf.bean.ProductHomeProBean
 import com.holike.cloudshelf.bean.SystemCodeBean
 import com.holike.cloudshelf.enumc.ProductCatalog
+import com.holike.cloudshelf.mvp.BasePresenter
 import com.holike.cloudshelf.mvp.model.fragment.ProductHomeProModel
 import com.holike.cloudshelf.mvp.view.fragment.ProductHomeProView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import com.holike.cloudshelf.widget.GridSpacingItemDecoration
-import pony.xcode.mvp.BasePresenter
-import pony.xcode.recycler.CommonAdapter
+import pony.xcode.recycler.lib.CommonAdapter
 
 
 class ProductHomeProPresenter : BasePresenter<ProductHomeProModel, ProductHomeProView>(), OnRequestDictListener {
-    private inner class ProductHomeProListAdapter(context: Context, dataList: MutableList<ProductHomeProBean>)
-        : CommonAdapter<ProductHomeProBean>(context, dataList) {
-
-        //是否是定制窗帘
-        private var mCurtainPro: Boolean = false
-        override fun getItemViewType(position: Int): Int = if (mCurtainPro) 1 else 0
-
-        override fun getItemResourceId(viewType: Int): Int = if (viewType == 1) R.layout.item_product_homepro_grid
-        else R.layout.item_product_homepro
-
-        override fun bindViewHolder(holder: RecyclerHolder, t: ProductHomeProBean, position: Int) {
-            val itemType = holder.itemViewType
-            if (itemType == 1) {
-                Glide.with(mContext).load(t.getImageUrl(mImageWidth, mImageHeight)).centerCrop().into(holder.getView(R.id.iv_pic))
-                holder.setText(R.id.tv_name, t.name)
-                holder.itemView.setOnClickListener {
-                    val selectName = mBottomDictAdapter?.getSelectName()
-                    val name = "${if (selectName.isNullOrEmpty()) "" else "$selectName > "}${if (t.name.isNullOrEmpty()) "" else "${t.name}"}"
-                    var title = mContext.getString(R.string.text_product_catalog)
-                    if (name.isNotEmpty()) {
-                        title += " > $name"
-                    }
-                    view?.onItemClick(null, t.id, t.classification, title, t.isShowNavigation())
-                }
-            } else {
-                holder.setText(R.id.tv_title, t.name)
-                val gridRView = holder.getView<RecyclerView>(R.id.rv_pic)
-                gridRView.isNestedScrollingEnabled = false
-                if (gridRView.itemDecorationCount <= 0) {
-                    gridRView.addItemDecoration(GridSpacingItemDecoration(5, mContext.resources.getDimensionPixelSize(R.dimen.dp_20), false))
-                }
-                gridRView.adapter = ImageGridAdapter(mContext, t.obtainCategory(), t.id, t.name)
-            }
-        }
-
-        fun addAll(dataList: MutableList<ProductHomeProBean>, isCurtain: Boolean) {
-            mCurtainPro = isCurtain
-            this.mDataList.clear()
-            if (!mCurtainPro) {
-                //有些只有空间 没有品类 则过滤掉
-                for (bean in dataList.filter { proBean -> proBean.obtainCategory().isNotEmpty() }) {
-                    this.mDataList.add(bean)
-                }
-            } else {
-                this.mDataList.addAll(dataList)
-            }
-            notifyDataSetChanged()
-            if (mDataList.isNotEmpty()) {
-                view?.onSuccess()
-            } else {
-                view?.onNoQueryResults()
-            }
-        }
-
-        private inner class ImageGridAdapter(context: Context, dataList: MutableList<ProductHomeProBean>,
-                                             val parentId: String?, val parentName: String?)
-            : CommonAdapter<ProductHomeProBean>(context, dataList) {
-
-            override fun getItemResourceId(viewType: Int): Int = R.layout.item_product_homepro_grid
-
-            override fun bindViewHolder(holder: RecyclerHolder, t: ProductHomeProBean, position: Int) {
-                Glide.with(mContext).load(t.getImageUrl(mImageWidth, mImageHeight)).centerCrop().into(holder.getView(R.id.iv_pic))
-                holder.setText(R.id.tv_name, t.name)
-                holder.itemView.setOnClickListener {
-                    val selectName = mBottomDictAdapter?.getSelectName()
-                    val name = "${if (selectName.isNullOrEmpty()) "" else "$selectName > "}${if (parentName.isNullOrEmpty()) "" else "$parentName > "}${if (t.name.isNullOrEmpty()) "" else "${t.name}"}"
-                    var title = mContext.getString(R.string.text_product_catalog)
-                    if (name.isNotEmpty()) {
-                        title += " > $name"
-                    }
-                    view?.onItemClick(parentId, t.id, t.classification, title, t.isShowNavigation())
-                }
-            }
-        }
-    }
 
     private class DictBean(val id: String?, val name: String?)
     private inner class BottomDictAdapter(context: Context, dataList: MutableList<DictBean>) : CommonAdapter<DictBean>(context, dataList) {
@@ -147,16 +73,13 @@ class ProductHomeProPresenter : BasePresenter<ProductHomeProModel, ProductHomePr
 
     private var mImageWidth: Int = 0
     private var mImageHeight: Int = 0
-    private var mAdapter: ProductHomeProListAdapter? = null
     private var mBottomDictAdapter: BottomDictAdapter? = null
 
-    fun initRView(context: Context, centerRView: RecyclerView, bottomRView: RecyclerView) {
+    fun initRView(context: Context, bottomRView: RecyclerView) {
         mImageWidth = ((CurrentApp.getInstance().getMaxPixels()
                 - context.resources.getDimensionPixelSize(R.dimen.dp_45) * 2
                 - context.resources.getDimensionPixelSize(R.dimen.dp_20) * 4) / 5f).toInt()
         mImageHeight = mImageWidth
-        mAdapter = ProductHomeProListAdapter(context, ArrayList())
-        centerRView.adapter = mAdapter
         mBottomDictAdapter = BottomDictAdapter(context, ArrayList())
         bottomRView.adapter = mBottomDictAdapter
         val systemCode = CurrentApp.getInstance().getSystemCode()
@@ -232,6 +155,104 @@ class ProductHomeProPresenter : BasePresenter<ProductHomeProModel, ProductHomePr
     }
 
     private fun updateProductHomePro(dataList: MutableList<ProductHomeProBean>, isCurtain: Boolean) {
-        mAdapter?.addAll(dataList, isCurtain)
+        val data = ArrayList<ProductHomeProBean>()
+        if (!isCurtain) {
+            //有些只有空间 没有品类 则过滤掉
+            for (bean in dataList.filter { proBean -> proBean.obtainCategory().isNotEmpty() }) {
+                data.add(bean)
+            }
+        } else {
+            data.addAll(dataList)
+        }
+        if (data.isNotEmpty()) {
+            view?.onSuccess(isCurtain, data)
+        } else {
+            view?.onNoQueryResults()
+        }
+    }
+
+    fun setAdapter(context: Context, rView: RecyclerView, dataList: MutableList<ProductHomeProBean>, isCurtain: Boolean) {
+        if (isCurtain) {
+            setCurtainAdapter(context, rView, dataList)
+        } else {
+            setFinishedAdapter(context, rView, dataList)
+        }
+    }
+
+    private fun setFinishedAdapter(context: Context, rView: RecyclerView, dataList: MutableList<ProductHomeProBean>) {
+        rView.layoutManager = LinearLayoutManager(context)
+        if (rView.tag != null) {
+            rView.removeItemDecoration(rView.tag as RecyclerView.ItemDecoration)
+            rView.tag = null
+        }
+        rView.adapter = FinishedListAdapter(context, dataList)
+    }
+
+    private fun setCurtainAdapter(context: Context, rView: RecyclerView, dataList: MutableList<ProductHomeProBean>) {
+        rView.layoutManager = GridLayoutManager(context, 5)
+        if (rView.tag == null) {
+            val itemDecoration = GridSpacingItemDecoration(5, context.resources.getDimensionPixelSize(R.dimen.dp_20), false)
+            rView.addItemDecoration(itemDecoration)
+            rView.tag = itemDecoration
+        }
+        rView.adapter = CurtainListAdapter(context, dataList)
+    }
+
+    //成品家具列表适配器
+    private inner class FinishedListAdapter(context: Context, dataList: MutableList<ProductHomeProBean>)
+        : CommonAdapter<ProductHomeProBean>(context, dataList) {
+
+        override fun getItemResourceId(viewType: Int): Int = R.layout.item_product_homepro
+
+        override fun bindViewHolder(holder: RecyclerHolder, t: ProductHomeProBean, position: Int) {
+            holder.setText(R.id.tv_title, t.name)
+            val gridRView = holder.getView<RecyclerView>(R.id.rv_pic)
+            gridRView.isNestedScrollingEnabled = false
+            if (gridRView.itemDecorationCount <= 0) {
+                gridRView.addItemDecoration(GridSpacingItemDecoration(5, mContext.resources.getDimensionPixelSize(R.dimen.dp_20), false))
+            }
+            gridRView.adapter = ImageGridAdapter(mContext, t.obtainCategory(), t.id, t.name)
+        }
+
+        private inner class ImageGridAdapter(context: Context, dataList: MutableList<ProductHomeProBean>,
+                                             val parentId: String?, val parentName: String?)
+            : CommonAdapter<ProductHomeProBean>(context, dataList) {
+
+            override fun getItemResourceId(viewType: Int): Int = R.layout.item_product_homepro_grid
+
+            override fun bindViewHolder(holder: RecyclerHolder, t: ProductHomeProBean, position: Int) {
+                Glide.with(mContext).load(t.getImageUrl(mImageWidth, mImageHeight)).centerCrop().into(holder.getView(R.id.iv_pic))
+                holder.setText(R.id.tv_name, t.name)
+                holder.itemView.setOnClickListener {
+                    val selectName = mBottomDictAdapter?.getSelectName()
+                    val name = "${if (selectName.isNullOrEmpty()) "" else "$selectName > "}${if (parentName.isNullOrEmpty()) "" else "$parentName > "}${if (t.name.isNullOrEmpty()) "" else "${t.name}"}"
+                    var title = mContext.getString(R.string.text_product_catalog)
+                    if (name.isNotEmpty()) {
+                        title += " > $name"
+                    }
+                    view?.onItemClick(parentId, t.id, t.classification, title, t.isShowNavigation())
+                }
+            }
+        }
+    }
+
+    //窗帘列表适配器
+    private inner class CurtainListAdapter(context: Context, dataList: MutableList<ProductHomeProBean>)
+        : CommonAdapter<ProductHomeProBean>(context, dataList) {
+        override fun getItemResourceId(viewType: Int): Int = R.layout.item_product_homepro_grid
+
+        override fun bindViewHolder(holder: RecyclerHolder, t: ProductHomeProBean, position: Int) {
+            Glide.with(mContext).load(t.getImageUrl(mImageWidth, mImageHeight)).centerCrop().into(holder.getView(R.id.iv_pic))
+            holder.setText(R.id.tv_name, t.name)
+            holder.itemView.setOnClickListener {
+                val selectName = mBottomDictAdapter?.getSelectName()
+                val name = "${if (selectName.isNullOrEmpty()) "" else "$selectName > "}${if (t.name.isNullOrEmpty()) "" else "${t.name}"}"
+                var title = mContext.getString(R.string.text_product_catalog)
+                if (name.isNotEmpty()) {
+                    title += " > $name"
+                }
+                view?.onItemClick(null, t.id, t.classification, title, t.isShowNavigation())
+            }
+        }
     }
 }

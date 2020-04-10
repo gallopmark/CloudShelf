@@ -6,6 +6,7 @@ class CheckUtils private constructor() {
 
     companion object {
 
+        //检测手机号是否正确 手机号必须以1开头的11位数
         fun isMobile(phone: String?): Boolean {
             if (phone.isNullOrEmpty()) return false
             val regex = Regex("[1]\\d{10}")

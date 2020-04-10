@@ -23,12 +23,17 @@ class ContentInfoModel : ApiModel() {
             }
 
             override fun onSuccess(result: String, message: String?) {
+                val bean: TableModelDetailBean
                 try {
-                    val bean = Gson().fromJson(result, TableModelDetailBean::class.java)
-                    callback.onSuccess(bean, null)
+                    bean = Gson().fromJson(result, TableModelDetailBean::class.java)
                 } catch (e: Exception) {
-                    callback.onFailure(JsonParserHelper.DEFAULT_CODE,
-                            CurrentApp.getInstance().getString(R.string.json_parse_exception))
+                    callback.onFailure(JsonParserHelper.DEFAULT_CODE, CurrentApp.getInstance().getString(R.string.json_parse_exception))
+                    return
+                }
+                if (bean == null) {
+                    callback.onFailure(JsonParserHelper.DEFAULT_CODE, CurrentApp.getInstance().getString(R.string.no_data_exception))
+                } else {
+                    callback.onSuccess(bean, null)
                 }
             }
 

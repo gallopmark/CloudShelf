@@ -1,93 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/homeProContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layoutAnimation="@anim/la_layout_from_bottom"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/dp_30">
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/homeProContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layoutAnimation="@anim/la_layout_from_bottom"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_30">
 
-        <TextView
-            android:id="@+id/typeTView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dp_45"
-            android:layout_marginLeft="@dimen/dp_45"
-            android:layout_marginEnd="@dimen/dp_45"
-            android:layout_marginRight="@dimen/dp_45"
-            android:drawablePadding="@dimen/dp_6"
-            android:gravity="center|start"
-            android:textColor="@color/col_03"
-            android:textSize="@dimen/sp_18"
-            android:textStyle="bold" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/typeTView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/dp_45"
+                android:layout_marginLeft="@dimen/dp_45"
+                android:layout_marginEnd="@dimen/dp_45"
+                android:layout_marginRight="@dimen/dp_45"
+                android:drawablePadding="@dimen/dp_6"
+                android:gravity="center|start"
+                android:textColor="@color/col_03"
+                android:textSize="@dimen/sp_18"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_45"
+                android:layout_marginLeft="@dimen/dp_45"
+                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_45"
+                android:layout_marginRight="@dimen/dp_45">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/centerRView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:overScrollMode="never"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                <include layout="@layout/include_default_page" />
+            </FrameLayout>
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/dp_45"
-            android:layout_marginLeft="@dimen/dp_45"
-            android:layout_marginTop="@dimen/dp_16"
-            android:layout_marginEnd="@dimen/dp_45"
-            android:layout_marginRight="@dimen/dp_45">
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@color/col_28">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/centerRView"
-                android:layout_width="match_parent"
+                android:id="@+id/bottomRView"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
                 android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-            <include layout="@layout/include_default_page" />
-
-            <include
-                layout="@layout/include_backtrack"
-                android:layout_width="@dimen/dp_80"
-                android:layout_height="@dimen/dp_80"
-                android:layout_gravity="end|center"
-                android:layout_marginEnd="@dimen/dp_45"
-                android:layout_marginRight="@dimen/dp_45" />
-
-            <pony.xcode.widget.DrawableTextView
-                android:id="@+id/backTopTView"
-                android:layout_width="@dimen/dp_80"
-                android:layout_height="@dimen/dp_80"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="@dimen/dp_45"
-                android:layout_marginRight="@dimen/dp_45"
-                android:layout_marginBottom="@dimen/dp_30"
-                android:background="@drawable/bg_col27_corners2dp"
-                android:drawableTop="@mipmap/ic_back_top"
-                android:drawablePadding="@dimen/dp_4"
-                android:gravity="center"
-                android:text="@string/text_back_top"
-                android:textColor="@color/col_03"
-                android:textSize="@dimen/sp_12"
-                android:visibility="gone" />
         </FrameLayout>
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_60"
-        android:layout_marginTop="@dimen/dp_10"
-        android:background="@color/col_28">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bottomRView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-    </FrameLayout>
-</LinearLayout>
+    <com.holike.cloudshelf.widget.DrawableTextView
+        android:id="@+id/backTopTView"
+        style="@style/CommonViewStyle"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/dp_45"
+        android:layout_marginRight="@dimen/dp_45"
+        android:layout_marginBottom="@dimen/dp_30"
+        android:drawableTop="@mipmap/ic_back_top"
+        android:text="@string/text_back_top"
+        android:visibility="gone" />
+</FrameLayout>

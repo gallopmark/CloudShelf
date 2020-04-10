@@ -1,10 +1,7 @@
 package com.holike.cloudshelf.fragment
 
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.text.TextUtils
 import android.view.View
 import com.bumptech.glide.Glide
@@ -23,6 +20,7 @@ import com.holike.cloudshelf.mvp.view.fragment.MainView
 import com.holike.cloudshelf.rxbus.EventBus
 import com.holike.cloudshelf.rxbus.EventType
 import com.holike.cloudshelf.rxbus.MessageEvent
+import com.holike.cloudshelf.util.AppUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -65,16 +63,7 @@ class MainFragment : HollyFragment<MainPresenter, MainView>(), MainView {
 
     //8.0以上提示用户允许未知来源应用安装程序
     override fun onStartUnknownAppSourceSetting() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val requestCode = VersionUpdateDialog.UNKNOWN_APP_REQUEST_CODE
-            try {
-                val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse("package:${mContext.applicationContext.packageName}"))
-                openActivityForResult(intent, requestCode)
-            } catch (e: Exception) {
-                val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
-                openActivityForResult(intent, requestCode)
-            }
-        }
+        AppUtils.startUnknownAppSourceSetting(this,VersionUpdateDialog.UNKNOWN_APP_REQUEST_CODE)
     }
 
     //调起系统安装apk 结束首页

@@ -2,7 +2,6 @@ package com.holike.cloudshelf.activity
 
 import android.content.Intent
 import android.os.Bundle
-import com.holike.cloudshelf.R
 import com.holike.cloudshelf.base.BaseActivity
 import com.holike.cloudshelf.enumc.ProductCatalog
 import com.holike.cloudshelf.fragment.ProductCatalogFragment
@@ -28,8 +27,6 @@ class MultiTypeActivity : BaseActivity() {
             act.startActivity(intent)
         }
     }
-
-    override fun getLayoutResourceId(): Int = R.layout.activity_common
 
     override fun setup(savedInstanceState: Bundle?) {
         super.setup(savedInstanceState)

@@ -16,10 +16,9 @@ import com.holike.cloudshelf.R
 import com.holike.cloudshelf.bean.VersionInfoBean
 import com.holike.cloudshelf.netapi.download.DownloadCallBack
 import com.holike.cloudshelf.netapi.download.DownloadEngine
+import com.holike.cloudshelf.util.AppUtils
 import com.holike.cloudshelf.widget.CustomToast
 import io.reactivex.disposables.Disposable
-import pony.xcode.base.CommonDialog
-import pony.xcode.utils.AppUtils
 import java.io.File
 
 //版本更新对话框

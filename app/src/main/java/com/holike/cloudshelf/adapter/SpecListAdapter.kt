@@ -8,7 +8,7 @@ import com.holike.cloudshelf.R
 import com.holike.cloudshelf.bean.TableModelHouseBean
 import com.holike.cloudshelf.bean.internal.LabelSpec
 import com.holike.cloudshelf.enumc.ProductCatalog
-import pony.xcode.recycler.CommonAdapter
+import pony.xcode.recycler.lib.CommonAdapter
 
 
 class SpecListAdapter : CommonAdapter<LabelSpec> {

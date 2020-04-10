@@ -3,7 +3,7 @@ package com.holike.cloudshelf.widget
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
-
+//正方形 imageView
 class SquareImageView : AppCompatImageView {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)

@@ -13,7 +13,7 @@ import com.holike.cloudshelf.fragment.CityPickerFragment
 import com.holike.cloudshelf.mvp.presenter.LocationPresenter
 import com.holike.cloudshelf.mvp.view.LocationView
 import kotlinx.android.synthetic.main.activity_citypicker.*
-import kotlinx.android.synthetic.main.include_backtrack2.*
+import kotlinx.android.synthetic.main.include_backtrack_light.*
 import pony.xcode.citypicker.adapter.OnPickListener
 import pony.xcode.citypicker.model.City
 import pony.xcode.citypicker.model.LocateState
@@ -37,6 +37,8 @@ class CityPickerActivity : HollyActivity<LocationPresenter, LocationView>(), Loc
 
     override fun getLayoutResourceId(): Int = R.layout.activity_citypicker
 
+    override fun getBacktrackResource(): Int = R.layout.include_backtrack_light
+
     override fun setup(savedInstanceState: Bundle?) {
         super.setup(savedInstanceState)
         startLayoutAnimation()
@@ -46,7 +48,7 @@ class CityPickerActivity : HollyActivity<LocationPresenter, LocationView>(), Loc
 
     private fun startLayoutAnimation() {
         titleTView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom))
-        view_back.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom))
+        backtrack.startAnimation(AnimationUtils.loadAnimation(this, R.anim.anim_from_bottom))
     }
 
     private fun initPicker() {

@@ -1,4 +1,4 @@
-package com.holike.cloudshelf.base
+package com.holike.cloudshelf.mvp.presenter
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -7,27 +7,18 @@ import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.adapter.BottomPreviewImageAdapter
 import com.holike.cloudshelf.adapter.PicturePagerAdapter
+import com.holike.cloudshelf.mvp.BaseModel
+import com.holike.cloudshelf.mvp.BasePresenter
+import com.holike.cloudshelf.mvp.BaseView
 import com.holike.cloudshelf.widget.StereoPagerTransformer
-import pony.xcode.mvp.BaseModel
-import pony.xcode.mvp.BasePresenter
-import pony.xcode.mvp.BaseView
 
 
 abstract class PicturePagerPresenter<M : BaseModel, V : BaseView> : BasePresenter<M, V>() {
 
-    val mParamWidth: Int
-    var mParamHeight: Int
-    val mBottomImageWidth: Int
-    val mBottomImageHeight: Int
-
-    init {
-        //UI width = 526 height = 370
-        val size = CurrentApp.getInstance().getMaxPixels() * 0.57f
-        mParamWidth = size.toInt()
-        mParamHeight = (size * 0.68f).toInt()
-        mBottomImageWidth = CurrentApp.getInstance().resources.getDimensionPixelSize(R.dimen.dp_130)
-        mBottomImageHeight = (mBottomImageWidth * 0.68f).toInt()
-    }
+    val mParamWidth: Int = CurrentApp.getInstance().getPreviewWindowWidth()
+    var mParamHeight: Int = CurrentApp.getInstance().getPreviewWindowHeight()
+    val mBottomImageWidth: Int = CurrentApp.getInstance().resources.getDimensionPixelSize(R.dimen.dp_130)
+    val mBottomImageHeight: Int = (mBottomImageWidth * 0.68f).toInt()
 
     private val mPreviewImages = ArrayList<String>()
     private var mPreviewImageAdapter: PicturePagerAdapter? = null
@@ -95,6 +86,9 @@ abstract class PicturePagerPresenter<M : BaseModel, V : BaseView> : BasePresente
         mPreviewImages.addAll(imageList)
         mPreviewImageAdapter?.notifyDataSetChanged()
         mOnPageChangeListener.onPageSelected(0)
+    }
+
+    open fun updateBottomImages(imageList: MutableList<String>){
         mBottomImages.clear()
         mBottomImages.addAll(imageList)
         mBottomImageAdapter?.notifyDataSetChanged()

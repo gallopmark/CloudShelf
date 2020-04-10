@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pony.xcode.widget.DrawableTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@id/view_back"
-    style="@style/CommonViewStyle"
-    android:drawableTop="@mipmap/ic_back_white"
-    android:text="@string/text_back" />
+<com.holike.cloudshelf.widget.DrawableTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/backtrack"
+    style="@style/BackViewStyle" />

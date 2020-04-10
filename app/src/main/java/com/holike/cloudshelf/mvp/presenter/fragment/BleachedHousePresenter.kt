@@ -6,11 +6,11 @@ import com.holike.cloudshelf.R
 import com.holike.cloudshelf.adapter.PictureDisplayAdapter
 import com.holike.cloudshelf.bean.BleachedHouseBean
 import com.holike.cloudshelf.bean.internal.PictureDisplayItem
+import com.holike.cloudshelf.mvp.BasePresenter
 import com.holike.cloudshelf.mvp.model.BleachedHouseModel
 import com.holike.cloudshelf.mvp.view.fragment.BleachedHouseView
 import com.holike.cloudshelf.netapi.HttpRequestCallback
 import com.holike.cloudshelf.util.ListUtils
-import pony.xcode.mvp.BasePresenter
 
 
 class BleachedHousePresenter : BasePresenter<BleachedHouseModel, BleachedHouseView>() {

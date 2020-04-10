@@ -34,24 +34,24 @@ class TableModelHouseBean {
     }
 
     class DataBean {
-        @SerializedName("ViewUrl")
-        var viewUrl: String? = null  // 全景图url
-
-        @SerializedName("click")
-        var click: String? = null  //点击次数
-
-        @SerializedName("pName")
-        var pName: String? = null //风格名
-
-        @SerializedName("UpTime")
-        var upTime: String? = null //创建时间
+//        @SerializedName("ViewUrl")
+//        var viewUrl: String? = null  // 全景图url
+//
+//        @SerializedName("click")
+//        var click: String? = null  //点击次数
+//
+//        @SerializedName("pName")
+//        var pName: String? = null //风格名
+//
+//        @SerializedName("UpTime")
+//        var upTime: String? = null //创建时间
 
         @SerializedName("ID")
         var id: String? = null //案例id
 
-        @SerializedName("hNanme")
-        var spaceName: String? = null //空间名
-        var Memo: String? = null
+//        @SerializedName("hNanme")
+//        var spaceName: String? = null //空间名
+//        var Memo: String? = null
 
         @SerializedName("Name")
         var name: String? = null
@@ -66,7 +66,7 @@ class TableModelHouseBean {
         //获取第一张图片
         fun getFirstImage():String?{
             val images = obtainImages()
-            if(!images.isEmpty()){
+            if(images.isNotEmpty()){
                 return images[0]
             }
             return null

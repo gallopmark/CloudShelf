@@ -4,6 +4,11 @@ package com.holike.cloudshelf.util
 class ImageResizeUtils {
 
     companion object {
+        /**
+         * @param imageUrl 图片链接
+         * @param width 所需图片的宽度
+         * @param height 所需图片的高度
+         */
         fun resize(imageUrl: String?, width: Int, height: Int): String {
             if (imageUrl.isNullOrEmpty()) {
                 return ""

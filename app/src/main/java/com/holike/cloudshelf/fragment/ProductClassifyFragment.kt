@@ -13,12 +13,15 @@ import com.holike.cloudshelf.mvp.view.fragment.ProductClassifyView
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import kotlinx.android.synthetic.main.fragment_multi_type.*
+import kotlinx.android.synthetic.main.include_backtrack_light.*
 import kotlinx.android.synthetic.main.include_main_layout.*
 
 //产品大全-全屋定制、橱柜定制、木门定制
 open class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, ProductClassifyView>(),
         ProductClassifyView, OnLoadMoreListener {
     override fun getLayoutResourceId(): Int = R.layout.fragment_multi_type
+
+    override fun getBacktrackResource(): Int = R.layout.include_backtrack_light
 
     override fun setup(savedInstanceState: Bundle?) {
         initViewData()
@@ -39,6 +42,7 @@ open class ProductClassifyFragment : HollyFragment<ProductClassifyPresenter, Pro
 
     private fun startLayoutAnimation() {
         containerLayout.layoutAnimation = AnimationUtils.loadLayoutAnimation(mContext, R.anim.la_layout_from_bottom)
+        backtrack.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom))
     }
 
     override fun onShowNavigation(isShow: Boolean) {

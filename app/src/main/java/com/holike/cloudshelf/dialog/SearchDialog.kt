@@ -11,8 +11,6 @@ import android.widget.TextView
 import com.holike.cloudshelf.CurrentApp
 import com.holike.cloudshelf.R
 import com.holike.cloudshelf.helper.ClearEditTextHelper
-import pony.xcode.base.CommonDialog
-
 
 class SearchDialog(context: Context) : CommonDialog(context) {
     private val mHeight: Int = (CurrentApp.getInstance().getScreenHeight() * 0.48f).toInt()
@@ -73,22 +71,16 @@ class SearchDialog(context: Context) : CommonDialog(context) {
         super.show()
         mContentView.postDelayed({
             if (isShowing) {
-                val im =
-                    mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                im.showSoftInput(mContentView.findViewById(R.id.searchEText), 0)
+                val imm = mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(mContentView.findViewById(R.id.searchEText), 0)
             }
         }, 550)
     }
 
     override fun dismiss() {
-        val view = currentFocus
-        if (view is TextView) {
-            val mInputMethodManager: InputMethodManager =
-                mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            mInputMethodManager.hideSoftInputFromWindow(
-                view.getWindowToken(),
-                InputMethodManager.RESULT_UNCHANGED_SHOWN
-            )
+        currentFocus?.let {
+            val imm: InputMethodManager = mContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(it.windowToken, InputMethodManager.RESULT_UNCHANGED_SHOWN)
         }
         super.dismiss()
     }

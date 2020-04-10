@@ -5,6 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
+//GridLayoutManager 分割线
 class GridSpacingItemDecoration : ItemDecoration {
     private var mSpanCount: Int
     private var mSpacing: Int
@@ -12,15 +13,9 @@ class GridSpacingItemDecoration : ItemDecoration {
     private var mHeaderNum: Int
     private var mFooterNum = 0
 
-    constructor(spanCount: Int, space: Int, includeEdge: Boolean) : this(spanCount, space, includeEdge, 0) {
-    }
+    constructor(spanCount: Int, space: Int, includeEdge: Boolean) : this(spanCount, space, includeEdge, 0)
 
-    constructor(spanCount: Int, spacing: Int, includeEdge: Boolean, headerNum: Int) {
-        mSpanCount = spanCount
-        mSpacing = spacing
-        mIncludeEdge = includeEdge
-        mHeaderNum = headerNum
-    }
+    constructor(spanCount: Int, spacing: Int, includeEdge: Boolean, headerNum: Int) : this(spanCount, spacing, includeEdge, headerNum, 0)
 
     constructor(spanCount: Int, spacing: Int, includeEdge: Boolean, headerNum: Int, footerNum: Int) {
         mSpanCount = spanCount
@@ -33,9 +28,7 @@ class GridSpacingItemDecoration : ItemDecoration {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val position = parent.getChildAdapterPosition(view) - mHeaderNum // item position
         var lastPosition = -1
-        if (parent.adapter != null) {
-            lastPosition = parent.adapter!!.itemCount - mFooterNum
-        }
+        parent.adapter?.apply { lastPosition = itemCount - mFooterNum }
         if (position >= 0 && lastPosition != -1 && position < lastPosition) {
             val column = position % mSpanCount // item column
             if (mIncludeEdge) {

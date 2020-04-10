@@ -3,7 +3,6 @@ package com.holike.cloudshelf.util
 import cn.jpush.android.api.JPushInterface
 import com.holike.cloudshelf.BuildConfig
 import com.holike.cloudshelf.CurrentApp
-import pony.xcode.utils.SystemUtils
 
 //极光相关
 class JPushUtils private constructor() {
@@ -18,8 +17,7 @@ class JPushUtils private constructor() {
 
         //设置别名
         fun setAlias() {
-            val deviceId = SystemUtils.getDeviceUUid(CurrentApp.getInstance()).replace(":", "")
-                .replace("-", "_")
+            val deviceId = AppUtils.getDeviceUUid(CurrentApp.getInstance())?.replace(":", "")?.replace("-", "_")
             //登录成功之后 极光推送设置别名
             JPushInterface.setAlias(CurrentApp.getInstance(), SEQUENCE, deviceId)
         }

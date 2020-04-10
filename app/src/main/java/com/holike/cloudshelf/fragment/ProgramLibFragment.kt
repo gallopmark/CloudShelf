@@ -13,12 +13,15 @@ import com.holike.cloudshelf.mvp.view.fragment.ProgramLibView
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import kotlinx.android.synthetic.main.fragment_multi_type.*
+import kotlinx.android.synthetic.main.include_backtrack_light.*
 import kotlinx.android.synthetic.main.include_main_layout.*
 
 //方案库
 class ProgramLibFragment : HollyFragment<ProgramLibPresenter, ProgramLibView>(), ProgramLibView, OnLoadMoreListener {
 
     override fun getLayoutResourceId(): Int = R.layout.fragment_multi_type
+
+    override fun getBacktrackResource(): Int = R.layout.include_backtrack_light
 
     override fun setup(savedInstanceState: Bundle?) {
         initViewData()
@@ -34,6 +37,7 @@ class ProgramLibFragment : HollyFragment<ProgramLibPresenter, ProgramLibView>(),
     }
 
     private fun startLayoutAnimation() {
+        backtrack.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.anim_from_bottom))
         containerLayout.layoutAnimation = AnimationUtils.loadLayoutAnimation(mContext, R.anim.la_layout_from_bottom)
     }
 
